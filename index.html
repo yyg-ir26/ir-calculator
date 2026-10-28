@@ -284,7 +284,7 @@
         }
         table.ref {
             width: 100%;
-            min-width: 520px;
+            min-width: 0;
             border-collapse: collapse;
             font-size: 0.8rem;
             background: #fff;
@@ -296,16 +296,18 @@
             font-weight: 700;
             color: var(--primary-dark);
             border-bottom: 1px solid var(--border);
-            white-space: nowrap;
         }
         table.ref td {
             padding: 8px 10px;
             vertical-align: top;
             border-bottom: 1px solid var(--border);
             line-height: 1.4;
+            overflow-wrap: anywhere;
         }
+        #hu_table th:last-child, #hu_table td:last-child { width: 32%; }
+        #hu_table td[colspan] { width: auto; }
         table.ref tr:last-child td { border-bottom: none; }
-        table.ref td:first-child { font-weight: 600; min-width: 130px; }
+        table.ref td:first-child { font-weight: 600; }
 
         .section-label {
             font-size: 0.8rem;
@@ -350,14 +352,124 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .tool-nav select {
-            display: block;
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px; height: 1px;
+            margin: -1px; padding: 0; border: 0;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+        }
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            font-weight: 600;
+            min-height: 48px;
+            padding: 10px 14px;
+            background: #fff;
             border: 2px solid var(--primary);
+            border-radius: 10px;
             color: var(--primary-dark);
+            font-size: 16px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
         }
+        .tool-btn .chev { font-size: 1.1rem; flex-shrink: 0; }
+        .tool-btn:active { background: #f0f9ff; }
+        .tool-btn:focus-visible, .sheet-item:focus-visible, .sheet-close:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: -3px;
+        }
+
+        /* Tool picker sheet (bottom sheet on phones, centered panel on desktop) */
+        .sheet-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            background: rgba(15,23,42,0.6);
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet {
+            background: #fff;
+            width: 100%;
+            max-width: 560px;
+            max-height: 88%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px 16px 0 0;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
+        }
+        @media (min-width: 700px) {
+            .sheet-overlay { align-items: center; }
+            .sheet { border-radius: 16px; max-height: 82%; padding-bottom: 0; }
+        }
+        .sheet-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 6px 6px 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        .sheet-close {
+            min-width: 44px;
+            min-height: 44px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .sheet-body {
+            position: relative;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 12px;
+        }
+        .sheet-group-title {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 9px 16px;
+        }
+        .sheet-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-height: 50px;
+            padding: 10px 16px 10px 30px;
+            background: #fff;
+            border: none;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 1rem;
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .sheet-item:hover, .sheet-item:active { background: #f0f9ff; }
+        .sheet-item[aria-current="true"] { background: #e0f2fe; color: var(--primary-dark); font-weight: 700; }
+        .sheet-item[aria-current="true"]::after { content: "\2713"; color: var(--primary); font-weight: 800; margin-left: 10px; }
 
         /* Disclaimer modal */
         .modal-overlay {
@@ -398,7 +510,7 @@
             appearance: none;
         }
         .btn-primary:active { background: var(--primary-dark); }
-        body.modal-open { overflow: hidden; }
+        body.modal-open, body.sheet-open { overflow: hidden; }
     </style>
 </head>
 <body>
@@ -408,11 +520,13 @@
         <div class="modal-box">
             <h2 id="disclaimer_title">Important: please read</h2>
             <ul>
-                <li>This app is an <strong>educational and professional reference</strong>. It is not a medical device, is not regulatory-cleared, and does not give medical advice.</li>
+                <li><strong>This is an independent reference tool. It is NOT an official, institution-approved, employer-approved or clinically validated application</strong>, and it is not endorsed by any hospital, employer or professional society.</li>
+                <li>It is an educational and professional reference. It is not a medical device, is not regulatory-cleared, and does not give medical advice.</li>
                 <li>Calculators and tables summarize published criteria that change over time and may contain errors. <strong>Verify against original sources, current guidelines and your institutional protocols</strong>, and use your clinical judgment.</li>
                 <li>You are responsible for decisions made using this tool. It is provided "as is" without warranty, and the authors accept no liability for its use.</li>
                 <li>Do not enter patient names or identifiers. Nothing you type leaves your device.</li>
             </ul>
+            <p id="disclaimer_desktop_note" class="field-hint" style="display:none; margin: -4px 0 12px;">This notice is shown every time the app is opened on a computer.</p>
             <button type="button" id="disclaimer_accept" class="btn-primary">I understand and agree</button>
         </div>
     </div>
@@ -421,11 +535,13 @@
     <header>
         <h1>IR Decision Support Suite</h1>
         <p>Interventional Radiology Clinical Calculators &amp; RADS Tools</p>
+        <p style="font-size:0.72rem; margin-top:5px; color:#fcd34d;">Independent reference tool. Not institution-approved or clinically validated.</p>
     </header>
 
     <div class="tool-nav">
-        <label for="tool_select" class="tool-nav-label">Select a tool</label>
-        <select id="tool_select" aria-label="Select a tool">
+        <span class="tool-nav-label" id="tool_label">Select a tool</span>
+        <button type="button" id="tool_btn" class="tool-btn" aria-haspopup="dialog" aria-expanded="false" aria-labelledby="tool_label tool_btn_text"><span id="tool_btn_text">Ascitic PMN / SBP</span><span class="chev" aria-hidden="true">&#9662;</span></button>
+        <select id="tool_select" class="visually-hidden" tabindex="-1" aria-hidden="true">
             <optgroup label="Ascites &amp; Pleural">
                 <option value="pmn">Ascitic PMN / SBP</option>
                 <option value="saag">SAAG</option>
@@ -462,6 +578,16 @@
                 <option value="about">Disclaimer &amp; About</option>
             </optgroup>
         </select>
+    </div>
+
+    <div id="tool_sheet" class="sheet-overlay" aria-hidden="true">
+        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet_title">
+            <div class="sheet-head">
+                <span id="sheet_title">Choose a tool</span>
+                <button type="button" id="tool_close" class="sheet-close" aria-label="Close">&#10005;</button>
+            </div>
+            <div class="sheet-body" id="tool_list"></div>
+        </div>
     </div>
 
     <div class="container">
@@ -671,30 +797,30 @@
 
                 <div class="section-label">Examples: low bleeding risk</div>
                 <ul class="tight">
-                    <li>Paracentesis, thoracentesis</li>
-                    <li>Superficial biopsy / FNA / abscess drainage (thyroid, lymph node, breast)</li>
-                    <li>Catheter exchanges (gastrostomy, biliary, nephrostomy, abscess)</li>
+                    <li>Paracentesis, thoracentesis, chest tube</li>
+                    <li>Superficial biopsy, aspiration or drainage (palpable lesion, lymph node, soft tissue, breast; not intrathoracic or intra-abdominal), thyroid biopsy</li>
+                    <li>Superficial bone biopsy (not vertebral body), bone marrow biopsy</li>
+                    <li>Catheter and tube exchange or removal (biliary, nephrostomy, abscess drain, mature-tract G/GJ/J tube)</li>
                     <li>Transjugular liver biopsy</li>
-                    <li>Central venous access: tunneled/non-tunneled lines, ports, PICC</li>
-                    <li>Dialysis access interventions, IVC filter, venography</li>
-                    <li>Joint injections, peripheral nerve blocks, appendicular bone biopsy</li>
+                    <li>Central venous access: non-tunneled and tunneled catheters, PICC, ports, dialysis catheters</li>
+                    <li>AV fistula/graft evaluation or intervention, routine IVC filter placement/removal, venography and pelvic/extremity venous interventions</li>
+                    <li>Arterial angiography, interventions and embolotherapy with sheath ≤6 Fr</li>
+                    <li>Joint aspiration/injection, non-cervical facet and SI joint injection, transforaminal nerve root injection</li>
                 </ul>
 
                 <div class="section-label">Examples: high bleeding risk</div>
                 <ul class="tight">
-                    <li>Solid organ biopsy (liver, kidney, spleen, lung)</li>
-                    <li>Deep non-organ biopsy (retroperitoneal, intra-abdominal, pelvic)</li>
-                    <li>New biliary interventions (PTBD, cholecystostomy)</li>
-                    <li>New nephrostomy / urinary tract interventions</li>
-                    <li>New gastrostomy / gastrojejunostomy placement</li>
-                    <li>TIPS</li>
-                    <li>Ablation of solid organ, bone or soft tissue</li>
-                    <li>Spine / neuraxial procedures (e.g., lumbar puncture), axial skeleton biopsy</li>
-                    <li>Large-bore arterial interventions</li>
+                    <li>Arterial interventions with ≥7 Fr sheath, or aortic, pelvic, mesenteric or CNS arterial work (e.g., uterine fibroid embolization)</li>
+                    <li>Solid organ biopsy (liver, kidney, spleen, lung); deep non-organ biopsy (spine, intra-abdominal, retroperitoneal, pelvic compartments)</li>
+                    <li>Deep abscess drainage or drain placement (lung parenchyma, abdominal, pelvic, retroperitoneal)</li>
+                    <li>Biliary interventions (including cholecystostomy); new nephrostomy and other urinary tract interventions (ureteral dilation, stone removal); original gastrostomy/GJ/J tube placement</li>
+                    <li>TIPS, portal vein interventions, catheter-directed thrombolysis (DVT, PE, portal vein), intrathoracic and CNS venous interventions, complex IVC filter removal</li>
+                    <li>Spine procedures with risk of spinal or epidural hematoma (lumbar puncture, vertebroplasty/kyphoplasty, epidural injection, cervical facet block)</li>
+                    <li>Ablation of solid organ, bone or soft tissue (commonly managed as high risk)</li>
                 </ul>
 
                 <div class="footnote">
-                    Source: SIR consensus guidelines, Patel et al., JVIR 2019;30:1168–1184. Low risk: INR corrected to ≤3.0 (range 2.0–3.0), platelets ≥20 ×10³/µL. High risk: INR corrected to ≤1.8 (range 1.5–1.8), platelets ≥50 ×10³/µL. Chronic liver disease: no INR threshold for low-risk procedures, INR &lt;2.5 for high-risk procedures, platelets as above, fibrinogen &gt;100 mg/dL (cryoprecipitate if lower), because INR and platelets poorly reflect bleeding risk in rebalanced hemostasis. Warfarin: low risk target INR ≤3.0; high risk withhold ~5 days to INR ≤1.8. Routine lab screening is not needed for low-risk procedures unless the patient is on warfarin/heparin or has bleeding risk factors. Antiplatelet and other anticoagulant hold times: see the SIR guideline tables and your institutional protocol. Stricter limits (e.g., INR &lt;1.5) are often used for neuro/neuraxial procedures.
+                    Source: SIR consensus guidelines, Patel et al., JVIR 2019;30:1168–1184 (Part II). <strong>Low risk:</strong> correct INR to ≤3.0 (range 2.0–3.0); transfuse platelets if &lt;20 ×10³/µL. <strong>High risk:</strong> correct INR to within 1.5–1.8; transfuse platelets if &lt;50 ×10³/µL. <strong>Chronic liver disease</strong> (suggested thresholds, expert opinion): low risk, no INR threshold, platelets &gt;20, fibrinogen &gt;100 mg/dL; high risk, INR &lt;2.5, platelets &gt;30, fibrinogen &gt;100 mg/dL (cryoprecipitate if lower). In cirrhosis INR and platelets poorly reflect bleeding risk, and other societies differ (AASLD advises against routine correction; AGA and ACG suggest platelets &gt;50). Screening labs are not routinely recommended before low-risk procedures unless the patient has bleeding risk factors or takes warfarin or heparin. Warfarin: low risk target INR ≤3.0; high risk withhold 5 days to INR ≤1.8 (see the Holds tool for other agents). The procedure lists are examples adapted from SIR 2019 and institutional adaptations; classification of a specific procedure is the operator's judgment, and your institution may differ.
                 </div>
             </div>
         </div>
@@ -1194,13 +1320,13 @@
                     <select id="rads_select">
                         <option value="li">LI-RADS (Liver / HCC)</option>
                         <option value="pi">PI-RADS (Prostate)</option>
-                        <option value="bi">BI-RADS (Breast)</option>
+                        <option value="bi">BI-RADS v2025 (Breast)</option>
                         <option value="lung">Lung-RADS v2022 (Lung screening CT)</option>
                         <option value="orus">O-RADS US (Ovarian/Adnexal)</option>
                         <option value="ormri">O-RADS MRI (Ovarian/Adnexal)</option>
                         <option value="cad">CAD-RADS 2.0 (Coronary CTA)</option>
                         <option value="ni">NI-RADS (Head &amp; Neck surveillance)</option>
-                        <option value="crads">C-RADS (CT Colonography)</option>
+                        <option value="crads">C-RADS v2023 (CT Colonography)</option>
                         <option value="vi">VI-RADS (Bladder MRI)</option>
                         <option value="bos">Bosniak v2019 (Renal cystic masses)</option>
                     </select>
@@ -1248,10 +1374,10 @@
                 </div>
 
                 <div class="footnote">
-                    <strong>Low-risk procedures:</strong> SIR 2019 generally does not require holding anticoagulants or antiplatelets (warfarin: proceed if INR ≤3.0). Individualize for patient and operator. See the Bleeding Risk tab for procedure examples and lab thresholds.<br><br>
-                    <strong>Resumption:</strong> restart once hemostasis is secure, based on bleeding and thrombotic risk. Typically within about 24 hours for many agents; DOACs generally 24 hours after low-risk and 48–72 hours after high-risk procedures.<br><br>
-                    <strong>Bridging:</strong> DOACs do not need bridging. For warfarin in patients at high thromboembolic risk (e.g., mechanical valve, recent stroke or VTE), discuss bridging with cardiology/hematology. Thromboembolic risk, recent stents, and dual antiplatelet therapy need individual assessment.<br><br>
-                    Hold times differ somewhat between published summaries, especially dabigatran and renally cleared agents. <strong>Verify against SIR 2019 Table 6, your pharmacy and institutional protocols before acting.</strong> Source: Patel et al., JVIR 2019;30:1168–1184; Douketis et al., CHEST 2022 (dabigatran by CrCl).
+                    <strong>Low-risk procedures:</strong> SIR 2019 recommends continuing most anticoagulants and antiplatelets (warfarin: target INR ≤3.0). The exceptions are the glycoprotein IIb/IIIa inhibitors, which SIR lists as withheld for both risk levels.<br><br>
+                    <strong>DOAC timing:</strong> the SIR table gives DOAC holds in <em>doses</em>, not days. For twice-daily agents (apixaban, dabigatran) 2 doses is about 1 day; for once-daily agents (rivaroxaban, edoxaban) 1 dose is about 1 day. Renal tiers are CrCl ≥50, 30 to &lt;50 and 15 to &lt;30 mL/min as listed by SIR; where SIR gives no value, the tool says so.<br><br>
+                    <strong>Emergent procedures:</strong> SIR recommends reversal agents when a DOAC-treated patient needs a STAT or emergent high-risk procedure. Patients who cannot safely stop anticoagulation (e.g., recent coronary or cerebrovascular stents) need an individualized plan, and bridging decisions belong with cardiology/hematology. DOACs are not bridged.<br><br>
+                    <strong>Verify before acting:</strong> times are taken from SIR 2019 Table 6 (Patel et al., JVIR 2019;30:1168–1184, Part II) as reproduced in institutional adaptations of the table. Check the original table, your pharmacy and local protocol. See the Bleeding Risk tab for procedure risk lists and lab thresholds.
                 </div>
             </div>
         </div>
@@ -1517,7 +1643,8 @@
                 <div class="card-subtitle">IR Decision Support Suite, version 1.1 (October 2026)</div>
                 <div class="section-label" style="margin-top:0;">Medical disclaimer</div>
                 <ul class="tight">
-                    <li>This app is an educational and professional reference. It is <strong>not a medical device</strong>, has not been reviewed or cleared by any regulatory authority, and does not provide medical advice, diagnosis or treatment.</li>
+                    <li><strong>This is an independent reference tool. It is not an official, institution-approved, employer-approved or clinically validated application</strong>, and it is not endorsed by any hospital, employer or professional society. It has not undergone formal clinical validation or institutional review.</li>
+                    <li>It is an educational and professional reference. It is <strong>not a medical device</strong>, has not been reviewed or cleared by any regulatory authority, and does not provide medical advice, diagnosis or treatment.</li>
                     <li>Calculators and tables summarize published criteria and guidelines. These change over time and may contain errors or omissions despite efforts to verify them.</li>
                     <li><strong>Always verify results</strong> against the original sources, current guidelines, institutional protocols and your clinical judgment before making any patient-care decision.</li>
                     <li>The user is solely responsible for decisions made with this tool. The authors and distributors provide it "as is", without warranty of any kind, and accept no liability for any loss, injury or damage arising from its use.</li>
@@ -1533,6 +1660,12 @@
                 <ul class="tight">
                     <li>Named classification and staging systems (e.g., ACR TI-RADS, LI-RADS, PI-RADS, BI-RADS, Lung-RADS, O-RADS, CAD-RADS, NI-RADS, C-RADS, Bosniak, BCLC, VI-RADS) are the work of their respective organizations and authors. This app provides brief summaries only; consult the official publications for complete criteria and current versions.</li>
                     <li>See the References page for sources used by each tool.</li>
+                </ul>
+                <div class="section-label">Versions used (last checked October 2026)</div>
+                <ul class="tight">
+                    <li>BI-RADS v2025; Lung-RADS v2022; LI-RADS CT/MRI v2018; PI-RADS v2.1; ACR TI-RADS (2017); O-RADS US v2022 and O-RADS MRI; CAD-RADS 2.0; C-RADS v2023; NI-RADS (CT/PET table; an MRI version also exists and is not covered); VI-RADS; Bosniak v2019; BCLC 2022.</li>
+                    <li>SIR periprocedural guideline 2019 (Part II); MELD 3.0; CKD-EPI 2021; ACR Manual on Contrast Media premedication regimens.</li>
+                    <li>Guidelines are updated periodically. Check the issuing organization for newer versions.</li>
                 </ul>
                 <div class="footnote">
                     By using this app you acknowledge that you have read and understood this disclaimer. If you notice an error, please report it so it can be corrected.
@@ -1608,8 +1741,7 @@
 
                 <h3>Hemostasis, Renal Function and Body Size</h3>
                 <ul class="tight">
-                    <li>Douketis JD, Spyropoulos AC, Murad MH, et al. Perioperative management of antithrombotic therapy: an American College of Chest Physicians clinical practice guideline. <em>Chest</em> 2022;162:e207–e243.</li>
-                    <li>Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. <em>N Engl J Med</em> 2021;385:1737–1749.</li>
+                                        <li>Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. <em>N Engl J Med</em> 2021;385:1737–1749.</li>
                     <li>Mosteller RD. Simplified calculation of body-surface area. <em>N Engl J Med</em> 1987;317:1098. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. <em>Arch Intern Med</em> 1916;17:863–871. Devine BJ. Case Number 25: Gentamicin therapy. <em>Drug Intell Clin Pharm</em> 1974;8:650–655.</li>
                     <li>American Society of Anesthesiologists. Statement on ASA Physical Status Classification System. Approved October 15, 2014; last amended December 13, 2020.</li>
                 </ul>
@@ -1636,13 +1768,13 @@
                     <li>Tessler FN, Middleton WD, Grant EG, et al. ACR Thyroid Imaging, Reporting and Data System (TI-RADS): white paper of the ACR TI-RADS Committee. <em>J Am Coll Radiol</em> 2017;14:587–595.</li>
                     <li>Chernyak V, Fowler KJ, Kamaya A, et al. Liver Imaging Reporting and Data System (LI-RADS) version 2018: imaging of hepatocellular carcinoma in at-risk patients. <em>Radiology</em> 2018;289:816–830. ACR LI-RADS v2018 CT/MRI manual, Chapter 8 (Diagnostic Categories).</li>
                     <li>Turkbey B, Rosenkrantz AB, Haider MA, et al. Prostate Imaging Reporting and Data System version 2.1: 2019 update of PI-RADS v2. <em>Eur Urol</em> 2019;76:340–351.</li>
-                    <li>D'Orsi CJ, et al. <em>ACR BI-RADS Atlas, Breast Imaging Reporting and Data System</em>, 5th ed. Reston, VA: American College of Radiology; 2013.</li>
+                    <li>American College of Radiology. <em>ACR BI-RADS® v2025</em> (6th edition). Reston, VA: ACR; 2025. Previous edition: D'Orsi CJ, et al. <em>ACR BI-RADS Atlas</em>, 5th ed. 2013.</li>
                     <li>ACR Lung-RADS v2022 Assessment Categories and Summary of Changes. American College of Radiology, 2022.</li>
                     <li>Strachowski LM, Jha P, Phillips CH, et al. O-RADS US v2022: an update from the American College of Radiology's O-RADS US Risk Stratification and Management Committee. <em>Radiology</em> 2023;308:e230685. Andreotti RF, et al. O-RADS US risk stratification and management system: a consensus guideline from the ACR. <em>Radiology</em> 2020;294:168–185.</li>
                     <li>Thomassin-Naggara I, Poncelet E, Jalaguier-Coudray A, et al. Ovarian-Adnexal Reporting Data System Magnetic Resonance Imaging (O-RADS MRI) score for risk stratification of sonographically indeterminate adnexal masses. <em>JAMA Netw Open</em> 2020;3:e1919896.</li>
                     <li>Cury RC, Leipsic J, Abbara S, et al. CAD-RADS 2.0 – 2022 Coronary Artery Disease Reporting and Data System: an expert consensus document of SCCT, ACC, ACR and NASCI. <em>J Am Coll Radiol</em> 2022;19:1185–1212.</li>
                     <li>Aiken AH, Rath TJ, Anzai Y, et al. ACR Neck Imaging Reporting and Data System (NI-RADS): a white paper of the ACR NI-RADS Committee. <em>J Am Coll Radiol</em> 2018;15:1097–1108. ACR NI-RADS MRI and PET/CT management tables.</li>
-                    <li>Zalis ME, Barish MA, Choi JR, et al. CT colonography reporting and data system: a consensus proposal. <em>Radiology</em> 2005;236:3–9. ACR C-RADS v2023 colonic and extracolonic assessment categories.</li>
+                    <li>Zalis ME, Barish MA, Choi JR, et al. CT colonography reporting and data system: a consensus proposal. <em>Radiology</em> 2005;236:3–9. American College of Radiology. C-RADS v2023: Colonic and Extracolonic Assessment Categories.</li>
                     <li>Panebianco V, Narumi Y, Altun E, et al. Multiparametric magnetic resonance imaging for bladder cancer: development of VI-RADS (Vesical Imaging-Reporting And Data System). <em>Eur Urol</em> 2018;74:294–306.</li>
                     <li>Silverman SG, Pedrosa I, Ellis JH, et al. Bosniak classification of cystic renal masses, version 2019: an update proposal and needs assessment. <em>Radiology</em> 2019;292:475–488.</li>
                 </ul>
@@ -1669,6 +1801,12 @@
             const s = String(el.value).trim().replace(',', '.');
             if (s === '' || !/^-?\d*\.?\d+$|^-?\d+\.$/.test(s)) return NaN;
             return parseFloat(s);
+        }
+
+        // Truncate (never round up) so a displayed maximum never exceeds the calculated limit
+        function fl(x, d) {
+            const f = Math.pow(10, d);
+            return (Math.floor(x * f + 1e-9) / f).toFixed(d);
         }
 
         function show(id, cls, html) {
@@ -1722,7 +1860,7 @@
                 return;
             }
 
-            const uncorrected = wbc * (pmnPct / 100);
+            const uncorrected = (wbc * pmnPct) / 100;
             let absolutePmn = uncorrected;
             let note = '';
 
@@ -1736,8 +1874,9 @@
                 }
             }
 
-            const pmnVal = Math.round(absolutePmn * 10) / 10;
-            const isSbp = pmnVal >= 250;
+            const isSbp = absolutePmn >= 250 - 1e-9;
+            // display rounds down below the cutoff so the number never reads 250 for a negative result
+            const pmnVal = isSbp ? Math.round(absolutePmn * 10) / 10 : Math.floor(absolutePmn * 10 + 1e-9) / 10;
 
             show('pmn_res', isSbp ? 'pos' : 'neg', `
                 <div class="result-title">Absolute PMN: ${pmnVal} cells/mm³</div>
@@ -1967,11 +2106,11 @@
             }
             const raw = (5 * wt) / scr;
             const capped = raw > 300;
-            const macd = Math.round(Math.min(raw, 300));
+            const macd = Math.floor(Math.min(raw, 300) + 1e-9);
             show('macd_res', macd < 100 ? 'warn' : 'neg', `
                 <div class="result-title">MACD: ${macd} mL</div>
                 <div class="result-detail">
-                    Calculated ${Math.round(raw)} mL${capped ? ' (capped at 300 mL)' : ''}.
+                    Calculated ${Math.floor(raw + 1e-9)} mL${capped ? ' (capped at 300 mL)' : ''}.
                     ${macd < 100 ? '<br><strong>Low allowable volume:</strong> minimize contrast, consider CO₂ / non-contrast alternatives and hydration.' : ''}
                 </div>
             `);
@@ -1990,7 +2129,6 @@
                 return;
             }
 
-            const pltMin = risk === 'low' ? 20 : 50;
             let inrTxt, inrOk = null;
             if (risk === 'low') {
                 if (cld) { inrTxt = 'No INR threshold in chronic liver disease'; inrOk = isNaN(inr) ? null : true; }
@@ -1999,13 +2137,22 @@
                 if (cld) { inrTxt = 'INR &lt; 2.5 (chronic liver disease)'; inrOk = isNaN(inr) ? null : inr < 2.5; }
                 else { inrTxt = 'INR ≤ 1.8 (correct to 1.5–1.8)'; inrOk = isNaN(inr) ? null : inr <= 1.8; }
             }
-            const pltOk = isNaN(plt) ? null : plt >= pltMin;
+            let pltTxt, pltOk;
+            if (cld) {
+                const m = risk === 'low' ? 20 : 30;
+                pltTxt = `&gt; ${m}`;
+                pltOk = isNaN(plt) ? null : plt > m;
+            } else {
+                const m = risk === 'low' ? 20 : 50;
+                pltTxt = `≥ ${m}`;
+                pltOk = isNaN(plt) ? null : plt >= m;
+            }
             const fibOk = isNaN(fib) ? null : fib >= 100;
 
             const mark = ok => ok === null ? '–' : ok ? '✓' : '✗';
             const lines = [];
             lines.push(`${mark(inrOk)} <strong>INR${isNaN(inr) ? '' : ' ' + inr}:</strong> ${inrTxt}${inrOk === false ? ' → <strong>correct before procedure (e.g., FFP/PCC/vitamin K per clinical context)</strong>' : ''}`);
-            lines.push(`${mark(pltOk)} <strong>Platelets${isNaN(plt) ? '' : ' ' + plt}:</strong> ≥ ${pltMin} ×10³/µL${pltOk === false ? ' → <strong>consider platelet transfusion</strong>' : ''}`);
+            lines.push(`${mark(pltOk)} <strong>Platelets${isNaN(plt) ? '' : ' ' + plt}:</strong> ${pltTxt} ×10³/µL${pltOk === false ? ' → <strong>consider platelet transfusion</strong>' : ''}`);
             if (!isNaN(fib)) {
                 lines.push(`${mark(fibOk)} <strong>Fibrinogen ${fib}:</strong> &gt; 100 mg/dL${fibOk === false ? ' → <strong>consider cryoprecipitate / fibrinogen replacement</strong>' : ''}`);
             }
@@ -2200,14 +2347,14 @@
                     remaining = `<div class="result-detail"><strong style="color:var(--danger);">Maximum exceeded:</strong> ${given} mL (${givenMg.toFixed(0)} mg) already given.</div>`;
                 } else {
                     cls = remMl < maxMl * 0.25 ? 'warn' : 'neg';
-                    remaining = `<div class="result-detail">Already given: ${given} mL (${givenMg.toFixed(0)} mg)<br><strong>Remaining: ${remMl.toFixed(1)} mL</strong> (${(remMl * mgPerMl).toFixed(0)} mg)</div>`;
+                    remaining = `<div class="result-detail">Already given: ${given} mL (${givenMg.toFixed(0)} mg)<br><strong>Remaining: ${fl(remMl, 1)} mL</strong> (${fl(remMl * mgPerMl, 0)} mg)</div>`;
                 }
             }
 
             show('la_res', cls, `
-                <div class="result-title">${agent.name} ${conc}%${useEpi ? ' with epinephrine' : ''}: max ${maxMl.toFixed(1)} mL</div>
+                <div class="result-title">${agent.name} ${conc}%${useEpi ? ' with epinephrine' : ''}: max ${fl(maxMl, 1)} mL</div>
                 <div class="result-detail">
-                    Maximum total dose: <strong>${maxMg.toFixed(0)} mg</strong> (${mgkg} mg/kg${byWeight > cap ? '; absolute cap ' + cap + ' mg applies' : ''})<br>
+                    Maximum total dose: <strong>${fl(maxMg, 0)} mg</strong> (${mgkg} mg/kg${byWeight > cap ? '; absolute cap ' + cap + ' mg applies' : ''})<br>
                     Class: ${agent.cls}${key === 'ropi' && epi ? ' • Epinephrine does not change the ropivacaine limit used here' : ''}
                 </div>
                 ${remaining}
@@ -2391,7 +2538,7 @@
             const sflr = flr / b.telv * 100;
             let cls, verdict;
             if (sflr >= target) { cls = 'neg'; verdict = `Meets the ≥${target}% threshold.`; }
-            else if (sflr >= target - 5) { cls = 'warn'; verdict = `Borderline: below the ≥${target}% threshold. Discuss FLR augmentation (e.g., PVE) with the surgical team.`; }
+            else if (sflr >= target - 5) { cls = 'warn'; verdict = `Slightly below the ≥${target}% threshold (within 5 points). Discuss FLR augmentation (e.g., PVE) with the surgical team.`; }
             else { cls = 'pos'; verdict = `Below the ≥${target}% threshold. FLR augmentation (e.g., PVE) is commonly considered; discuss with the surgical team.`; }
 
             const tlv = val('flr_tlv'), tum = val('flr_tum');
@@ -2486,7 +2633,7 @@
                     LSF: <strong>${lsf.toFixed(1)}%</strong> (${src}), lung mass ${mass} kg<br>
                     Single-treatment limit 30 Gy: <strong>${overSingle ? 'EXCEEDED' : 'within limit'}</strong><br>
                     Cumulative ${cum.toFixed(1)} Gy vs 50 Gy limit: <strong>${overCum ? 'EXCEEDED' : 'within limit'}</strong>
-                    ${maxAct !== null ? `<br>Maximum activity meeting both lung limits: <strong>${maxAct.toFixed(2)} GBq</strong>` : ''}
+                    ${maxAct !== null ? `<br>Maximum activity meeting both lung limits: <strong>${fl(maxAct, 2)} GBq</strong>` : ''}
                     <br>${resin}
                 </div>
             `);
@@ -2517,41 +2664,72 @@
         document.getElementById('asa_class').addEventListener('change', calcASA);
         document.getElementById('asa_e').addEventListener('change', calcASA);
 
-        // ---------- ANTICOAGULANT / ANTIPLATELET HOLDS ----------
-        const LOW_DEFAULT = 'Do not withhold for low-bleeding-risk procedures (SIR 2019). Individualize for patient and operator.';
+        // ---------- ANTICOAGULANT / ANTIPLATELET HOLDS (SIR 2019, Table 6) ----------
+        // Note: SIR specifies DOAC holds in DOSES (BID agents: 2 doses is about 1 day; once-daily agents: 1 dose is about 1 day).
+        const LOW_DEFAULT = 'Do not withhold (SIR 2019, low-bleeding-risk procedure).';
         const HOLD = [
-            { g: 'Anticoagulants', id: 'warfarin', name: 'Warfarin', sum: '5 days; INR ≤1.8',
-              high: '5 days. Confirm INR ≤1.8 (correct to 1.5–1.8) before the procedure. Consider bridging only in high thromboembolic risk.',
-              low: 'Do not withhold. Proceed if INR ≤3.0.' },
-            { g: 'Anticoagulants', id: 'ufh', name: 'Heparin (IV unfractionated)', sum: '4–6 hours', high: '4–6 hours before the procedure.' },
-            { g: 'Anticoagulants', id: 'lmwhp', name: 'LMWH, prophylactic dose', sum: '1 dose (about 12 h)', high: 'Hold 1 dose (last dose about 12 hours before).' },
-            { g: 'Anticoagulants', id: 'lmwht', name: 'LMWH, therapeutic dose', sum: '24 h (2 doses if BID)', high: 'Last dose at least 24 hours before (hold 2 doses if given twice daily). Consider checking anti-Xa if renal impairment.' },
-            { g: 'Anticoagulants', id: 'fonda', name: 'Fondaparinux', sum: 'CrCl ≥50: 2–3 d; &lt;50: 3–5 d', renal: true,
-              hr: { ge50: '2–3 days.', mid: '3–5 days.', lt30: '3–5 days or longer; fondaparinux is generally avoided at CrCl &lt;30. Consult pharmacy.' } },
-            { g: 'Anticoagulants', id: 'arga', name: 'Argatroban', sum: '4–6 hours', high: '4–6 hours before the procedure.' },
-            { g: 'Anticoagulants', id: 'apix', name: 'Apixaban', sum: '48 h (CrCl ≥25); longer if lower', renal: true,
-              hr: { ge50: '48 hours.', mid: '48 hours (the SIR table assumes CrCl ≥25; some protocols use 72 hours).', lt30: 'At least 72 hours. The SIR table covers CrCl ≥25 only; consider longer and consult pharmacy.' } },
-            { g: 'Anticoagulants', id: 'riva', name: 'Rivaroxaban', sum: '48 h (CrCl ≥30); ≥72 h if lower', renal: true,
-              hr: { ge50: '48 hours.', mid: '48 hours (CrCl ≥30).', lt30: 'At least 72 hours; consider longer and consult pharmacy.' } },
-            { g: 'Anticoagulants', id: 'edox', name: 'Edoxaban', sum: '48 h (CrCl ≥30); ≥72 h if lower', renal: true,
-              hr: { ge50: '48 hours.', mid: '48 hours (CrCl ≥30).', lt30: 'At least 72 hours; consider longer and consult pharmacy.' } },
-            { g: 'Anticoagulants', id: 'dabi', name: 'Dabigatran', sum: 'CrCl ≥50: 2 d; 30–49: 4 d; &lt;30: ≥5 d', renal: true,
-              hr: { ge50: '2 days (48 hours).', mid: '4 days.', lt30: '5 days or longer; dabigatran is generally avoided at CrCl &lt;30. Consult pharmacy.' },
-              warn: 'Dabigatran hold times differ between published summaries. Values here follow ACCP/CHEST 2022 and institutional adaptations of SIR 2019; confirm with SIR Table 6 and pharmacy.' },
-            { g: 'Antiplatelets', id: 'clop', name: 'Clopidogrel', sum: '5 days', high: '5 days before the procedure.' },
-            { g: 'Antiplatelets', id: 'tica', name: 'Ticagrelor', sum: '5 days', high: '5 days before the procedure.' },
-            { g: 'Antiplatelets', id: 'pras', name: 'Prasugrel', sum: '7 days', high: '7 days before the procedure.' },
-            { g: 'Antiplatelets', id: 'asp', name: 'Aspirin', sum: '3–5 days', high: '3–5 days before the procedure. Individualize: low-dose aspirin is often continued for many high-risk vascular procedures, especially with recent stents.' },
-            { g: 'Antiplatelets', id: 'nsaid', name: 'NSAIDs', sum: 'Per half-life', high: 'Hold according to the drug half-life (e.g., about 24 hours for short-acting agents, longer for long-acting agents).' }
+            { g: 'Anticoagulants', id: 'warfarin', name: 'Warfarin', sum: '5 days, until INR ≤1.8',
+              high: 'Withhold 5 days until INR ≤1.8. Consider bridging in high thrombosis risk patients; if STAT or emergent, use a reversal agent.',
+              low: 'Do not withhold. Target INR ≤3.0. Consider bridging in high thrombosis risk patients.',
+              rsHigh: 'Resume the day after the procedure. High-thrombosis-risk patients may benefit from LMWH bridging and multidisciplinary management, especially if a reversal agent and vitamin K were used.',
+              rsLow: 'Not applicable (same-day restart for bridged patients).' },
+            { g: 'Anticoagulants', id: 'ufh', name: 'Heparin, unfractionated', sum: 'IV: 4–6 hours',
+              high: 'Withhold IV heparin 4–6 hours before the procedure; check aPTT or anti-Xa. For BID or TID subcutaneous heparin, the procedure may be performed 6 hours after the last dose.',
+              rsHigh: '6–8 hours.' },
+            { g: 'Anticoagulants', id: 'lmwhp', name: 'LMWH, prophylactic dose', sum: '1 dose',
+              high: 'Enoxaparin: withhold 1 dose. Dalteparin: withhold 1 dose.', rsHigh: '12 hours.' },
+            { g: 'Anticoagulants', id: 'lmwht', name: 'LMWH, therapeutic dose', sum: '2 doses or 24 hours',
+              high: 'Enoxaparin: withhold 2 doses or 24 hours before the procedure; check anti-Xa level if renal function is impaired. Dalteparin: withhold 1 dose.', rsHigh: '12 hours.' },
+            { g: 'Anticoagulants', id: 'fonda', name: 'Fondaparinux', sum: '2–3 d (CrCl ≥50); 3–5 d (CrCl ≤50)', renal: true,
+              hr: { ge50: '2–3 days.', mid: '3–5 days.', lt30: '3–5 days (the SIR table lists CrCl ≤50). Fondaparinux labeling lists CrCl &lt;30 as a contraindication; consult pharmacy.' },
+              rsHigh: '24 hours.' },
+            { g: 'Anticoagulants', id: 'arga', name: 'Argatroban', sum: '2–4 hours',
+              high: 'Withhold 2–4 hours before the procedure; check aPTT.', rsHigh: '4–6 hours.' },
+            { g: 'Anticoagulants', id: 'biva', name: 'Bivalirudin', sum: '2–4 hours',
+              high: 'Withhold 2–4 hours before the procedure; check aPTT.', rsHigh: '4–6 hours.' },
+            { g: 'Anticoagulants', id: 'apix', name: 'Apixaban', sum: '4 doses (CrCl ≥50); 6 doses (CrCl 30 to &lt;50)', renal: true,
+              hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6 doses (about 3 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Consider a longer hold and checking an anti-Xa or apixaban level; consult pharmacy.' },
+              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or an apixaban level, especially with impaired renal function.',
+              rsHigh: '24 hours.' },
+            { g: 'Anticoagulants', id: 'dabi', name: 'Dabigatran', sum: '4 doses (CrCl ≥50); 6–8 doses (CrCl 30 to &lt;50)', renal: true,
+              hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6–8 doses (about 3–4 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Dabigatran is renally cleared; consult pharmacy and consider a thrombin time or dabigatran level.' },
+              extra: 'If STAT or emergent: reversal agent (idarucizumab). Consider checking thrombin time or a dabigatran level with impaired renal function.',
+              rsHigh: '24 hours.' },
+            { g: 'Anticoagulants', id: 'edox', name: 'Edoxaban', sum: '2 doses',
+              high: 'Withhold 2 doses (about 2 days). The SIR table gives no renal adjustment; consider checking anti-Xa activity, especially with impaired renal function. If STAT or emergent: reversal agent (andexanet alfa).',
+              rsHigh: '24 hours.' },
+            { g: 'Anticoagulants', id: 'riva', name: 'Rivaroxaban', sum: '2 doses (CrCl ≥30); 3 doses (CrCl 15 to &lt;30)', renal: true,
+              hr: { ge50: 'Withhold 2 doses (about 2 days).', mid: 'Withhold 2 doses (about 2 days).', lt30: 'Withhold 3 doses (about 3 days) for CrCl 15 to &lt;30. Not specified below 15; consult pharmacy.' },
+              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or a rivaroxaban level, especially with impaired renal function.',
+              rsHigh: '24 hours.' },
+            { g: 'Antiplatelets', id: 'clop', name: 'Clopidogrel', sum: '5 days',
+              high: 'Withhold 5 days before the procedure.',
+              rsHigh: 'Can restart 6 hours after the procedure with a 75 mg dose; 24 hours after if a loading dose (300–600 mg) is used.' },
+            { g: 'Antiplatelets', id: 'tica', name: 'Ticagrelor', sum: '5 days',
+              high: 'Withhold 5 days before the procedure.', rsHigh: 'Resume the day after the procedure.' },
+            { g: 'Antiplatelets', id: 'pras', name: 'Prasugrel', sum: '7 days',
+              high: 'Withhold 7 days before the procedure.', rsHigh: 'Resume the day after the procedure.' },
+            { g: 'Antiplatelets', id: 'asp', name: 'Aspirin (and aspirin/dipyridamole)', sum: '3–5 days',
+              high: 'Withhold 3–5 days before the procedure. Individualize for recent stents or high ischemic risk.', rsHigh: 'Resume the day after the procedure.' },
+            { g: 'Antiplatelets', id: 'nsaid', name: 'NSAIDs', sum: 'No SIR recommendation',
+              high: 'The SIR table gives no recommendation for high-risk procedures. Individualize by drug half-life (short-acting 2–6 h, intermediate 7–15 h, long-acting &gt;20 h).' },
+            { g: 'Antiplatelets', id: 'cilo', name: 'Cilostazol', sum: 'Do not withhold',
+              high: 'Do not withhold (SIR 2019).', low: 'Do not withhold (SIR 2019).' },
+            { g: 'Antiplatelets', id: 'abx', name: 'Abciximab', sum: '24 hours (low or high risk)',
+              high: 'Withhold 24 hours before the procedure. Usually given around PCI; defer non-urgent procedures if possible.',
+              low: 'Withhold 24 hours before the procedure (SIR lists the same for low-risk procedures). Usually given around PCI; defer non-urgent procedures if possible.' },
+            { g: 'Antiplatelets', id: 'gps', name: 'Eptifibatide / tirofiban', sum: '4–8 hours (low or high risk)',
+              high: 'Withhold 4–8 hours before the procedure. Usually given around PCI; defer non-urgent procedures if possible.',
+              low: 'Withhold 4–8 hours before the procedure (SIR lists the same for low-risk procedures). Usually given around PCI; defer non-urgent procedures if possible.' }
         ];
 
         function holdText(d, risk, renal) {
-            if (risk === 'low') return { t: d.low || LOW_DEFAULT, ok: true };
+            if (risk === 'low') return { t: d.low || LOW_DEFAULT, ok: true, rs: d.rsLow || 'Not applicable (not withheld).' };
             if (d.renal) {
-                if (!renal) return { t: 'Select creatinine clearance: the hold time for this agent depends on renal function.', ok: false };
-                return { t: d.hr[renal], ok: true };
+                if (!renal) return { t: 'Select creatinine clearance: the SIR hold time for this agent depends on renal function.', ok: false };
+                return { t: d.hr[renal], ok: true, rs: d.rsHigh };
             }
-            return { t: d.high, ok: true };
+            return { t: d.high, ok: true, rs: d.rsHigh };
         }
 
         function calcHold() {
@@ -2561,12 +2739,13 @@
             const d = HOLD.filter(x => x.id === id)[0];
             if (!d) { show('hold_res', '', 'Select a medication.'); return; }
             const r = holdText(d, risk, renal);
-            const cls = !r.ok ? 'warn' : (risk === 'low' ? 'neg' : 'pos');
+            const noRec = id === 'nsaid' && risk === 'high';
+            const cls = (!r.ok || noRec) ? 'warn' : (risk === 'low' ? 'neg' : 'pos');
             show('hold_res', cls, `
                 <div class="result-title">${d.name}: ${risk === 'low' ? 'low-risk procedure' : 'high-risk procedure'}</div>
                 <div class="result-detail">${r.t}</div>
-                ${d.warn && risk === 'high' ? `<div class="result-detail"><strong>Note:</strong> ${d.warn}</div>` : ''}
-                <div class="result-detail">Resume when hemostasis is secure, based on bleeding and thrombotic risk.</div>
+                ${d.extra && risk === 'high' && r.ok ? `<div class="result-detail">${d.extra}</div>` : ''}
+                ${r.rs ? `<div class="result-detail"><strong>Restart:</strong> ${r.rs}</div>` : ''}
             `);
         }
 
@@ -2633,7 +2812,7 @@
                     html += `<tr><td colspan="2" style="background:#f8fafc; font-weight:700; color:var(--primary-dark);">${r.g}</td></tr>`;
                     last = r.g;
                 }
-                html += `<tr><td>${r.n}${r.note ? `<br><span style="font-weight:400; color:var(--text-muted); font-size:0.75rem;">${r.note}</span>` : ''}</td><td style="white-space:nowrap;">${r.t}</td></tr>`;
+                html += `<tr><td>${r.n}${r.note ? `<br><span style="font-weight:400; color:var(--text-muted); font-size:0.75rem;">${r.note}</span>` : ''}</td><td>${r.t}</td></tr>`;
             });
             html += '</tbody>';
             document.getElementById('hu_table').innerHTML = html;
@@ -2677,15 +2856,15 @@
                 ]
             },
             bi: {
-                note: 'BI-RADS (5th edition) assessment categories. Percentages are the likelihood of malignancy.',
+                note: 'ACR BI-RADS v2025 (the 6th edition, which replaces the 2013 5th edition) assessment categories. Percentages are the likelihood of malignancy. The category 4 subdivision (4A/4B/4C) now also applies to MRI, and category 0 and 6 wording was revised, so check the v2025 manual for modality-specific details.',
                 items: [
-                    { badge: "BI-RADS 0", title: "Incomplete", desc: "Needs additional imaging evaluation and/or prior exams for comparison." },
+                    { badge: "BI-RADS 0", title: "Incomplete", desc: "Additional imaging evaluation and/or comparison with prior examinations is needed before a final assessment (v2025 states each requirement separately)." },
                     { badge: "BI-RADS 1", title: "Negative", desc: "No mass, architectural distortion or suspicious calcifications. Essentially 0% likelihood of malignancy." },
                     { badge: "BI-RADS 2", title: "Benign Finding", desc: "Definitely benign (e.g., simple cyst, stable fibroadenoma). Essentially 0% likelihood of malignancy." },
                     { badge: "BI-RADS 3", title: "Probably Benign", desc: "Short-interval (typically 6-month) follow-up suggested. Likelihood of malignancy ≤2%." },
                     { badge: "BI-RADS 4", title: "Suspicious", desc: "Tissue diagnosis (biopsy) should be considered. Overall >2% to <95%. 4A: >2-10%, 4B: >10-50%, 4C: >50-<95%." },
                     { badge: "BI-RADS 5", title: "Highly Suggestive of Malignancy", desc: "Likelihood of malignancy ≥95%. Appropriate action (biopsy) should be taken." },
-                    { badge: "BI-RADS 6", title: "Known Biopsy-Proven Malignancy", desc: "Known cancer, imaging performed for staging or response to treatment." }
+                    { badge: "BI-RADS 6", title: "Known Biopsy-Proven Malignancy", desc: "Known biopsy-proven cancer, with imaging performed for extent of disease, response to treatment or planning. Management is by the treating team (v2025 revised the category 6 management wording)." }
                 ]
             }
         };
@@ -2698,7 +2877,7 @@
                     { badge: "Lung-RADS 1", title: "Negative", desc: "No lung nodules, or nodules with definitely benign features (e.g., complete, central, popcorn or concentric calcification; fat-containing). Continue annual screening LDCT in 12 months." },
                     { badge: "Lung-RADS 2", title: "Benign Appearance or Behavior", desc: "Solid &lt;6 mm; part-solid &lt;6 mm total; ground-glass &lt;30 mm. Continue annual screening LDCT in 12 months." },
                     { badge: "Lung-RADS 3", title: "Probably Benign", desc: "Solid 6 to &lt;8 mm; part-solid ≥6 mm total with solid component &lt;6 mm; ground-glass ≥30 mm. Short-term follow-up LDCT in 6 months." },
-                    { badge: "Lung-RADS 4A", title: "Suspicious", desc: "Solid 8 to &lt;15 mm; part-solid with solid component 6 to &lt;8 mm; solid endobronchial nodule at segmental or more proximal level. LDCT in 3 months; PET/CT may be considered if solid component ≥8 mm." },
+                    { badge: "Lung-RADS 4A", title: "Suspicious", desc: "Solid 8 to &lt;15 mm; part-solid with solid component 6 to &lt;8 mm; solid airway (endobronchial) nodule at segmental or more proximal level. LDCT in 3 months; PET/CT may be considered if solid component ≥8 mm. Stepped management (v2022): if stable or smaller at 3 months, reclassify as 3 (next LDCT 6 months from that exam); a persistent airway nodule at 3 months is upgraded to 4B." },
                     { badge: "Lung-RADS 4B", title: "Very Suspicious", desc: "Solid ≥15 mm; part-solid with solid component ≥8 mm; slow-growing solid or part-solid nodule. Diagnostic chest CT (± contrast), PET/CT and/or tissue sampling, based on probability of malignancy and comorbidities." },
                     { badge: "Lung-RADS 4X", title: "Very Suspicious with Added Features", desc: "Category 3 or 4 nodule with additional features that increase suspicion of lung cancer (e.g., spiculation, lymphadenopathy, frank metastatic disease, ground-glass nodule that doubles in one year). Manage as 4B." },
                     { badge: "Modifier S", title: "Significant Other Finding", desc: "Clinically significant or potentially significant finding not related to lung cancer (e.g., emphysema, coronary artery calcification, aortic aneurysm). Manage according to clinical context." }
@@ -2753,18 +2932,17 @@
                 ]
             },
             crads: {
-                note: 'C-RADS (ACR; v2023 update) for CT colonography. Colonic (C) and extracolonic (E) findings are scored separately. Polyps smaller than 6 mm are not reported.',
+                note: 'C-RADS v2023 (ACR, released January 2024) for CT colonography. Colonic (C) and extracolonic (E) findings are scored separately. The extracolonic scheme was simplified in v2023 (E1 and E2 merged; E0 removed).',
                 items: [
-                    { badge: "C0", title: "Inadequate Study / Awaiting Priors", desc: "Inadequate prep (cannot exclude lesions ≥10 mm) or insufflation, or awaiting prior studies. Repeat CTC or consider another screening test." },
-                    { badge: "C1", title: "Normal Colon or Benign Lesion", desc: "No polyp ≥6 mm. Continue routine screening (every 5–10 years)." },
-                    { badge: "C2", title: "Intermediate Polyp / Indeterminate", desc: "Polyps 6–9 mm, fewer than 3. Polypectomy (colonoscopy) or surveillance CTC in 3 years." },
-                    { badge: "C3", title: "Possibly Advanced Adenoma", desc: "Polyp ≥10 mm, or ≥3 polyps each 6–9 mm. Colonoscopy with polypectomy." },
-                    { badge: "C4", title: "Colonic Mass, Likely Malignant", desc: "Lesion compromising the lumen or with extracolonic invasion. Surgical consultation." },
-                    { badge: "E0", title: "Limited Exam", desc: "Evaluation of extracolonic soft tissues severely limited (e.g., artifact)." },
-                    { badge: "E1", title: "Normal or Anatomic Variant", desc: "No extracolonic abnormality; no workup." },
-                    { badge: "E2", title: "Clinically Unimportant Finding", desc: "E.g., simple renal cyst, cholelithiasis. No workup." },
-                    { badge: "E3", title: "Likely Unimportant, Incompletely Characterized", desc: "E.g., minimally complex renal cyst. Workup at the discretion of the clinician." },
-                    { badge: "E4", title: "Potentially Important Finding", desc: "E.g., suspicious mass, aortic aneurysm, adenopathy. Communicate to the referring clinician for further workup." }
+                    { badge: "C0", title: "Inadequate Study / Awaiting Priors", desc: "Inadequate preparation (cannot exclude lesions ≥10 mm because of fluid or stool), inadequate insufflation (a colonic segment collapsed on both views), or awaiting prior comparisons. Repeat CTC or consider an alternative screening test." },
+                    { badge: "C1", title: "Normal Colon or Benign Lesion", desc: "No polyp ≥6 mm; benign findings such as lipoma or inverted diverticulum. Continue routine screening (about every 5–10 years)." },
+                    { badge: "C2a", title: "Intermediate Polyp / Indeterminate Finding", desc: "Intermediate polyp, 6–9 mm, fewer than 3. Repeat CTC in 3 years or refer for colonoscopy (polypectomy), depending on patient factors." },
+                    { badge: "C2b", title: "Likely Benign Diverticular Finding", desc: "Mass-like diverticular change (e.g., myochosis, muscular hypertrophy or stricture) that is likely benign. Repeat exam in about 5 years; if uncertain, repeat CTC within about 3 years." },
+                    { badge: "C3", title: "Polyp, Possibly Advanced Adenoma", desc: "Polyp ≥10 mm, or ≥3 polyps each 6–9 mm, or a subepithelial lesion ≥10 mm, or a previously C2a polyp that has enlarged. Colonoscopy referral." },
+                    { badge: "C4", title: "Colonic Mass, Likely Malignant", desc: "Lesion compromising the lumen or with extracolonic invasion. Colonoscopy and surgical and/or oncologic consultation; communicate to the referring clinician." },
+                    { badge: "E1/E2", title: "No Clinically Important Extracolonic Finding", desc: "No extracolonic finding, or a known stable or clearly benign finding needing no workup (e.g., simple or Bosniak I–II renal cysts, liver cysts, adrenal adenoma by non-contrast criteria, uncomplicated stones)." },
+                    { badge: "E3", title: "Likely Unimportant; Further Workup May Be Warranted", desc: "E.g., indeterminate cystic adnexal lesion in a postmenopausal woman without suspicious features, indeterminate renal cyst not clearly benign (Bosniak III), increased liver attenuation (≥75 HU) suggesting iron overload, porcelain gallbladder, indeterminate solitary bone lesion." },
+                    { badge: "E4", title: "Likely Clinically Important; Workup Needed", desc: "E.g., obvious or highly suspicious malignancy (Bosniak IV renal lesion, spiculated lung mass, peritoneal nodularity), bulky suspicious adenopathy, abdominal aortic aneurysm >3 cm, obstructing urolithiasis, consolidation suggesting pneumonia. Communicate to the referring clinician." }
                 ]
             },
             vi: {
@@ -2820,6 +2998,7 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             sel.value = id;
+            updateToolUI(id);
             try { localStorage.setItem('ir_last_tool', id); } catch (e) { /* storage unavailable */ }
             try { history.replaceState(null, '', '#' + id); } catch (e) { /* ignore */ }
             window.scrollTo(0, 0);
@@ -2829,6 +3008,84 @@
             showTool(this.value);
         });
 
+        // ---------- TOOL PICKER SHEET (styled group headings on every platform) ----------
+        function updateToolUI(id) {
+            const sel = document.getElementById('tool_select');
+            const opt = Array.from(sel.options).filter(o => o.value === id)[0];
+            const t = document.getElementById('tool_btn_text');
+            if (opt && t) t.textContent = opt.textContent;
+            document.querySelectorAll('.sheet-item').forEach(b => {
+                if (b.dataset.id === id) b.setAttribute('aria-current', 'true');
+                else b.removeAttribute('aria-current');
+            });
+        }
+
+        function openSheet() {
+            const sheet = document.getElementById('tool_sheet');
+            sheet.classList.add('open');
+            sheet.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('sheet-open');
+            document.getElementById('tool_btn').setAttribute('aria-expanded', 'true');
+            const list = document.getElementById('tool_list');
+            const cur = list.querySelector('.sheet-item[aria-current="true"]');
+            if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2);
+            document.getElementById('tool_close').focus();
+        }
+
+        function closeSheet() {
+            const sheet = document.getElementById('tool_sheet');
+            sheet.classList.remove('open');
+            sheet.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('sheet-open');
+            const btn = document.getElementById('tool_btn');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+
+        (function initPicker() {
+            const sel = document.getElementById('tool_select');
+            const list = document.getElementById('tool_list');
+            Array.from(sel.children).forEach(g => {
+                if (g.tagName !== 'OPTGROUP') return;
+                const grp = document.createElement('div');
+                grp.setAttribute('role', 'group');
+                grp.setAttribute('aria-label', g.label);
+                const title = document.createElement('div');
+                title.className = 'sheet-group-title';
+                title.textContent = g.label;
+                grp.appendChild(title);
+                Array.from(g.children).forEach(o => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'sheet-item';
+                    b.dataset.id = o.value;
+                    b.textContent = o.textContent;
+                    grp.appendChild(b);
+                });
+                list.appendChild(grp);
+            });
+            list.addEventListener('click', function (e) {
+                const b = e.target.closest ? e.target.closest('.sheet-item') : null;
+                if (!b) return;
+                closeSheet();
+                showTool(b.dataset.id);
+                document.getElementById('tool_btn').focus();
+            });
+            document.getElementById('tool_btn').addEventListener('click', openSheet);
+            document.getElementById('tool_close').addEventListener('click', function () {
+                closeSheet();
+                document.getElementById('tool_btn').focus();
+            });
+            document.getElementById('tool_sheet').addEventListener('click', function (e) {
+                if (e.target === this) { closeSheet(); document.getElementById('tool_btn').focus(); }
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && document.getElementById('tool_sheet').classList.contains('open')) {
+                    closeSheet();
+                    document.getElementById('tool_btn').focus();
+                }
+            });
+        })();
+
         (function initTool() {
             let start = (location.hash || '').replace('#', '');
             if (!start) {
@@ -2837,15 +3094,30 @@
             showTool(start || 'pmn');
         })();
 
-        // ---------- FIRST-LAUNCH DISCLAIMER ----------
+        // ---------- DISCLAIMER ----------
+        // Phones/tablets: shown on first launch. Computers: shown every time the app opens.
+        function isDesktop() {
+            try {
+                const fine = !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+                const ua = navigator.userAgent || '';
+                const mobileUA = /Android|iPhone|iPad|iPod|Mobile|Silk|Kindle/i.test(ua) ||
+                    !!(navigator.userAgentData && navigator.userAgentData.mobile === true);
+                const iPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+                return fine && !mobileUA && !iPadOS;
+            } catch (e) { return false; }
+        }
+
         (function initDisclaimer() {
-            const KEY = 'ir_disclaimer_v1';
+            const KEY = 'ir_disclaimer_v2';
             const modal = document.getElementById('disclaimer_modal');
+            const desktop = isDesktop();
             let accepted = false;
             try { accepted = localStorage.getItem(KEY) === 'accepted'; } catch (e) { accepted = false; }
-            if (!accepted) {
+            if (!accepted || desktop) {
                 modal.style.display = 'flex';
                 document.body.classList.add('modal-open');
+                if (desktop) document.getElementById('disclaimer_desktop_note').style.display = 'block';
+                document.getElementById('disclaimer_accept').focus();
             }
             document.getElementById('disclaimer_accept').addEventListener('click', function () {
                 try { localStorage.setItem(KEY, 'accepted'); } catch (e) { /* storage unavailable */ }
