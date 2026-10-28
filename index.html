@@ -1,0 +1,2867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="IR Suite">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="application-name" content="IR Suite">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <title>IR Clinical Calculator Suite</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+            touch-action: manipulation;
+        }
+
+        header {
+            background: var(--secondary);
+            color: white;
+            padding: calc(20px + env(safe-area-inset-top, 0px)) calc(15px + env(safe-area-inset-right, 0px)) 20px calc(15px + env(safe-area-inset-left, 0px));
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+        header p  { font-size: 0.85rem; color: #94a3b8; }
+
+        /* App Container */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 calc(15px + env(safe-area-inset-right, 0px)) 0 calc(15px + env(safe-area-inset-left, 0px));
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        @media (min-width: 600px) {
+            .form-grid.two-col { grid-template-columns: 1fr 1fr; }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        /* 16px minimum font-size prevents iOS Safari zooming in on focus */
+        input.num, select {
+            width: 100%;
+            min-height: 46px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text);
+            outline: none;
+            background-color: #fff;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        select {
+            padding-right: 36px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            text-overflow: ellipsis;
+        }
+
+        input.num:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2,132,199,0.15); }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 12px;
+            min-height: 48px;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-container input { width: 22px; height: 22px; flex-shrink: 0; }
+
+        .checkbox-container label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 44px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input { width: 22px; height: 22px; flex-shrink: 0; }
+
+        .field-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .bloody-section {
+            display: none;
+            background: var(--warning-bg);
+            border: 1px solid #fde68a;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Results Box */
+        .result-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            overflow-wrap: anywhere;
+        }
+
+        .result-box.pos  { background: var(--danger-bg);  border-color: #fca5a5; color: #7f1d1d; }
+        .result-box.neg  { background: var(--success-bg); border-color: #bbf7d0; color: #14532d; }
+        .result-box.warn { background: var(--warning-bg); border-color: #fde68a; color: #78350f; }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .result-detail { font-size: 0.85rem; margin-top: 6px; }
+
+        .footnote {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        /* RADS Section */
+        .rads-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .rads-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fafafa;
+        }
+
+        .rads-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .rads-badge {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .rads-title { font-weight: 700; font-size: 0.95rem; }
+        .rads-desc  { font-size: 0.85rem; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 30px;
+            padding: 0 15px;
+        }
+
+        /* Tables (reference / allergy) */
+        .tbl-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 10px 0 4px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        table.ref {
+            width: 100%;
+            min-width: 520px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            background: #fff;
+        }
+        table.ref th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 8px 10px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        table.ref td {
+            padding: 8px 10px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.4;
+        }
+        table.ref tr:last-child td { border-bottom: none; }
+        table.ref td:first-child { font-weight: 600; min-width: 130px; }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 16px;
+        }
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+            background: #e0f2fe;
+            color: var(--primary-dark);
+            margin: 1px 2px 1px 0;
+        }
+        .tag.ester { background: #fef3c7; color: #92400e; }
+        ul.tight { margin: 6px 0 0 18px; font-size: 0.82rem; line-height: 1.45; }
+        ul.tight li { margin-bottom: 3px; }
+        .card h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px; }
+
+        /* Tool selector (replaces tab strip) */
+        .tool-nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 10px calc(15px + env(safe-area-inset-right, 0px)) 10px calc(15px + env(safe-area-inset-left, 0px));
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .tool-nav-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tool-nav select {
+            display: block;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            color: var(--primary-dark);
+        }
+
+        /* Disclaimer modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(15,23,42,0.88);
+            align-items: center;
+            justify-content: center;
+            padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 14px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px;
+        }
+        .modal-box h2 { color: var(--danger); font-size: 1.15rem; margin-bottom: 10px; }
+        .modal-box ul { margin: 8px 0 14px 18px; font-size: 0.85rem; line-height: 1.45; }
+        .modal-box li { margin-bottom: 6px; }
+        .btn-primary {
+            display: block;
+            width: 100%;
+            min-height: 48px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .btn-primary:active { background: var(--primary-dark); }
+        body.modal-open { overflow: hidden; }
+    </style>
+</head>
+<body>
+
+    <!-- First-launch disclaimer -->
+    <div id="disclaimer_modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="disclaimer_title">
+        <div class="modal-box">
+            <h2 id="disclaimer_title">Important: please read</h2>
+            <ul>
+                <li>This app is an <strong>educational and professional reference</strong>. It is not a medical device, is not regulatory-cleared, and does not give medical advice.</li>
+                <li>Calculators and tables summarize published criteria that change over time and may contain errors. <strong>Verify against original sources, current guidelines and your institutional protocols</strong>, and use your clinical judgment.</li>
+                <li>You are responsible for decisions made using this tool. It is provided "as is" without warranty, and the authors accept no liability for its use.</li>
+                <li>Do not enter patient names or identifiers. Nothing you type leaves your device.</li>
+            </ul>
+            <button type="button" id="disclaimer_accept" class="btn-primary">I understand and agree</button>
+        </div>
+    </div>
+
+
+    <header>
+        <h1>IR Decision Support Suite</h1>
+        <p>Interventional Radiology Clinical Calculators &amp; RADS Tools</p>
+    </header>
+
+    <div class="tool-nav">
+        <label for="tool_select" class="tool-nav-label">Select a tool</label>
+        <select id="tool_select" aria-label="Select a tool">
+            <optgroup label="Ascites &amp; Pleural">
+                <option value="pmn">Ascitic PMN / SBP</option>
+                <option value="saag">SAAG</option>
+                <option value="lights">Light's Criteria (pleural fluid)</option>
+            </optgroup>
+            <optgroup label="Hemostasis &amp; Anticoagulation">
+                <option value="bleed">Bleeding Risk Labs (SIR 2019)</option>
+                <option value="hold">Anticoagulant / Antiplatelet Holds</option>
+            </optgroup>
+            <optgroup label="Renal, Contrast &amp; Dosing">
+                <option value="crcl">CrCl, eGFR &amp; Contrast Dose</option>
+                <option value="bsa">BSA, BMI &amp; Ideal Body Weight</option>
+            </optgroup>
+            <optgroup label="Liver &amp; Oncology">
+                <option value="liver">MELD, Child-Pugh &amp; BCLC</option>
+                <option value="flr">FLR &amp; Portal Vein Embolization</option>
+                <option value="y90">Y-90 Lung Shunt &amp; Lung Dose</option>
+            </optgroup>
+            <optgroup label="Vascular / VTE">
+                <option value="vte">Wells &amp; Villalta</option>
+            </optgroup>
+            <optgroup label="Sedation, Anesthesia &amp; Allergy">
+                <option value="la">Local Anesthetic Max Dose</option>
+                <option value="asa">ASA Physical Status</option>
+                <option value="allergy">Allergy Alternatives &amp; Premedication</option>
+            </optgroup>
+            <optgroup label="Imaging References">
+                <option value="tirads">TI-RADS Calculator</option>
+                <option value="rads_ref">RADS &amp; Staging Guides</option>
+                <option value="hu">Hounsfield Unit Table</option>
+            </optgroup>
+            <optgroup label="About">
+                <option value="refs">References</option>
+                <option value="about">Disclaimer &amp; About</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. PMN / SBP CALCULATOR -->
+        <div id="pmn" class="tab-content active">
+            <div class="card">
+                <h2>Ascitic PMN &amp; SBP Calculator</h2>
+                <div class="card-subtitle">Diagnose Spontaneous Bacterial Peritonitis (SBP) with Runyon Bloody Tap Correction</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="pmn_wbc">Total Ascitic WBC (cells/mm³):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pmn_wbc" placeholder="e.g. 500">
+                    </div>
+                    <div class="form-group">
+                        <label for="pmn_percent">Neutrophils / PMN (%):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pmn_percent" placeholder="e.g. 60">
+                    </div>
+                </div>
+
+                <label class="checkbox-container" for="pmn_bloody">
+                    <input type="checkbox" id="pmn_bloody">
+                    <span style="font-weight:600; font-size:0.9rem;">Hemorrhagic / Bloody Tap Correction Required?</span>
+                </label>
+
+                <div id="bloody_inputs" class="bloody-section">
+                    <div class="form-group">
+                        <label for="pmn_rbc">Ascitic RBC Count (cells/mm³):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pmn_rbc" placeholder="e.g. 50000">
+                    </div>
+                    <p style="font-size:0.75rem; color:#92400e; margin-top:6px;">
+                        <em>Runyon Formula: Subtracts 1 PMN for every 250 RBCs in fluid.</em>
+                    </p>
+                </div>
+
+                <div id="pmn_res" class="result-box" aria-live="polite">
+                    Enter WBC and Neutrophil % to compute PMN count.
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. SAAG CALCULATOR -->
+        <div id="saag" class="tab-content">
+            <div class="card">
+                <h2>Serum-Ascites Albumin Gradient (SAAG)</h2>
+                <div class="card-subtitle">Differentiate portal hypertension from non-portal hypertensive causes</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="saag_serum">Serum Albumin (g/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="saag_serum" placeholder="e.g. 3.2">
+                    </div>
+                    <div class="form-group">
+                        <label for="saag_ascites">Ascitic Albumin (g/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="saag_ascites" placeholder="e.g. 1.8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="saag_prot">Ascitic Total Protein (g/dL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="saag_prot" placeholder="e.g. 1.5">
+                    <div class="field-hint">Used only to refine the cause when SAAG is high.</div>
+                </div>
+
+                <div id="saag_res" class="result-box" aria-live="polite">
+                    Enter Serum and Ascitic Albumin to calculate SAAG.
+                </div>
+                <div class="footnote">Serum and ascitic albumin should be drawn at the same time.</div>
+            </div>
+        </div>
+
+        <!-- 3. LIGHT'S CRITERIA -->
+        <div id="lights" class="tab-content">
+            <div class="card">
+                <h2>Light's Criteria (Pleural Effusion)</h2>
+                <div class="card-subtitle">Differentiate exudative vs transudative pleural effusions</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="lp_p">Pleural Protein (g/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="lp_p">
+                    </div>
+                    <div class="form-group">
+                        <label for="ls_p">Serum Protein (g/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="ls_p">
+                    </div>
+                    <div class="form-group">
+                        <label for="lp_ldh">Pleural LDH (U/L):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="lp_ldh">
+                    </div>
+                    <div class="form-group">
+                        <label for="ls_ldh">Serum LDH (U/L):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="ls_ldh">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="ls_ldh_uln">Upper Limit Normal Serum LDH (U/L):</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="ls_ldh_uln" value="200">
+                    <div class="field-hint">Default 200 U/L. Reference ranges vary by lab, so enter your lab's ULN.</div>
+                </div>
+
+                <div id="lights_res" class="result-box" aria-live="polite">
+                    Enter protein and LDH parameters to evaluate criteria.
+                </div>
+                <div class="footnote">
+                    Any ONE criterion met = exudate. Light's criteria can misclassify ~25% of transudates as exudates (especially after diuresis). If clinically a transudate, a serum–pleural albumin gradient &gt;1.2 g/dL favors transudate.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. CREATININE CLEARANCE -->
+        <div id="crcl" class="tab-content">
+            <div class="card">
+                <h2>Creatinine Clearance (Cockcroft-Gault)</h2>
+                <div class="card-subtitle">Estimate renal function for medication and contrast dosing</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="cg_age">Age (years):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_age" placeholder="e.g. 65">
+                    </div>
+                    <div class="form-group">
+                        <label for="cg_wt">Weight (kg):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_wt" placeholder="e.g. 70">
+                    </div>
+                    <div class="form-group">
+                        <label for="cg_scr">Serum Creatinine (mg/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_scr" placeholder="e.g. 1.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="cg_sex">Sex:</label>
+                        <select id="cg_sex">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="crcl_res" class="result-box" aria-live="polite">
+                    Enter patient parameters to calculate CrCl.
+                </div>
+                <div class="footnote">
+                    Cockcroft-Gault is conventionally calculated with actual body weight; in obese patients consider ideal or adjusted body weight. Contrast-risk thresholds (ACR–NKF consensus) are based on eGFR (&lt;30 mL/min/1.73 m²), which can differ from CrCl.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>eGFR (CKD-EPI 2021, race-free)</h2>
+                <div class="card-subtitle">Uses the age, sex and serum creatinine entered above</div>
+                <div id="egfr_res" class="result-box" aria-live="polite">
+                    Enter age, sex and serum creatinine above to calculate.
+                </div>
+                <div class="footnote">
+                    CKD-EPI 2021 creatinine equation (Inker et al., NEJM 2021), for adults ≥18 years; result is indexed to 1.73 m² body surface area. Contrast guidance below follows the ACR–NKF consensus for IV iodinated contrast; intra-arterial administration with first-pass renal exposure is generally treated similarly. Confirm with your institutional policy.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Maximum Allowable Contrast Dose (MACD)</h2>
+                <div class="card-subtitle">Uses the weight and serum creatinine entered above (Cigarroa formula)</div>
+                <div id="macd_res" class="result-box" aria-live="polite">
+                    Enter weight and serum creatinine above to calculate.
+                </div>
+                <div class="footnote">
+                    MACD = (5 mL × weight in kg) ÷ serum creatinine (mg/dL), capped at 300 mL. Derived from cardiac catheterization data (Cigarroa 1989) and used as a practical guide to limit contrast-associated AKI risk. It does not replace clinical judgment, hydration strategy or eGFR-based risk assessment. Volume refers to iodinated contrast (not diluted).
+                </div>
+            </div>
+        </div>
+
+        <!-- 4b. PERIPROCEDURAL BLEEDING RISK (SIR 2019) -->
+        <div id="bleed" class="tab-content">
+            <div class="card">
+                <h2>Periprocedural Bleeding Risk Labs</h2>
+                <div class="card-subtitle">SIR 2019 consensus lab thresholds for percutaneous image-guided procedures</div>
+
+                <div class="form-group">
+                    <label for="bleed_risk">Procedure bleeding risk:</label>
+                    <select id="bleed_risk">
+                        <option value="low">Low risk (e.g., paracentesis, thoracentesis, lines, catheter exchange)</option>
+                        <option value="high">High risk (e.g., solid organ biopsy, new biliary/nephrostomy/G-tube, TIPS, ablation)</option>
+                    </select>
+                </div>
+
+                <label class="checkbox-container" for="bleed_cld">
+                    <input type="checkbox" id="bleed_cld">
+                    <span style="font-weight:600; font-size:0.9rem;">Chronic liver disease / cirrhosis</span>
+                </label>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="bleed_inr">INR:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bleed_inr" placeholder="e.g. 1.6">
+                    </div>
+                    <div class="form-group">
+                        <label for="bleed_plt">Platelets (×10³/µL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bleed_plt" placeholder="e.g. 45">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bleed_fib">Fibrinogen (mg/dL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bleed_fib" placeholder="e.g. 150">
+                </div>
+
+                <div id="bleed_res" class="result-box" aria-live="polite">
+                    Enter INR and/or platelet count to compare against the SIR thresholds.
+                </div>
+
+                <div class="section-label">Examples: low bleeding risk</div>
+                <ul class="tight">
+                    <li>Paracentesis, thoracentesis</li>
+                    <li>Superficial biopsy / FNA / abscess drainage (thyroid, lymph node, breast)</li>
+                    <li>Catheter exchanges (gastrostomy, biliary, nephrostomy, abscess)</li>
+                    <li>Transjugular liver biopsy</li>
+                    <li>Central venous access: tunneled/non-tunneled lines, ports, PICC</li>
+                    <li>Dialysis access interventions, IVC filter, venography</li>
+                    <li>Joint injections, peripheral nerve blocks, appendicular bone biopsy</li>
+                </ul>
+
+                <div class="section-label">Examples: high bleeding risk</div>
+                <ul class="tight">
+                    <li>Solid organ biopsy (liver, kidney, spleen, lung)</li>
+                    <li>Deep non-organ biopsy (retroperitoneal, intra-abdominal, pelvic)</li>
+                    <li>New biliary interventions (PTBD, cholecystostomy)</li>
+                    <li>New nephrostomy / urinary tract interventions</li>
+                    <li>New gastrostomy / gastrojejunostomy placement</li>
+                    <li>TIPS</li>
+                    <li>Ablation of solid organ, bone or soft tissue</li>
+                    <li>Spine / neuraxial procedures (e.g., lumbar puncture), axial skeleton biopsy</li>
+                    <li>Large-bore arterial interventions</li>
+                </ul>
+
+                <div class="footnote">
+                    Source: SIR consensus guidelines, Patel et al., JVIR 2019;30:1168–1184. Low risk: INR corrected to ≤3.0 (range 2.0–3.0), platelets ≥20 ×10³/µL. High risk: INR corrected to ≤1.8 (range 1.5–1.8), platelets ≥50 ×10³/µL. Chronic liver disease: no INR threshold for low-risk procedures, INR &lt;2.5 for high-risk procedures, platelets as above, fibrinogen &gt;100 mg/dL (cryoprecipitate if lower), because INR and platelets poorly reflect bleeding risk in rebalanced hemostasis. Warfarin: low risk target INR ≤3.0; high risk withhold ~5 days to INR ≤1.8. Routine lab screening is not needed for low-risk procedures unless the patient is on warfarin/heparin or has bleeding risk factors. Antiplatelet and other anticoagulant hold times: see the SIR guideline tables and your institutional protocol. Stricter limits (e.g., INR &lt;1.5) are often used for neuro/neuraxial procedures.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4b2. WELLS / VILLALTA -->
+        <div id="vte" class="tab-content">
+            <div class="card">
+                <h2>Wells Criteria: DVT</h2>
+                <div class="card-subtitle">Pretest probability of lower-extremity deep vein thrombosis</div>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Active cancer (treatment within 6 months or palliative) (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Paralysis, paresis or recent plaster immobilization of the leg (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Bedridden ≥3 days, or major surgery within 12 weeks under general/regional anesthesia (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Localized tenderness along the deep venous system (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Entire leg swollen (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Calf swelling ≥3 cm larger than the other side, measured 10 cm below the tibial tuberosity (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Pitting edema confined to the symptomatic leg (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Collateral superficial veins, non-varicose (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="1"> Previously documented DVT (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wd" data-pts="-2"> Alternative diagnosis at least as likely as DVT (−2)</label>
+                </div>
+                <div id="wd_res" class="result-box" aria-live="polite">
+                    Tick the criteria that apply. If both legs are symptomatic, score the more symptomatic leg.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Wells Criteria: Pulmonary Embolism</h2>
+                <div class="card-subtitle">Pretest probability of pulmonary embolism</div>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="3"> Clinical signs/symptoms of DVT: leg swelling and pain on palpation of deep veins (+3)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="3"> PE is the #1 diagnosis or an alternative diagnosis is less likely than PE (+3)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="1.5"> Heart rate &gt;100 bpm (+1.5)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="1.5"> Immobilization ≥3 days or surgery in the previous 4 weeks (+1.5)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="1.5"> Previous PE or DVT (+1.5)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="1"> Hemoptysis (+1)</label>
+                    <label class="checkbox-item"><input type="checkbox" class="wp" data-pts="1"> Malignancy: on treatment, treated within 6 months, or palliative (+1)</label>
+                </div>
+                <div id="wp_res" class="result-box" aria-live="polite">
+                    Tick the criteria that apply.
+                </div>
+                <div class="footnote">
+                    Wells scores are meant to guide testing in patients with suspected DVT/PE and should be combined with clinical judgment. Pregnancy and other special populations have separate diagnostic pathways. Age-adjusted D-dimer cutoff (patients &gt;50 years): age × 10 µg/L FEU.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Villalta Score (Post-Thrombotic Syndrome)</h2>
+                <div class="card-subtitle">Rate each item 0 (none) to 3 (severe)</div>
+
+                <div class="section-label" style="margin-top:0;">Symptoms (patient-rated)</div>
+                <div class="form-grid two-col" style="margin-top:8px;">
+                    <div class="form-group"><label for="vl_s1">Heaviness</label><select id="vl_s1" class="vl vls"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_s2">Pain</label><select id="vl_s2" class="vl vls"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_s3">Cramps</label><select id="vl_s3" class="vl vls"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_s4">Pruritus</label><select id="vl_s4" class="vl vls"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_s5">Paresthesia</label><select id="vl_s5" class="vl vls"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                </div>
+
+                <div class="section-label">Clinical signs (examiner-rated)</div>
+                <div class="form-grid two-col" style="margin-top:8px;">
+                    <div class="form-group"><label for="vl_g1">Pretibial edema</label><select id="vl_g1" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_g2">Skin induration</label><select id="vl_g2" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_g3">Hyperpigmentation</label><select id="vl_g3" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_g4">Venous ectasia</label><select id="vl_g4" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_g5">Redness</label><select id="vl_g5" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                    <div class="form-group"><label for="vl_g6">Pain on calf compression</label><select id="vl_g6" class="vl vlg"><option value="0">0 None</option><option value="1">1 Mild</option><option value="2">2 Moderate</option><option value="3">3 Severe</option></select></div>
+                </div>
+
+                <label class="checkbox-container" for="vl_ulcer">
+                    <input type="checkbox" id="vl_ulcer">
+                    <span style="font-weight:600; font-size:0.9rem;">Venous ulcer present</span>
+                </label>
+
+                <div id="vl_res" class="result-box" aria-live="polite">
+                    Set the items above to calculate the Villalta score.
+                </div>
+                <div class="footnote">
+                    Total 0–4: no PTS; 5–9: mild; 10–14: moderate; ≥15 or a venous ulcer: severe. PTS is diagnosed with a score ≥5 or a venous ulcer. The score is intended for use after the acute DVT phase (generally ≥3–6 months after the event) and can be repeated to track progression or response to treatment.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4c. LIVER SCORES -->
+        <div id="liver" class="tab-content">
+            <div class="card">
+                <h2>MELD 3.0 &amp; MELD-Na</h2>
+                <div class="card-subtitle">Pre-TIPS and liver disease severity assessment</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="meld_bili">Total Bilirubin (mg/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_bili" placeholder="e.g. 2.4">
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_inr">INR:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_inr" placeholder="e.g. 1.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_cr">Creatinine (mg/dL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_cr" placeholder="e.g. 1.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_na">Sodium (mmol/L):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_na" placeholder="e.g. 133">
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_alb">Albumin (g/dL) <span style="font-weight:400; color:var(--text-muted);">[for MELD 3.0]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_alb" placeholder="e.g. 3.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_sex">Sex:</label>
+                        <select id="meld_sex">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="meld_age">Age (years) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_age" placeholder="adult if blank">
+                    </div>
+                </div>
+
+                <label class="checkbox-container" for="meld_dial">
+                    <input type="checkbox" id="meld_dial">
+                    <span style="font-weight:600; font-size:0.9rem;">Dialysis ≥2 times in the past week</span>
+                </label>
+
+                <div id="meld_res" class="result-box" aria-live="polite">
+                    Enter bilirubin, INR, creatinine and sodium (plus albumin for MELD 3.0).
+                </div>
+                <div class="footnote">
+                    MELD 3.0 (adopted by OPTN in July 2023) uses bilirubin, INR, creatinine, sodium, albumin and sex. Lower bounds: bilirubin, INR and creatinine are floored at 1.0; creatinine is capped at 3.0 (dialysis = 3.0); sodium is bounded 125–137; albumin 1.5–3.5. Classic MELD-Na caps creatinine at 4.0 (dialysis = 4.0) and applies the sodium adjustment when MELD &gt;11. Scores are bounded 6–40. Not for acute liver failure. If your result differs from another calculator, check: dialysis status, the creatinine cap (3.0 for MELD 3.0 vs 4.0 for MELD-Na), the sodium and albumin limits, sex, age (under 18 uses a different equation), and whether the other tool reports MELD 3.0, MELD-Na or original MELD. The values used after limits are shown under the result.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Child-Pugh Score</h2>
+                <div class="card-subtitle">Select each parameter</div>
+
+                <div class="form-group">
+                    <label for="cp_bili">Total bilirubin:</label>
+                    <select id="cp_bili">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">&lt;2 mg/dL (1 pt)</option>
+                        <option value="2">2–3 mg/dL (2 pts)</option>
+                        <option value="3">&gt;3 mg/dL (3 pts)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cp_alb">Albumin:</label>
+                    <select id="cp_alb">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">&gt;3.5 g/dL (1 pt)</option>
+                        <option value="2">2.8–3.5 g/dL (2 pts)</option>
+                        <option value="3">&lt;2.8 g/dL (3 pts)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cp_inr">INR:</label>
+                    <select id="cp_inr">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">&lt;1.7 (1 pt)</option>
+                        <option value="2">1.7–2.3 (2 pts)</option>
+                        <option value="3">&gt;2.3 (3 pts)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cp_asc">Ascites:</label>
+                    <select id="cp_asc">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">None (1 pt)</option>
+                        <option value="2">Mild / controlled with diuretics (2 pts)</option>
+                        <option value="3">Moderate–severe / refractory (3 pts)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cp_he">Hepatic encephalopathy:</label>
+                    <select id="cp_he">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">None (1 pt)</option>
+                        <option value="2">Grade 1–2 / medically controlled (2 pts)</option>
+                        <option value="3">Grade 3–4 / refractory (3 pts)</option>
+                    </select>
+                </div>
+
+                <div id="cp_res" class="result-box" aria-live="polite">
+                    Select all five parameters to calculate the Child-Pugh class.
+                </div>
+                <div class="footnote">Class A = 5–6 points, B = 7–9, C = 10–15. Survival figures are approximate historical estimates.</div>
+            </div>
+
+            <div class="card">
+                <h2>BCLC Staging (HCC, 2022)</h2>
+                <div class="card-subtitle">Barcelona Clinic Liver Cancer stage and treatment strategy</div>
+
+                <div class="form-group">
+                    <label for="bclc_tumor">Tumor burden:</label>
+                    <select id="bclc_tumor">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="0">Single nodule ≤2 cm</option>
+                        <option value="1">Single nodule &gt;2 cm, or ≤3 nodules each ≤3 cm</option>
+                        <option value="2">Multinodular (beyond early-stage criteria)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bclc_spread">Vascular invasion / extrahepatic spread:</label>
+                    <select id="bclc_spread">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="no">No macrovascular invasion or extrahepatic spread</option>
+                        <option value="yes">Portal/vascular invasion and/or extrahepatic spread</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bclc_ps">ECOG performance status:</label>
+                    <select id="bclc_ps">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="0">ECOG 0 (fully active)</option>
+                        <option value="1">ECOG 1–2 (symptomatic, ambulatory)</option>
+                        <option value="3">ECOG 3–4 (limited self-care or worse)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bclc_liver">Liver function:</label>
+                    <select id="bclc_liver">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="ok">Preserved (e.g., Child-Pugh A, or selected B)</option>
+                        <option value="bad">Advanced dysfunction (Child-Pugh C / severe decompensation)</option>
+                    </select>
+                </div>
+
+                <div id="bclc_res" class="result-box" aria-live="polite">
+                    Select all four parameters to determine the BCLC stage.
+                </div>
+                <div class="footnote">
+                    Simplified from the BCLC 2022 update (Reig et al.). The update recommends assessing liver function beyond Child-Pugh (e.g., ALBI, clinically significant portal hypertension), and stage migration is allowed when the recommended treatment fails or is not feasible. Treatment choice should be made by a multidisciplinary tumor board, considering tumor extension, comorbidity, frailty, treatment availability and patient preference.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4d. LOCAL ANESTHETIC DOSING -->
+        <div id="la" class="tab-content">
+            <div class="card">
+                <h2>Local Anesthetic Maximum Dose</h2>
+                <div class="card-subtitle">Weight-based maximum dose with volume at your concentration</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="la_wt">Weight (kg):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="la_wt" placeholder="e.g. 70">
+                    </div>
+                    <div class="form-group">
+                        <label for="la_agent">Agent:</label>
+                        <select id="la_agent"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="la_conc">Concentration:</label>
+                        <select id="la_conc"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="la_given">Already given (mL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="la_given" placeholder="e.g. 10">
+                    </div>
+                </div>
+
+                <label class="checkbox-container" for="la_epi">
+                    <input type="checkbox" id="la_epi">
+                    <span style="font-weight:600; font-size:0.9rem;">Solution contains epinephrine</span>
+                </label>
+
+                <div id="la_res" class="result-box" aria-live="polite">
+                    Enter weight to calculate the maximum dose.
+                </div>
+                <div class="footnote">
+                    Commonly cited maximum doses for infiltration (lower of the mg/kg dose or the absolute cap): lidocaine 4.5 mg/kg (300 mg) or 7 mg/kg with epinephrine (500 mg); bupivacaine 2.5 mg/kg (175 mg) or 3 mg/kg with epinephrine (225 mg); ropivacaine 3 mg/kg (200 mg); mepivacaine 4.5 mg/kg (300 mg) or 7 mg/kg with epinephrine (500 mg); chloroprocaine 11 mg/kg (800 mg) or 14 mg/kg with epinephrine (1000 mg). Published limits vary between sources and labels, so confirm against your institutional formulary. Consider ideal/lean body weight in obese patients and reduce doses in hepatic impairment, elderly or frail patients, and when injecting into highly vascular areas. Concentration: 1% = 10 mg/mL.
+                </div>
+                <div class="footnote">
+                    <strong>Suspected LAST</strong> (perioral numbness, tinnitus, seizure, arrhythmia): stop injecting, call for help, secure airway and give 100% oxygen; give 20% lipid emulsion (e.g., 1.5 mL/kg bolus then 0.25 mL/kg/min). Follow your institutional LAST protocol.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4e. ALLERGY ALTERNATIVES -->
+        <div id="allergy" class="tab-content">
+            <div class="card">
+                <h2>Local Anesthetic Allergy: Alternatives</h2>
+                <div class="card-subtitle">What to use when a patient reports a "caine" allergy</div>
+
+                <div class="section-label">Class (cross-reactivity is within a class, not between classes)</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Class</th><th>Agents</th></tr></thead>
+                        <tbody>
+                            <tr><td><span class="tag">AMIDE</span></td><td>Lidocaine, mepivacaine, bupivacaine, levobupivacaine, ropivacaine, prilocaine, articaine</td></tr>
+                            <tr><td><span class="tag ester">ESTER</span></td><td>Procaine, chloroprocaine, tetracaine, benzocaine, cocaine</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="tight">
+                    <li>True IgE-mediated allergy to local anesthetics is rare. Many "reactions" are vasovagal syncope, anxiety, epinephrine effects (palpitations), or reactions to additives (methylparaben, metabisulfite).</li>
+                    <li>No cross-reactivity between esters and amides. Esters cross-react with each other. Amides usually do not cross-react with each other, but it has been reported (e.g., lidocaine and mepivacaine).</li>
+                    <li>Methylparaben (multi-dose vials) is metabolized to PABA, as are esters. Epinephrine-containing solutions may contain metabisulfite.</li>
+                </ul>
+
+                <div class="section-label">Alternatives by scenario</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Reported allergy</th><th>Suggested alternatives</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>Lidocaine / amide, vague or unverified reaction</td>
+                                <td>Preservative-free (methylparaben-free), epinephrine-free single-dose vial of an amide; or an ester such as preservative-free chloroprocaine; or 1% diphenhydramine. Allergy referral for testing if the procedure is elective.</td>
+                            </tr>
+                            <tr>
+                                <td>Confirmed amide allergy</td>
+                                <td>Ester agent (e.g., preservative-free chloroprocaine) or 1% diphenhydramine. Another amide only after negative skin testing and graded challenge.</td>
+                            </tr>
+                            <tr>
+                                <td>Ester allergy (procaine, tetracaine, benzocaine, chloroprocaine)</td>
+                                <td>Preservative-free amide (lidocaine, bupivacaine, ropivacaine). Avoid other esters.</td>
+                            </tr>
+                            <tr>
+                                <td>Methylparaben / preservative or sulfite reaction</td>
+                                <td>Preservative-free, single-use vial; epinephrine-free (sulfite-free) solution.</td>
+                            </tr>
+                            <tr>
+                                <td>Palpitations / tachycardia with epinephrine (not an allergy)</td>
+                                <td>Plain (epinephrine-free) solution.</td>
+                            </tr>
+                            <tr>
+                                <td>Both classes, unknown agent, or testing not possible</td>
+                                <td>1% diphenhydramine for short, minor procedures; otherwise sedation/analgesia or general anesthesia per anesthesia team.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footnote">
+                    <strong>1% diphenhydramine:</strong> can be made by diluting the 50 mg/mL vial 1:4 with normal saline (1 mL + 4 mL = 10 mg/mL). It is effective for short, minor infiltration, but has a shorter duration than lidocaine, can sting or irritate tissue, and is sedating. Avoid large volumes. Document the reaction type and agent, and consider allergist referral for definitive testing.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Other IR Allergy Alternatives</h2>
+                <div class="card-subtitle">Common substitutions in the IR suite</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Allergy</th><th>Alternatives / considerations</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>Iodinated contrast (prior allergic-like reaction)</td>
+                                <td>Premedication (see below); use a different iodinated agent if the culprit is known; consider CO₂ angiography for below-diaphragm vascular imaging (avoid intra-arterial CO₂ above the diaphragm, e.g., cerebral/coronary); non-contrast, US or MRI-based alternatives. Gadolinium as an angiographic substitute is off-label, so discuss risks and dose limits.</td>
+                            </tr>
+                            <tr>
+                                <td>Shellfish / "iodine" allergy</td>
+                                <td>Not a recognized specific risk factor for contrast reactions; it carries a risk similar to other allergies. Premedication is not indicated for this history alone.</td>
+                            </tr>
+                            <tr>
+                                <td>Chlorhexidine</td>
+                                <td>Povidone-iodine or another skin antiseptic per institutional protocol.</td>
+                            </tr>
+                            <tr>
+                                <td>Latex</td>
+                                <td>Latex-free gloves, catheters, tourniquets and equipment; schedule first case if possible.</td>
+                            </tr>
+                            <tr>
+                                <td>Heparin / history of HIT</td>
+                                <td>Non-heparin anticoagulation (bivalirudin or argatroban); use saline flushes and avoid heparin-coated devices.</td>
+                            </tr>
+                            <tr>
+                                <td>Penicillin (antibiotic prophylaxis)</td>
+                                <td>Cefazolin is generally acceptable unless the reaction was severe or IgE-mediated (it has a distinct side chain). Otherwise, alternatives per institutional antibiotic protocol (e.g., vancomycin).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Contrast Premedication (ACR Manual)</h2>
+                <div class="card-subtitle">For prior allergic-like reaction to the same class of contrast agent</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Regimen</th><th>Dosing</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>Elective, prednisone-based (13 h)</td>
+                                <td>Prednisone 50 mg PO at 13 h, 7 h and 1 h before contrast, plus diphenhydramine 50 mg IV/IM/PO 1 h before.</td>
+                            </tr>
+                            <tr>
+                                <td>Elective, methylprednisolone-based (12 h)</td>
+                                <td>Methylprednisolone 32 mg PO at 12 h and 2 h before contrast. Diphenhydramine 50 mg may be added (considered optional).</td>
+                            </tr>
+                            <tr>
+                                <td>Accelerated IV (minimum 4–5 h)</td>
+                                <td>Methylprednisolone 40 mg IV or hydrocortisone 200 mg IV immediately and then every 4 h until contrast, plus diphenhydramine 50 mg IV 1 h before.</td>
+                            </tr>
+                            <tr>
+                                <td>Steroid-allergic patient (accelerated)</td>
+                                <td>Dexamethasone 7.5 mg or betamethasone 6 mg IV every 4 h until contrast, plus diphenhydramine 50 mg IV 1 h before.</td>
+                            </tr>
+                            <tr>
+                                <td>Cannot give oral</td>
+                                <td>Hydrocortisone 200 mg IV in place of oral steroid, timed as for the oral regimen.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footnote">
+                    IV steroids have not been shown to be effective when given less than 4–6 h before contrast. Premedication reduces but does not eliminate the risk of reaction. Patients on chronic steroids may need adjustment. Emergent studies: a regimen with diphenhydramine alone is a last resort. Always have reaction-management medications and equipment available. Source: ACR Manual on Contrast Media; follow your institutional protocol.
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. OFFICIAL ACR TI-RADS CALCULATOR -->
+        <div id="tirads" class="tab-content">
+            <div class="card">
+                <h2>ACR TI-RADS Point Calculator</h2>
+                <div class="card-subtitle">Official ACR scoring guidelines for thyroid nodules</div>
+
+                <div class="form-group">
+                    <label for="tr_comp">1. Composition:</label>
+                    <select id="tr_comp">
+                        <option value="" selected disabled>Select composition…</option>
+                        <option value="0">Cystic or almost completely cystic (0 pts)</option>
+                        <option value="0">Spongiform (0 pts)</option>
+                        <option value="1">Mixed cystic and solid (1 pt)</option>
+                        <option value="2">Solid or almost completely solid (2 pts)</option>
+                        <option value="2">Cannot be determined because of calcification (2 pts)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tr_echo">2. Echogenicity:</label>
+                    <select id="tr_echo">
+                        <option value="" selected disabled>Select echogenicity…</option>
+                        <option value="0">Anechoic (0 pts)</option>
+                        <option value="1">Hyperechoic or isoechoic (1 pt)</option>
+                        <option value="2">Hypoechoic (2 pts)</option>
+                        <option value="3">Very hypoechoic (3 pts)</option>
+                        <option value="1">Cannot be determined because of calcification (1 pt)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tr_shape">3. Shape:</label>
+                    <select id="tr_shape">
+                        <option value="" selected disabled>Select shape…</option>
+                        <option value="0">Wider-than-tall (0 pts)</option>
+                        <option value="3">Taller-than-wide (3 pts)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tr_margin">4. Margin:</label>
+                    <select id="tr_margin">
+                        <option value="" selected disabled>Select margin…</option>
+                        <option value="0">Smooth (0 pts)</option>
+                        <option value="0">Ill-defined (0 pts)</option>
+                        <option value="2">Lobulated or irregular (2 pts)</option>
+                        <option value="3">Extra-thyroidal extension (3 pts)</option>
+                        <option value="0">Cannot be determined (0 pts)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>5. Echogenic Foci (choose all that apply; points add):</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item"><input type="checkbox" value="0" class="tr_foci tr_none" checked> None or large comet-tail artifacts (0 pts)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="1" class="tr_foci"> Macrocalcifications (+1 pt)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="2" class="tr_foci"> Peripheral (rim) calcifications (+2 pts)</label>
+                        <label class="checkbox-item"><input type="checkbox" value="3" class="tr_foci"> Punctate echogenic foci (+3 pts)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tr_size">Maximum Nodule Diameter (cm) <span style="font-weight:400; color:var(--text-muted);">[optional, for thresholds]</span>:</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="tr_size" placeholder="e.g. 1.8">
+                </div>
+
+                <div id="tirads_res" class="result-box" aria-live="polite">
+                    Select all four features above (composition, echogenicity, shape, margin) to calculate total TI-RADS points and management recommendations.
+                </div>
+                <div class="footnote">
+                    ACR TI-RADS (2017): 0 pts = TR1, 2 pts = TR2, 3 pts = TR3, 4–6 pts = TR4, ≥7 pts = TR5. A 1-point total is not listed separately by the ACR and is treated here as TR2 (no FNA or follow-up either way). If composition cannot be determined, classify as solid; if echogenicity cannot be determined, classify as isoechoic. Nodules with definite extra-thyroidal extension should be considered malignant until proven otherwise.
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. OTHER RADS REFERENCE GUIDES -->
+        <div id="rads_ref" class="tab-content">
+            <div class="card">
+                <h2>RADS &amp; Staging Reference Guides</h2>
+                <div class="card-subtitle">Select reporting system below. TI-RADS has its own calculator tab.</div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="rads_select" style="position:absolute; left:-9999px;">RADS system</label>
+                    <select id="rads_select">
+                        <option value="li">LI-RADS (Liver / HCC)</option>
+                        <option value="pi">PI-RADS (Prostate)</option>
+                        <option value="bi">BI-RADS (Breast)</option>
+                        <option value="lung">Lung-RADS v2022 (Lung screening CT)</option>
+                        <option value="orus">O-RADS US (Ovarian/Adnexal)</option>
+                        <option value="ormri">O-RADS MRI (Ovarian/Adnexal)</option>
+                        <option value="cad">CAD-RADS 2.0 (Coronary CTA)</option>
+                        <option value="ni">NI-RADS (Head &amp; Neck surveillance)</option>
+                        <option value="crads">C-RADS (CT Colonography)</option>
+                        <option value="vi">VI-RADS (Bladder MRI)</option>
+                        <option value="bos">Bosniak v2019 (Renal cystic masses)</option>
+                    </select>
+                </div>
+
+                <div id="rads_note" class="footnote" style="margin-top:0;"></div>
+                <div id="rads_content" class="rads-grid"></div>
+            </div>
+        </div>
+
+        <!-- HOLD TIMES -->
+        <div id="hold" class="tab-content">
+            <div class="card">
+                <h2>Anticoagulant &amp; Antiplatelet Holds</h2>
+                <div class="card-subtitle">SIR 2019 consensus: how long to hold before a procedure</div>
+
+                <div class="form-group">
+                    <label for="hold_agent">Medication:</label>
+                    <select id="hold_agent"></select>
+                </div>
+                <div class="form-group">
+                    <label for="hold_risk">Procedure bleeding risk:</label>
+                    <select id="hold_risk">
+                        <option value="high">High bleeding risk procedure</option>
+                        <option value="low">Low bleeding risk procedure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hold_renal">Creatinine clearance (needed for some agents):</label>
+                    <select id="hold_renal">
+                        <option value="" selected>Not selected</option>
+                        <option value="ge50">CrCl ≥50 mL/min</option>
+                        <option value="mid">CrCl 30–49 mL/min</option>
+                        <option value="lt30">CrCl &lt;30 mL/min</option>
+                    </select>
+                </div>
+
+                <div id="hold_res" class="result-box" aria-live="polite">
+                    Select a medication.
+                </div>
+
+                <div class="section-label">Summary: high bleeding risk procedures</div>
+                <div class="tbl-wrap">
+                    <table class="ref" id="hold_table"></table>
+                </div>
+
+                <div class="footnote">
+                    <strong>Low-risk procedures:</strong> SIR 2019 generally does not require holding anticoagulants or antiplatelets (warfarin: proceed if INR ≤3.0). Individualize for patient and operator. See the Bleeding Risk tab for procedure examples and lab thresholds.<br><br>
+                    <strong>Resumption:</strong> restart once hemostasis is secure, based on bleeding and thrombotic risk. Typically within about 24 hours for many agents; DOACs generally 24 hours after low-risk and 48–72 hours after high-risk procedures.<br><br>
+                    <strong>Bridging:</strong> DOACs do not need bridging. For warfarin in patients at high thromboembolic risk (e.g., mechanical valve, recent stroke or VTE), discuss bridging with cardiology/hematology. Thromboembolic risk, recent stents, and dual antiplatelet therapy need individual assessment.<br><br>
+                    Hold times differ somewhat between published summaries, especially dabigatran and renally cleared agents. <strong>Verify against SIR 2019 Table 6, your pharmacy and institutional protocols before acting.</strong> Source: Patel et al., JVIR 2019;30:1168–1184; Douketis et al., CHEST 2022 (dabigatran by CrCl).
+                </div>
+            </div>
+        </div>
+
+        <!-- FLR / PVE -->
+        <div id="flr" class="tab-content">
+            <div class="card">
+                <h2>Future Liver Remnant (FLR)</h2>
+                <div class="card-subtitle">Standardized FLR (sFLR) for hepatectomy planning</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="flr_ht">Height (cm):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="flr_ht" placeholder="e.g. 175">
+                    </div>
+                    <div class="form-group">
+                        <label for="flr_wt">Weight (kg):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="flr_wt" placeholder="e.g. 80">
+                    </div>
+                    <div class="form-group">
+                        <label for="flr_vol">FLR volume (mL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="flr_vol" placeholder="e.g. 450">
+                    </div>
+                    <div class="form-group">
+                        <label for="flr_cond">Liver parenchyma:</label>
+                        <select id="flr_cond">
+                            <option value="20">Normal liver (target ≥20%)</option>
+                            <option value="30">Chemotherapy or steatosis (target ≥30%)</option>
+                            <option value="40">Cirrhosis / chronic liver disease (target ≥40%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="flr_tlv">Measured total liver volume (mL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="flr_tlv" placeholder="e.g. 1700">
+                    </div>
+                    <div class="form-group">
+                        <label for="flr_tum">Total tumor volume (mL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="flr_tum" placeholder="e.g. 200">
+                    </div>
+                </div>
+
+                <div id="flr_res" class="result-box" aria-live="polite">
+                    Enter height, weight and FLR volume to calculate sFLR.
+                </div>
+                <div class="footnote">
+                    sFLR = FLR volume ÷ total estimated liver volume (TELV) × 100, where TELV = −794.41 + 1267.28 × BSA (m², Mosteller), from Vauthey et al. Commonly cited minimum sFLR: ≥20% in a normal liver, ≥30% after chemotherapy or with steatosis, ≥40% in cirrhosis. FLR volume alone does not assess function; consider liver function testing (e.g., ICG, HIDA), portal hypertension and the planned resection. Decisions on PVE belong to the surgical and IR team.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Hypertrophy After Portal Vein Embolization</h2>
+                <div class="card-subtitle">Uses the height and weight entered above</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="pve_pre">FLR before PVE (mL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pve_pre" placeholder="e.g. 350">
+                    </div>
+                    <div class="form-group">
+                        <label for="pve_post">FLR after PVE (mL):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pve_post" placeholder="e.g. 480">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pve_weeks">Weeks between PVE and repeat imaging:</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="pve_weeks" placeholder="e.g. 4">
+                </div>
+
+                <div id="pve_res" class="result-box" aria-live="polite">
+                    Enter pre- and post-PVE FLR volumes and the interval.
+                </div>
+                <div class="footnote">
+                    Degree of hypertrophy (DH) = post-PVE sFLR minus pre-PVE sFLR (percentage points). Kinetic growth rate (KGR) = DH ÷ weeks since PVE. Commonly cited markers of adequate regeneration: DH ≥5 percentage points and KGR ≥2% per week (Shindoh 2013), together with reaching the sFLR target for the liver type above.
+                </div>
+            </div>
+        </div>
+
+        <!-- Y-90 -->
+        <div id="y90" class="tab-content">
+            <div class="card">
+                <h2>Y-90 Lung Shunt Fraction &amp; Lung Dose</h2>
+                <div class="card-subtitle">From Tc-99m MAA planar counts</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="y_lung">Lung counts:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_lung" placeholder="e.g. 45000">
+                    </div>
+                    <div class="form-group">
+                        <label for="y_liver">Liver counts:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_liver" placeholder="e.g. 480000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="y_lsf">Or enter LSF directly (%):</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_lsf" placeholder="e.g. 8.5">
+                    <div class="field-hint">Counts are used if both lung and liver counts are entered.</div>
+                </div>
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="y_act">Planned activity (GBq):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_act" placeholder="e.g. 2.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="y_mass">Lung mass (kg):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_mass" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="y_prior">Prior cumulative lung dose (Gy) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_prior" placeholder="0">
+                </div>
+
+                <div id="y_res" class="result-box" aria-live="polite">
+                    Enter lung and liver counts (or LSF) and the planned activity.
+                </div>
+
+                <div class="section-label">Resin microspheres (SIR-Spheres, BSA method): activity reduction by LSF</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>LSF</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>&lt;10%</td><td>No reduction</td></tr>
+                            <tr><td>10–15%</td><td>Reduce activity by 20%</td></tr>
+                            <tr><td>&gt;15–20%</td><td>Reduce activity by 40%</td></tr>
+                            <tr><td>&gt;20%</td><td>Treatment not recommended</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footnote">
+                    LSF = lung counts ÷ (lung + liver counts). Mean lung dose = 50 Gy·kg/GBq × activity (GBq) × LSF ÷ lung mass (kg), with 1 kg as the conventional assumed lung mass. Commonly applied limits: ≤30 Gy per treatment and ≤50 Gy cumulative. The 20% LSF ceiling is part of the resin microsphere instructions for use; glass microspheres use the dose-based limits. These limits were derived from planar imaging; check your vendor instructions for use, dosimetry model (partition/MIRD vs BSA) and institutional protocol, particularly with SPECT/CT-based LSF. This tool checks lung dose only and does not calculate prescribed activity.
+                </div>
+            </div>
+        </div>
+
+        <!-- ASA -->
+        <div id="asa" class="tab-content">
+            <div class="card">
+                <h2>ASA Physical Status</h2>
+                <div class="card-subtitle">Pre-anesthesia / pre-sedation comorbidity classification (ASA, amended 2020)</div>
+
+                <div class="form-group">
+                    <label for="asa_class">Select class:</label>
+                    <select id="asa_class">
+                        <option value="" selected disabled>Select…</option>
+                        <option value="1">ASA I: Normal healthy patient</option>
+                        <option value="2">ASA II: Mild systemic disease</option>
+                        <option value="3">ASA III: Severe systemic disease</option>
+                        <option value="4">ASA IV: Severe disease, constant threat to life</option>
+                        <option value="5">ASA V: Moribund</option>
+                        <option value="6">ASA VI: Declared brain-dead organ donor</option>
+                    </select>
+                </div>
+                <label class="checkbox-container" for="asa_e">
+                    <input type="checkbox" id="asa_e">
+                    <span style="font-weight:600; font-size:0.9rem;">Emergency (E modifier): delay would lead to a significant increase in threat to life or body part</span>
+                </label>
+
+                <div id="asa_res" class="result-box" aria-live="polite">
+                    Select a class to see its definition and examples.
+                </div>
+
+                <div class="section-label">Summary table</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Class</th><th>Definition and adult examples</th></tr></thead>
+                        <tbody>
+                            <tr><td>ASA I</td><td>Normal healthy patient. Healthy, non-smoking, no or minimal alcohol use.</td></tr>
+                            <tr><td>ASA II</td><td>Mild systemic disease without substantive functional limitation. Current smoker, social alcohol drinker, pregnancy, obesity (BMI 30–40), well-controlled DM/HTN, mild lung disease.</td></tr>
+                            <tr><td>ASA III</td><td>Severe systemic disease with substantive functional limitation. Poorly controlled DM/HTN, COPD, morbid obesity (BMI ≥40), active hepatitis, alcohol dependence or abuse, implanted pacemaker, moderate reduction in ejection fraction, ESRD on regular dialysis, history (&gt;3 months) of MI, CVA, TIA or CAD/stents.</td></tr>
+                            <tr><td>ASA IV</td><td>Severe systemic disease that is a constant threat to life. Recent (&lt;3 months) MI, CVA, TIA or CAD/stents, ongoing cardiac ischemia or severe valve dysfunction, severe reduction in ejection fraction, shock, sepsis, DIC, ARD, ESRD not on regular dialysis.</td></tr>
+                            <tr><td>ASA V</td><td>Moribund patient not expected to survive without the operation/procedure. Ruptured abdominal/thoracic aneurysm, massive trauma, intracranial bleed with mass effect, ischemic bowel with significant cardiac pathology or multiple organ dysfunction.</td></tr>
+                            <tr><td>ASA VI</td><td>Declared brain-dead patient whose organs are being removed for donor purposes.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footnote">
+                    The ASA classification communicates pre-anesthesia comorbidity and does not by itself predict perioperative risk. Distinguishing II from III depends on functional limitation, and III from IV on whether the disease is a constant threat to life. The E modifier is not applied to ASA VI. Sedation and anesthesia-consult thresholds are set by your institution. Source: ASA Statement on Physical Status Classification System (approved 2014, last amended December 13, 2020).
+                </div>
+            </div>
+        </div>
+
+        <!-- BSA / BMI / IBW -->
+        <div id="bsa" class="tab-content">
+            <div class="card">
+                <h2>BSA, BMI &amp; Ideal Body Weight</h2>
+                <div class="card-subtitle">Body size and dosing helpers</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-group">
+                        <label for="bsa_units">Units:</label>
+                        <select id="bsa_units">
+                            <option value="metric">Metric (cm, kg)</option>
+                            <option value="us">US (inches, lb)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bsa_sex">Sex (for ideal weight):</label>
+                        <select id="bsa_sex">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bsa_ht" id="bsa_ht_label">Height (cm):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bsa_ht" placeholder="e.g. 175">
+                    </div>
+                    <div class="form-group">
+                        <label for="bsa_wt" id="bsa_wt_label">Weight (kg):</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bsa_wt" placeholder="e.g. 80">
+                    </div>
+                </div>
+
+                <div id="bsa_res" class="result-box" aria-live="polite">
+                    Enter height and weight.
+                </div>
+                <div class="footnote">
+                    BSA (Mosteller) = √(height cm × weight kg ÷ 3600). BSA (Du Bois) = 0.007184 × weight<sup>0.425</sup> × height<sup>0.725</sup>. Ideal body weight (Devine): male 50 kg, female 45.5 kg, plus 2.3 kg per inch above 60 inches (set to the base value if shorter). Adjusted body weight = IBW + 0.4 × (actual − IBW). Which weight to use for drug dosing depends on the drug; check its labeling.
+                </div>
+            </div>
+        </div>
+
+        <!-- HOUNSFIELD UNITS -->
+        <div id="hu" class="tab-content">
+            <div class="card">
+                <h2>Hounsfield Unit Reference</h2>
+                <div class="card-subtitle">Typical CT attenuation values (non-contrast unless stated)</div>
+
+                <div class="form-group">
+                    <label for="hu_in">Look up a measured value (HU):</label>
+                    <input type="text" inputmode="text" autocomplete="off" autocapitalize="off" class="num" id="hu_in" placeholder="e.g. 62 or -90">
+                </div>
+                <div id="hu_res" class="result-box" aria-live="polite">
+                    Enter an HU value to see which tissues and materials commonly fall in that range.
+                </div>
+
+                <div class="tbl-wrap">
+                    <table class="ref" id="hu_table"></table>
+                </div>
+
+                <div class="section-label">Clinically useful thresholds</div>
+                <ul class="tight">
+                    <li><strong>Hepatic steatosis (unenhanced):</strong> liver &lt;40 HU suggests moderate-to-severe steatosis; liver at least 10 HU lower than spleen also supports it.</li>
+                    <li><strong>Adrenal adenoma:</strong> unenhanced ≤10 HU = lipid-rich adenoma. For lipid-poor lesions, washout at 15 min: absolute ≥60% or relative ≥40% suggests adenoma. Absolute = (PV − delayed) ÷ (PV − unenhanced) × 100; relative = (PV − delayed) ÷ PV × 100.</li>
+                    <li><strong>Renal mass enhancement (Bosniak v2019):</strong> increase &lt;10 HU = non-enhancing; 10–19 HU = questionable; ≥20 HU = enhancing. Homogeneous hyperdense cyst: ≥70 HU unenhanced.</li>
+                    <li><strong>Macroscopic fat in a renal mass:</strong> ≥4 contiguous pixels &lt;−10 HU suggests angiomyolipoma.</li>
+                    <li><strong>Emphysema:</strong> voxels &lt;−950 HU (LAA-950).</li>
+                    <li><strong>Coronary calcium (Agatston):</strong> lesion ≥130 HU with area ≥1 mm².</li>
+                    <li><strong>Opportunistic osteoporosis screen (L1 trabecular, non-contrast):</strong> &gt;160 HU generally normal; &lt;100 HU suggests osteoporosis.</li>
+                    <li><strong>Urinary stones:</strong> uric acid usually &lt;500 HU; calcium-containing stones usually &gt;1000 HU.</li>
+                    <li><strong>Hemorrhage:</strong> acute clot is hyperdense (about 50–80 HU) relative to liver and spleen and decreases as it ages.</li>
+                </ul>
+                <div class="footnote">
+                    Values are approximate and overlap. HU varies with scanner, kVp, reconstruction, patient size, contrast phase and timing, and ROI placement. Contrast-enhanced values are protocol dependent. Use a representative ROI that avoids edges, vessels and artifact, and interpret in clinical context.
+                </div>
+            </div>
+        </div>
+
+        <!-- ABOUT -->
+        <div id="about" class="tab-content">
+            <div class="card">
+                <h2>Disclaimer &amp; About</h2>
+                <div class="card-subtitle">IR Decision Support Suite, version 1.1 (October 2026)</div>
+                <div class="section-label" style="margin-top:0;">Medical disclaimer</div>
+                <ul class="tight">
+                    <li>This app is an educational and professional reference. It is <strong>not a medical device</strong>, has not been reviewed or cleared by any regulatory authority, and does not provide medical advice, diagnosis or treatment.</li>
+                    <li>Calculators and tables summarize published criteria and guidelines. These change over time and may contain errors or omissions despite efforts to verify them.</li>
+                    <li><strong>Always verify results</strong> against the original sources, current guidelines, institutional protocols and your clinical judgment before making any patient-care decision.</li>
+                    <li>The user is solely responsible for decisions made with this tool. The authors and distributors provide it "as is", without warranty of any kind, and accept no liability for any loss, injury or damage arising from its use.</li>
+                    <li>Not intended for use as the sole basis for diagnosis, drug dosing, radiation dosing or treatment selection.</li>
+                </ul>
+                <div class="section-label">Privacy</div>
+                <ul class="tight">
+                    <li>All calculations run on your device. The app does not send, collect or store patient data and has no analytics or accounts.</li>
+                    <li>Only two small preferences are saved in your browser: that you accepted the disclaimer, and the last tool you opened.</li>
+                    <li>Do not enter patient names or other identifiers.</li>
+                </ul>
+                <div class="section-label">Attribution</div>
+                <ul class="tight">
+                    <li>Named classification and staging systems (e.g., ACR TI-RADS, LI-RADS, PI-RADS, BI-RADS, Lung-RADS, O-RADS, CAD-RADS, NI-RADS, C-RADS, Bosniak, BCLC, VI-RADS) are the work of their respective organizations and authors. This app provides brief summaries only; consult the official publications for complete criteria and current versions.</li>
+                    <li>See the References page for sources used by each tool.</li>
+                </ul>
+                <div class="footnote">
+                    By using this app you acknowledge that you have read and understood this disclaimer. If you notice an error, please report it so it can be corrected.
+                </div>
+            </div>
+        </div>
+
+        <!-- REFERENCES -->
+        <div id="refs" class="tab-content">
+            <div class="card">
+                <h2>References</h2>
+                <div class="card-subtitle">Sources used for each tool. Always verify against the current edition and your institutional protocol.</div>
+
+                <h3>Ascites / SBP / SAAG</h3>
+                <ul class="tight">
+                    <li>Biggins SW, et al. Diagnosis, evaluation, and management of ascites, spontaneous bacterial peritonitis and hepatorenal syndrome: 2021 Practice Guidance by AASLD. <em>Hepatology</em> 2021;74:1014–1048.</li>
+                    <li>Runyon BA. Management of adult patients with ascites due to cirrhosis: update 2012. AASLD Practice Guideline. <em>Hepatology</em> 2013;57:1651–1653.</li>
+                    <li>Runyon BA, Montano AA, Akriviadis EA, et al. The serum-ascites albumin gradient is superior to the exudate-transudate concept in the differential diagnosis of ascites. <em>Ann Intern Med</em> 1992;117:215–220.</li>
+                    <li>Sort P, et al. Effect of intravenous albumin on renal impairment and mortality in patients with cirrhosis and spontaneous bacterial peritonitis. <em>N Engl J Med</em> 1999;341:403–409.</li>
+                </ul>
+
+                <h3>Light's Criteria</h3>
+                <ul class="tight">
+                    <li>Light RW, Macgregor MI, Luchsinger PC, Ball WC. Pleural effusions: the diagnostic separation of transudates and exudates. <em>Ann Intern Med</em> 1972;77:507–513.</li>
+                    <li>Roth BJ, O'Meara TF, Cragun WH. The serum-effusion albumin gradient in the evaluation of pleural effusions. <em>Chest</em> 1990;98:546–549.</li>
+                    <li>Romero-Candeira S, et al. Influence of diuretics on the concentration of proteins and other components of pleural transudates in patients with heart failure. <em>Am J Med</em> 2001;110:681–686.</li>
+                </ul>
+
+                <h3>CrCl and Contrast</h3>
+                <ul class="tight">
+                    <li>Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. <em>Nephron</em> 1976;16:31–41.</li>
+                    <li>Cigarroa RG, Lange RA, Williams RH, Hillis LD. Dosing of contrast material to prevent contrast nephropathy in patients with renal disease. <em>Am J Med</em> 1989;86:649–652.</li>
+                    <li>Davenport MS, et al. Use of intravenous iodinated contrast media in patients with kidney disease: consensus statements from the American College of Radiology and the National Kidney Foundation. <em>Radiology</em> 2020;294:660–668.</li>
+                    <li>ACR Committee on Drugs and Contrast Media. <em>ACR Manual on Contrast Media</em> (current edition), including premedication regimens. <a href="https://www.acr.org/Clinical-Resources/Contrast-Manual" target="_blank" rel="noopener">acr.org/Clinical-Resources/Contrast-Manual</a></li>
+                </ul>
+
+                <h3>Bleeding Risk Labs</h3>
+                <ul class="tight">
+                    <li>Patel IJ, Rahim S, Davidson JC, et al. Society of Interventional Radiology consensus guidelines for the periprocedural management of thrombotic and bleeding risk in patients undergoing percutaneous image-guided interventions. Part II: Recommendations. <em>J Vasc Interv Radiol</em> 2019;30:1168–1184. <a href="https://www.jvir.org/article/S1051-0443(19)30407-5/fulltext" target="_blank" rel="noopener">jvir.org</a></li>
+                    <li>Davidson JC, Rahim S, Hanks SE, et al. SIR consensus guidelines… Part I: Review of anticoagulation agents and clinical considerations. <em>J Vasc Interv Radiol</em> 2019;30:1155–1167. <a href="https://doi.org/10.1016/j.jvir.2019.04.016" target="_blank" rel="noopener">doi:10.1016/j.jvir.2019.04.016</a></li>
+                </ul>
+
+                <h3>Liver Scores</h3>
+                <ul class="tight">
+                    <li>Kim WR, Mannalithara A, Heimbach JK, et al. MELD 3.0: the Model for End-Stage Liver Disease updated for the modern era. <em>Gastroenterology</em> 2021;161:1887–1895. <a href="https://doi.org/10.1053/j.gastro.2021.08.050" target="_blank" rel="noopener">doi:10.1053/j.gastro.2021.08.050</a></li>
+                    <li>Kim WR, Biggins SW, Kremers WK, et al. Hyponatremia and mortality among patients on the liver-transplant waiting list. <em>N Engl J Med</em> 2008;359:1018–1026. (MELD-Na)</li>
+                    <li>Kamath PS, Wiesner RH, Malinchoc M, et al. A model to predict survival in patients with end-stage liver disease. <em>Hepatology</em> 2001;33:464–470.</li>
+                    <li>OPTN Liver and Intestinal Organ Transplantation Committee. MELD 3.0 policy materials. <a href="https://optn.transplant.hrsa.gov" target="_blank" rel="noopener">optn.transplant.hrsa.gov</a></li>
+                    <li>Pugh RNH, Murray-Lyon IM, Dawson JL, Pietroni MC, Williams R. Transection of the oesophagus for bleeding oesophageal varices. <em>Br J Surg</em> 1973;60:646–649.</li>
+                </ul>
+
+                <h3>Local Anesthetics and Allergy</h3>
+                <ul class="tight">
+                    <li>Neal JM, et al. The Third American Society of Regional Anesthesia and Pain Medicine Practice Advisory on Local Anesthetic Systemic Toxicity. <em>Reg Anesth Pain Med</em> 2018;43:113–123.</li>
+                    <li>Diphenhydramine as an alternative local anesthetic agent. <em>J Clin Aesthet Dermatol</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2923931" target="_blank" rel="noopener">PMC2923931</a></li>
+                    <li>True allergy to amide local anesthetics: a review and case presentation. <em>Anesth Prog</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6022794" target="_blank" rel="noopener">PMC6022794</a></li>
+                    <li>Maximum infiltration doses are commonly cited values from standard anesthesiology references and drug labeling; they vary between sources, so confirm with your institutional formulary.</li>
+                    <li>The "Other IR Allergy Alternatives" table (chlorhexidine, latex, HIT, penicillin) reflects general practice and should be checked against institutional protocols and pharmacy.</li>
+                </ul>
+
+                <h3>Wells and Villalta</h3>
+                <ul class="tight">
+                    <li>Wells PS, Anderson DR, Rodger M, et al. Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis. <em>N Engl J Med</em> 2003;349:1227–1235.</li>
+                    <li>Wells PS, Anderson DR, Rodger M, et al. Derivation of a simple clinical model to categorize patients' probability of pulmonary embolism: increasing the model's utility with the SimpliRED D-dimer. <em>Thromb Haemost</em> 2000;83:416–420.</li>
+                    <li>Villalta S, Bagatella P, Piccioli A, et al. Assessment of validity and reproducibility of a clinical scale for the post-thrombotic syndrome. <em>Haemostasis</em> 1994;24(Suppl 1):158a.</li>
+                    <li>Kahn SR, Partsch H, Vedantham S, Prandoni P, Kearon C. Definition of post-thrombotic syndrome of the leg for use in clinical investigations: a recommendation for standardization. <em>J Thromb Haemost</em> 2009;7:879–883.</li>
+                </ul>
+
+                <h3>HCC Staging</h3>
+                <ul class="tight">
+                    <li>Reig M, Forner A, Rimola J, et al. BCLC strategy for prognosis prediction and treatment recommendation: the 2022 update. <em>J Hepatol</em> 2022;76:681–693. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8866082/" target="_blank" rel="noopener">PMC8866082</a></li>
+                </ul>
+
+                <h3>Hemostasis, Renal Function and Body Size</h3>
+                <ul class="tight">
+                    <li>Douketis JD, Spyropoulos AC, Murad MH, et al. Perioperative management of antithrombotic therapy: an American College of Chest Physicians clinical practice guideline. <em>Chest</em> 2022;162:e207–e243.</li>
+                    <li>Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. <em>N Engl J Med</em> 2021;385:1737–1749.</li>
+                    <li>Mosteller RD. Simplified calculation of body-surface area. <em>N Engl J Med</em> 1987;317:1098. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. <em>Arch Intern Med</em> 1916;17:863–871. Devine BJ. Case Number 25: Gentamicin therapy. <em>Drug Intell Clin Pharm</em> 1974;8:650–655.</li>
+                    <li>American Society of Anesthesiologists. Statement on ASA Physical Status Classification System. Approved October 15, 2014; last amended December 13, 2020.</li>
+                </ul>
+
+                <h3>FLR, Portal Vein Embolization and Y-90</h3>
+                <ul class="tight">
+                    <li>Vauthey JN, Abdalla EK, Doherty DA, et al. Body surface area and body weight predict total liver volume in Western adults. <em>Liver Transpl</em> 2002;8:233–240.</li>
+                    <li>Shindoh J, Truty MJ, Aloia TA, et al. Kinetic growth rate after portal vein embolization predicts posthepatectomy outcomes: toward zero liver-related mortality in patients with colorectal liver metastases and small future liver remnant. <em>J Am Coll Surg</em> 2013;216:201–209.</li>
+                    <li>Lung shunt fraction quantification methods in radioembolization: what you need to know. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9793490" target="_blank" rel="noopener">PMC9793490</a>. Reassessment of the lung dose limits for radioembolization. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8445362" target="_blank" rel="noopener">PMC8445362</a>. Factors modulating 99mTc-MAA planar lung dosimetry for 90Y radioembolization. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9797182" target="_blank" rel="noopener">PMC9797182</a>.</li>
+                    <li>Weber M, Lam M, Chiesa C, et al. EANM procedure guideline for the treatment of liver cancer and liver metastases with intra-arterial radioactive compounds. <em>Eur J Nucl Med Mol Imaging</em> 2022. Manufacturer instructions for use (SIR-Spheres, TheraSphere).</li>
+                </ul>
+
+                <h3>Hounsfield Units</h3>
+                <ul class="tight">
+                    <li>Typical HU ranges compiled from standard radiology and CT physics references (e.g., AAPM CT physics lectures; Radiopaedia, Hounsfield unit). Values vary with scanner, kVp, phase and technique.</li>
+                    <li>Park SH, Kim PN, Kim KW, et al. Macrovesicular hepatic steatosis in living liver donors: use of CT for quantitative and qualitative assessment. <em>Radiology</em> 2006;239:105–112.</li>
+                    <li>Caoili EM, Korobkin M, Francis IR, et al. Adrenal masses: characterization with combined unenhanced and delayed enhanced CT. <em>Radiology</em> 2002;222:629–633.</li>
+                    <li>Pickhardt PJ, Pooler BD, Lauder T, et al. Opportunistic screening for osteoporosis using abdominal computed tomography scans obtained for other indications. <em>Ann Intern Med</em> 2013;158:588–595.</li>
+                    <li>Agatston AS, Janowitz WR, Hildner FJ, et al. Quantification of coronary artery calcium using ultrafast computed tomography. <em>J Am Coll Cardiol</em> 1990;15:827–832.</li>
+                </ul>
+
+                <h3>RADS Systems and Renal Cyst Classification</h3>
+                <ul class="tight">
+                    <li>Tessler FN, Middleton WD, Grant EG, et al. ACR Thyroid Imaging, Reporting and Data System (TI-RADS): white paper of the ACR TI-RADS Committee. <em>J Am Coll Radiol</em> 2017;14:587–595.</li>
+                    <li>Chernyak V, Fowler KJ, Kamaya A, et al. Liver Imaging Reporting and Data System (LI-RADS) version 2018: imaging of hepatocellular carcinoma in at-risk patients. <em>Radiology</em> 2018;289:816–830. ACR LI-RADS v2018 CT/MRI manual, Chapter 8 (Diagnostic Categories).</li>
+                    <li>Turkbey B, Rosenkrantz AB, Haider MA, et al. Prostate Imaging Reporting and Data System version 2.1: 2019 update of PI-RADS v2. <em>Eur Urol</em> 2019;76:340–351.</li>
+                    <li>D'Orsi CJ, et al. <em>ACR BI-RADS Atlas, Breast Imaging Reporting and Data System</em>, 5th ed. Reston, VA: American College of Radiology; 2013.</li>
+                    <li>ACR Lung-RADS v2022 Assessment Categories and Summary of Changes. American College of Radiology, 2022.</li>
+                    <li>Strachowski LM, Jha P, Phillips CH, et al. O-RADS US v2022: an update from the American College of Radiology's O-RADS US Risk Stratification and Management Committee. <em>Radiology</em> 2023;308:e230685. Andreotti RF, et al. O-RADS US risk stratification and management system: a consensus guideline from the ACR. <em>Radiology</em> 2020;294:168–185.</li>
+                    <li>Thomassin-Naggara I, Poncelet E, Jalaguier-Coudray A, et al. Ovarian-Adnexal Reporting Data System Magnetic Resonance Imaging (O-RADS MRI) score for risk stratification of sonographically indeterminate adnexal masses. <em>JAMA Netw Open</em> 2020;3:e1919896.</li>
+                    <li>Cury RC, Leipsic J, Abbara S, et al. CAD-RADS 2.0 – 2022 Coronary Artery Disease Reporting and Data System: an expert consensus document of SCCT, ACC, ACR and NASCI. <em>J Am Coll Radiol</em> 2022;19:1185–1212.</li>
+                    <li>Aiken AH, Rath TJ, Anzai Y, et al. ACR Neck Imaging Reporting and Data System (NI-RADS): a white paper of the ACR NI-RADS Committee. <em>J Am Coll Radiol</em> 2018;15:1097–1108. ACR NI-RADS MRI and PET/CT management tables.</li>
+                    <li>Zalis ME, Barish MA, Choi JR, et al. CT colonography reporting and data system: a consensus proposal. <em>Radiology</em> 2005;236:3–9. ACR C-RADS v2023 colonic and extracolonic assessment categories.</li>
+                    <li>Panebianco V, Narumi Y, Altun E, et al. Multiparametric magnetic resonance imaging for bladder cancer: development of VI-RADS (Vesical Imaging-Reporting And Data System). <em>Eur Urol</em> 2018;74:294–306.</li>
+                    <li>Silverman SG, Pedrosa I, Ellis JH, et al. Bosniak classification of cystic renal masses, version 2019: an update proposal and needs assessment. <em>Radiology</em> 2019;292:475–488.</li>
+                </ul>
+
+                <div class="footnote">
+                    This tool is for educational and professional reference. It is not a medical device and does not replace clinical judgment, institutional protocols or the full text of the cited guidelines.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Clinical Decision Support Tool &bull; For Educational &amp; Professional Reference</p>
+        <p style="margin-top:4px;">Verify against current guidelines and institutional protocols. Not a substitute for clinical judgment.</p>
+    </footer>
+
+    <script>
+        // ---------- HELPERS ----------
+        // Reads a number from an input. Accepts "," as the decimal separator (some Android/iOS locales).
+        function val(id) {
+            const el = document.getElementById(id);
+            if (!el) return NaN;
+            const s = String(el.value).trim().replace(',', '.');
+            if (s === '' || !/^-?\d*\.?\d+$|^-?\d+\.$/.test(s)) return NaN;
+            return parseFloat(s);
+        }
+
+        function show(id, cls, html) {
+            const el = document.getElementById(id);
+            el.className = 'result-box' + (cls ? ' ' + cls : '');
+            el.innerHTML = html;
+        }
+
+        // ---------- NUMERIC INPUT HANDLING ----------
+        const calcByInput = {
+            pmn_wbc: calcPMN, pmn_percent: calcPMN, pmn_rbc: calcPMN,
+            saag_serum: calcSAAG, saag_ascites: calcSAAG, saag_prot: calcSAAG,
+            lp_p: calcLights, ls_p: calcLights, lp_ldh: calcLights, ls_ldh: calcLights, ls_ldh_uln: calcLights,
+            cg_age: calcCrCl, cg_wt: calcCrCl, cg_scr: calcCrCl,
+            tr_size: calcTIRADS
+        };
+
+        document.querySelectorAll('input.num').forEach(inp => {
+            inp.addEventListener('input', () => {
+                // strip anything that isn't a digit, dot or comma
+                const cleaned = inp.id === 'hu_in' ? inp.value.replace(/[^0-9.,\-]/g, '') : inp.value.replace(/[^0-9.,]/g, '');
+                if (cleaned !== inp.value) inp.value = cleaned;
+                const fn = calcByInput[inp.id];
+                if (fn) fn();
+            });
+        });
+
+        document.getElementById('cg_sex').addEventListener('change', calcCrCl);
+        ['tr_comp', 'tr_echo', 'tr_shape', 'tr_margin'].forEach(id =>
+            document.getElementById(id).addEventListener('change', calcTIRADS));
+
+        // ---------- TOGGLE BLOODY TAP ----------
+        document.getElementById('pmn_bloody').addEventListener('change', function () {
+            document.getElementById('bloody_inputs').style.display = this.checked ? 'block' : 'none';
+            calcPMN();
+        });
+
+        // ---------- 1. PMN CALCULATION ----------
+        function calcPMN() {
+            const wbc = val('pmn_wbc');
+            const pmnPct = val('pmn_percent');
+            const isBloody = document.getElementById('pmn_bloody').checked;
+            const rbc = val('pmn_rbc');
+
+            if (isNaN(wbc) || isNaN(pmnPct)) {
+                show('pmn_res', '', 'Enter valid WBC and Neutrophil % values.');
+                return;
+            }
+            if (pmnPct > 100) {
+                show('pmn_res', 'warn', 'Neutrophil % cannot exceed 100.');
+                return;
+            }
+
+            const uncorrected = wbc * (pmnPct / 100);
+            let absolutePmn = uncorrected;
+            let note = '';
+
+            if (isBloody) {
+                if (isNaN(rbc)) {
+                    note = '<br><small><strong>Enter the ascitic RBC count to apply the Runyon correction.</strong></small>';
+                } else {
+                    const subtracted = rbc / 250;
+                    absolutePmn = Math.max(0, uncorrected - subtracted);
+                    note = `<br><small><strong>Runyon Correction:</strong> -${subtracted.toFixed(1)} PMNs for ${rbc.toLocaleString()} RBCs.<br>Uncorrected PMN: ${uncorrected.toFixed(1)} cells/mm³</small>`;
+                }
+            }
+
+            const pmnVal = Math.round(absolutePmn * 10) / 10;
+            const isSbp = pmnVal >= 250;
+
+            show('pmn_res', isSbp ? 'pos' : 'neg', `
+                <div class="result-title">Absolute PMN: ${pmnVal} cells/mm³</div>
+                <div><strong>Interpretation:</strong> ${isSbp ? 'POSITIVE for SBP (≥250/mm³)' : 'NEGATIVE for SBP (&lt;250/mm³)'}</div>
+                <div class="result-detail">
+                    ${isSbp
+                        ? '• Ascitic PMN ≥250/mm³ meets the diagnostic criterion for SBP. Start empiric antibiotics (cultures ideally inoculated into blood-culture bottles at the bedside).<br>• Consider IV albumin (1.5 g/kg day 1, 1 g/kg day 3), especially if Cr &gt;1 mg/dL, BUN &gt;30 mg/dL or total bilirubin &gt;4 mg/dL.'
+                        : '• SBP unlikely by cell count alone. Interpret with clinical picture and culture results.'}
+                </div>
+                ${note}
+            `);
+        }
+
+        // ---------- 2. SAAG CALCULATION ----------
+        function calcSAAG() {
+            const serum = val('saag_serum');
+            const ascites = val('saag_ascites');
+            const prot = val('saag_prot');
+
+            if (isNaN(serum) || isNaN(ascites)) {
+                show('saag_res', '', 'Enter Serum and Ascitic Albumin values.');
+                return;
+            }
+
+            const saag = Math.round((serum - ascites) * 100) / 100;
+            const isHigh = saag >= 1.1;
+
+            let proteinLine = '';
+            if (isHigh && !isNaN(prot)) {
+                proteinLine = prot >= 2.5
+                    ? '<br><br><strong>Ascitic protein ≥2.5 g/dL:</strong> favors a post-sinusoidal cause (cardiac ascites, Budd-Chiari / sinusoidal obstruction syndrome).'
+                    : '<br><br><strong>Ascitic protein &lt;2.5 g/dL:</strong> favors cirrhosis (sinusoidal portal hypertension).';
+            }
+
+            show('saag_res', isHigh ? 'pos' : 'neg', `
+                <div class="result-title">SAAG: ${saag} g/dL</div>
+                <div><strong>Gradient:</strong> ${isHigh ? 'High Gradient (≥ 1.1 g/dL)' : 'Low Gradient (&lt; 1.1 g/dL)'}</div>
+                <div class="result-detail">
+                    ${isHigh
+                        ? '<strong>Portal Hypertension Present (~97% accuracy)</strong><br>Causes: Cirrhosis, alcoholic hepatitis, cardiac ascites, Budd-Chiari / SOS, portal vein thrombosis, massive liver metastases.'
+                        : '<strong>No Portal Hypertension</strong><br>Causes: Peritoneal carcinomatosis, TB peritonitis, pancreatic ascites, nephrotic syndrome, serositis, bowel obstruction/infarction.'}
+                    ${proteinLine}
+                </div>
+            `);
+        }
+
+        // ---------- 3. LIGHT'S CRITERIA ----------
+        function calcLights() {
+            const pfP = val('lp_p');
+            const sP = val('ls_p');
+            const pfLDH = val('lp_ldh');
+            const sLDH = val('ls_ldh');
+            const ulnLDH = val('ls_ldh_uln');
+
+            const ratioP = (!isNaN(pfP) && !isNaN(sP) && sP > 0) ? pfP / sP : null;
+            const ratioLDH = (!isNaN(pfLDH) && !isNaN(sLDH) && sLDH > 0) ? pfLDH / sLDH : null;
+            const limitLDH = (!isNaN(pfLDH) && !isNaN(ulnLDH) && ulnLDH > 0) ? pfLDH / ulnLDH : null;
+
+            if (ratioP === null && ratioLDH === null && limitLDH === null) {
+                show('lights_res', '', 'Enter protein and LDH parameters to evaluate criteria.');
+                return;
+            }
+
+            const c1 = ratioP !== null && ratioP > 0.5;
+            const c2 = ratioLDH !== null && ratioLDH > 0.6;
+            const c3 = limitLDH !== null && limitLDH > (2 / 3);
+
+            const isExudate = c1 || c2 || c3;
+            const allEntered = ratioP !== null && ratioLDH !== null && limitLDH !== null;
+
+            let title, cls;
+            if (isExudate) {
+                title = 'Classification: EXUDATE';
+                cls = 'pos';
+            } else if (allEntered) {
+                title = 'Classification: TRANSUDATE';
+                cls = 'neg';
+            } else {
+                title = 'No criterion met so far (incomplete data)';
+                cls = 'warn';
+            }
+
+            const line = (label, ok, text) => `• ${label}: <strong>${ok === null ? 'N/A' : text}</strong>`;
+
+            show('lights_res', cls, `
+                <div class="result-title">${title}</div>
+                ${(!isExudate && !allEntered) ? '<div class="result-detail">Enter all values to exclude an exudate.</div>' : ''}
+                <div class="result-detail">
+                    ${line('Pleural/Serum Protein &gt; 0.5', ratioP, ratioP !== null ? ratioP.toFixed(2) + ' (' + (c1 ? 'Met' : 'Unmet') + ')' : '')}<br>
+                    ${line('Pleural/Serum LDH &gt; 0.6', ratioLDH, ratioLDH !== null ? ratioLDH.toFixed(2) + ' (' + (c2 ? 'Met' : 'Unmet') + ')' : '')}<br>
+                    ${line('Pleural LDH &gt; 2/3 of Serum LDH ULN', limitLDH, limitLDH !== null ? (limitLDH * 100).toFixed(0) + '% of ULN; threshold 67% (' + (c3 ? 'Met' : 'Unmet') + ')' : '')}
+                </div>
+            `);
+        }
+
+        // ---------- 4. CREATININE CLEARANCE ----------
+        function calcCrCl() {
+            calcMACD();
+            calcEGFR();
+            const age = val('cg_age');
+            const wt = val('cg_wt');
+            const scr = val('cg_scr');
+            const sex = document.getElementById('cg_sex').value;
+
+            if (isNaN(age) || isNaN(wt) || isNaN(scr) || scr <= 0 || wt <= 0 || age <= 0) {
+                show('crcl_res', '', 'Enter age, weight, and serum creatinine.');
+                return;
+            }
+
+            let crcl = ((140 - age) * wt) / (72 * scr);
+            if (sex === 'female') crcl *= 0.85;
+            crcl = Math.max(0, Math.round(crcl * 10) / 10);
+
+            const cls = crcl < 30 ? 'pos' : crcl < 60 ? 'warn' : 'neg';
+            show('crcl_res', cls, `
+                <div class="result-title">Estimated CrCl: ${crcl} mL/min</div>
+                <div class="result-detail">
+                    ${crcl < 30 ? '<strong>Severe Renal Impairment (&lt;30):</strong> High risk for contrast media &amp; dose adjustments.' :
+                      crcl < 60 ? '<strong>Moderate Renal Impairment (30–59):</strong> Monitor hydration and nephrotoxins.' :
+                      '<strong>Normal / Mildly Reduced Renal Function (≥60).</strong>'}
+                </div>
+            `);
+        }
+
+        // ---------- 5. ACR TI-RADS CALCULATOR ----------
+        // Echogenic foci: "None" is mutually exclusive with the others; the others ADD together.
+        document.querySelectorAll('.tr_foci').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const none = document.querySelector('.tr_none');
+                const others = Array.from(document.querySelectorAll('.tr_foci')).filter(x => x !== none);
+                if (cb === none && cb.checked) {
+                    others.forEach(o => o.checked = false);
+                } else if (cb !== none && cb.checked) {
+                    none.checked = false;
+                }
+                if (!none.checked && !others.some(o => o.checked)) none.checked = true;
+                calcTIRADS();
+            });
+        });
+
+        const TR_LEVELS = {
+            TR1: { name: 'Benign', risk: '&lt;2%' },
+            TR2: { name: 'Not Suspicious', risk: '&lt;2%' },
+            TR3: { name: 'Mildly Suspicious', risk: '&lt;5%' },
+            TR4: { name: 'Moderately Suspicious', risk: '5–20%' },
+            TR5: { name: 'Highly Suspicious', risk: '&gt;20%' }
+        };
+
+        const TR_THRESH = {
+            TR3: { fna: 2.5, fu: 1.5, sched: 'US at 1, 3 and 5 years' },
+            TR4: { fna: 1.5, fu: 1.0, sched: 'US at 1, 2, 3 and 5 years' },
+            TR5: { fna: 1.0, fu: 0.5, sched: 'US annually for up to 5 years' }
+        };
+
+        function calcTIRADS() {
+            const sel = id => document.getElementById(id).value;
+            if (['tr_comp', 'tr_echo', 'tr_shape', 'tr_margin'].some(id => sel(id) === '')) {
+                show('tirads_res', '', 'Select all four features above (composition, echogenicity, shape, margin) to calculate total TI-RADS points and management recommendations.');
+                return;
+            }
+
+            const comp = parseInt(sel('tr_comp'), 10);
+            const echo = parseInt(sel('tr_echo'), 10);
+            const shape = parseInt(sel('tr_shape'), 10);
+            const margin = parseInt(sel('tr_margin'), 10);
+
+            // Echogenic foci points are cumulative
+            let fociPts = 0;
+            document.querySelectorAll('.tr_foci:checked').forEach(cb => { fociPts += parseInt(cb.value, 10); });
+
+            const totalPts = comp + echo + shape + margin + fociPts;
+
+            let level;
+            if (totalPts === 0) level = 'TR1';
+            else if (totalPts <= 2) level = 'TR2';
+            else if (totalPts === 3) level = 'TR3';
+            else if (totalPts <= 6) level = 'TR4';
+            else level = 'TR5';
+
+            const info = TR_LEVELS[level];
+            const th = TR_THRESH[level];
+            const size = val('tr_size');
+
+            let recs;
+            if (!th) {
+                recs = `&bull; FNA: <strong>Not indicated</strong><br>&bull; Surveillance follow-up: <strong>Not indicated</strong>`;
+            } else {
+                recs = `&bull; FNA Threshold: <strong>≥ ${th.fna} cm</strong><br>
+                        &bull; Surveillance Follow-up Threshold: <strong>≥ ${th.fu} cm</strong> (${th.sched})`;
+            }
+
+            let sizeEval = '';
+            if (!isNaN(size) && size > 0) {
+                let needsFna = false, needsFuv = false;
+                if (th) {
+                    needsFna = size >= th.fna;
+                    needsFuv = !needsFna && size >= th.fu;
+                }
+                const color = needsFna ? 'var(--danger)' : needsFuv ? 'var(--warning)' : 'var(--success)';
+                const text = needsFna ? 'FNA RECOMMENDED'
+                           : needsFuv ? 'SURVEILLANCE FOLLOW-UP RECOMMENDED (' + th.sched + ')'
+                           : 'NO FNA OR FOLLOW-UP NEEDED';
+                sizeEval = `<div class="result-detail"><strong>Nodule Size (${size} cm) Evaluation:</strong> <span style="color:${color}; font-weight:bold;">${text}</span></div>`;
+            }
+
+            const cls = (level === 'TR4' || level === 'TR5') ? 'pos' : level === 'TR3' ? 'warn' : 'neg';
+
+            show('tirads_res', cls, `
+                <div class="result-title">Total Score: ${totalPts} points &bull; ${level}: ${info.name}</div>
+                <div class="result-detail">
+                    Composition ${comp} + Echogenicity ${echo} + Shape ${shape} + Margin ${margin} + Foci ${fociPts} = <strong>${totalPts}</strong><br>
+                    Approx. malignancy risk: ${info.risk}
+                </div>
+                <div class="result-detail"><strong>ACR Recommendations:</strong><br>${recs}</div>
+                ${sizeEval}
+            `);
+        }
+
+
+        // ---------- 4a. MAX ALLOWABLE CONTRAST DOSE ----------
+        function calcMACD() {
+            const wt = val('cg_wt');
+            const scr = val('cg_scr');
+            if (isNaN(wt) || isNaN(scr) || wt <= 0 || scr <= 0) {
+                show('macd_res', '', 'Enter weight and serum creatinine above to calculate.');
+                return;
+            }
+            const raw = (5 * wt) / scr;
+            const capped = raw > 300;
+            const macd = Math.round(Math.min(raw, 300));
+            show('macd_res', macd < 100 ? 'warn' : 'neg', `
+                <div class="result-title">MACD: ${macd} mL</div>
+                <div class="result-detail">
+                    Calculated ${Math.round(raw)} mL${capped ? ' (capped at 300 mL)' : ''}.
+                    ${macd < 100 ? '<br><strong>Low allowable volume:</strong> minimize contrast, consider CO₂ / non-contrast alternatives and hydration.' : ''}
+                </div>
+            `);
+        }
+
+        // ---------- 4b. BLEEDING RISK (SIR 2019) ----------
+        function calcBleed() {
+            const risk = document.getElementById('bleed_risk').value;
+            const cld = document.getElementById('bleed_cld').checked;
+            const inr = val('bleed_inr');
+            const plt = val('bleed_plt');
+            const fib = val('bleed_fib');
+
+            if (isNaN(inr) && isNaN(plt) && isNaN(fib)) {
+                show('bleed_res', '', 'Enter INR and/or platelet count to compare against the SIR thresholds.');
+                return;
+            }
+
+            const pltMin = risk === 'low' ? 20 : 50;
+            let inrTxt, inrOk = null;
+            if (risk === 'low') {
+                if (cld) { inrTxt = 'No INR threshold in chronic liver disease'; inrOk = isNaN(inr) ? null : true; }
+                else { inrTxt = 'INR ≤ 3.0 (correct to 2.0–3.0)'; inrOk = isNaN(inr) ? null : inr <= 3.0; }
+            } else {
+                if (cld) { inrTxt = 'INR &lt; 2.5 (chronic liver disease)'; inrOk = isNaN(inr) ? null : inr < 2.5; }
+                else { inrTxt = 'INR ≤ 1.8 (correct to 1.5–1.8)'; inrOk = isNaN(inr) ? null : inr <= 1.8; }
+            }
+            const pltOk = isNaN(plt) ? null : plt >= pltMin;
+            const fibOk = isNaN(fib) ? null : fib >= 100;
+
+            const mark = ok => ok === null ? '–' : ok ? '✓' : '✗';
+            const lines = [];
+            lines.push(`${mark(inrOk)} <strong>INR${isNaN(inr) ? '' : ' ' + inr}:</strong> ${inrTxt}${inrOk === false ? ' → <strong>correct before procedure (e.g., FFP/PCC/vitamin K per clinical context)</strong>' : ''}`);
+            lines.push(`${mark(pltOk)} <strong>Platelets${isNaN(plt) ? '' : ' ' + plt}:</strong> ≥ ${pltMin} ×10³/µL${pltOk === false ? ' → <strong>consider platelet transfusion</strong>' : ''}`);
+            if (!isNaN(fib)) {
+                lines.push(`${mark(fibOk)} <strong>Fibrinogen ${fib}:</strong> &gt; 100 mg/dL${fibOk === false ? ' → <strong>consider cryoprecipitate / fibrinogen replacement</strong>' : ''}`);
+            }
+
+            const anyFail = [inrOk, pltOk, fibOk].some(x => x === false);
+            const allKnown = (inrOk !== null || (cld && risk === 'low')) && pltOk !== null;
+            const cls = anyFail ? 'pos' : (allKnown ? 'neg' : 'warn');
+            const title = anyFail ? 'Correction suggested before procedure'
+                        : allKnown ? 'Within SIR thresholds'
+                        : 'Within thresholds for values entered (enter remaining labs)';
+
+            show('bleed_res', cls, `
+                <div class="result-title">${title}</div>
+                <div class="result-detail">${lines.join('<br>')}</div>
+                <div class="result-detail">${risk === 'low' ? 'Low-risk procedure' : 'High-risk procedure'}${cld ? ' • Chronic liver disease thresholds' : ''}</div>
+            `);
+        }
+
+        ['bleed_inr', 'bleed_plt', 'bleed_fib'].forEach(id => calcByInput[id] = calcBleed);
+        document.getElementById('bleed_risk').addEventListener('change', calcBleed);
+        document.getElementById('bleed_cld').addEventListener('change', calcBleed);
+
+        // ---------- 4c. MELD 3.0 / MELD-Na ----------
+        function calcMELD() {
+            let bili = val('meld_bili'), inr = val('meld_inr'), cr = val('meld_cr');
+            let na = val('meld_na');
+            let alb = val('meld_alb');
+            const age = val('meld_age');
+            const female = document.getElementById('meld_sex').value === 'female';
+            const dial = document.getElementById('meld_dial').checked;
+
+            if (isNaN(bili) || isNaN(inr) || isNaN(cr) || isNaN(na)) {
+                show('meld_res', '', 'Enter bilirubin, INR, creatinine and sodium (plus albumin for MELD 3.0).');
+                return;
+            }
+            if (!isNaN(age) && age < 12) {
+                show('meld_res', 'warn', 'MELD 3.0 applies to patients 12 years and older. Use PELD for younger patients.');
+                return;
+            }
+            const peds = !isNaN(age) && age < 18;   // 12-17 y: no sex term, constant 7.33
+
+            // OPTN limits: values below 1.0 set to 1.0; sodium 125-137
+            bili = Math.max(1, bili);
+            inr = Math.max(1, inr);
+            na = Math.min(137, Math.max(125, na));
+
+            // Classic MELD / MELD-Na (creatinine cap 4.0; dialysis = 4.0)
+            let crOld = Math.max(1, cr);
+            crOld = dial ? 4 : Math.min(4, crOld);
+            let meld = Math.round(10 * (0.957 * Math.log(crOld) + 0.378 * Math.log(bili) + 1.120 * Math.log(inr) + 0.643));
+            meld = Math.max(6, Math.min(40, meld));
+            let meldNa = meld;
+            if (meld > 11) {
+                meldNa = Math.round(meld + 1.32 * (137 - na) - 0.033 * meld * (137 - na));
+            }
+            meldNa = Math.max(6, Math.min(40, meldNa));
+
+            // MELD 3.0 (creatinine cap 3.0; dialysis = 3.0; albumin 1.5-3.5)
+            let meld3 = null, surv = null, used = '';
+            if (!isNaN(alb)) {
+                const a = Math.min(3.5, Math.max(1.5, alb));
+                let c3 = Math.max(1, cr);
+                c3 = dial ? 3 : Math.min(3, c3);
+                const raw = (peds ? 0 : (female ? 1.33 : 0)) + 4.56 * Math.log(bili) + 0.82 * (137 - na)
+                    - 0.24 * (137 - na) * Math.log(bili) + 9.09 * Math.log(inr)
+                    + 11.14 * Math.log(c3) + 1.85 * (3.5 - a) - 1.83 * (3.5 - a) * Math.log(c3) + (peds ? 7.33 : 6);
+                meld3 = Math.max(6, Math.min(40, Math.round(raw)));
+                surv = Math.pow(0.946, Math.exp(0.17698 * meld3 - 3.56)) * 100;
+                used = `Values used for MELD 3.0 after OPTN limits: bilirubin ${bili}, INR ${inr}, creatinine ${c3}${dial ? ' (dialysis)' : ''}, sodium ${na}, albumin ${a}, ${peds ? 'age 12–17 equation' : (female ? 'female' : 'male')}`;
+            }
+
+            const lead = meld3 !== null ? meld3 : meldNa;
+            const cls = lead >= 18 ? 'pos' : lead >= 10 ? 'warn' : 'neg';
+
+            show('meld_res', cls, `
+                ${meld3 !== null
+                    ? `<div class="result-title">MELD 3.0: ${meld3}</div>
+                       <div class="result-detail">Estimated 90-day survival: <strong>${surv.toFixed(0)}%</strong></div>`
+                    : `<div class="result-detail"><em>Enter albumin to calculate MELD 3.0.</em></div>`}
+                <div class="result-detail"><strong>MELD-Na: ${meldNa}</strong> &bull; MELD (original): ${meld}</div>
+                <div class="result-detail">
+                    ${lead >= 15 ? '• MELD ≥15: consider transplant evaluation/referral.<br>' : ''}
+                    ${lead >= 18 ? '• Higher scores (≥18) are associated with increased early mortality after TIPS; weigh with bilirubin, age, encephalopathy and cardiac function.' : ''}
+                </div>
+                ${used ? `<div class="footnote" style="margin-top:8px;">${used}</div>` : ''}
+            `);
+        }
+
+        ['meld_bili', 'meld_inr', 'meld_cr', 'meld_na', 'meld_alb', 'meld_age'].forEach(id => calcByInput[id] = calcMELD);
+        document.getElementById('meld_sex').addEventListener('change', calcMELD);
+        document.getElementById('meld_dial').addEventListener('change', calcMELD);
+
+        // ---------- 4d. CHILD-PUGH ----------
+        function calcChildPugh() {
+            const ids = ['cp_bili', 'cp_alb', 'cp_inr', 'cp_asc', 'cp_he'];
+            const vals = ids.map(id => document.getElementById(id).value);
+            if (vals.some(v => v === '')) {
+                show('cp_res', '', 'Select all five parameters to calculate the Child-Pugh class.');
+                return;
+            }
+            const total = vals.reduce((s, v) => s + parseInt(v, 10), 0);
+            let cls, label, surv, rc;
+            if (total <= 6) { cls = 'A'; label = 'Well-compensated'; surv = '~100% 1-yr, ~85% 2-yr'; rc = 'neg'; }
+            else if (total <= 9) { cls = 'B'; label = 'Significant functional compromise'; surv = '~80% 1-yr, ~60% 2-yr'; rc = 'warn'; }
+            else { cls = 'C'; label = 'Decompensated'; surv = '~45% 1-yr, ~35% 2-yr'; rc = 'pos'; }
+            show('cp_res', rc, `
+                <div class="result-title">Child-Pugh ${cls}: ${total} points</div>
+                <div class="result-detail"><strong>${label}</strong><br>Approximate survival: ${surv}</div>
+            `);
+        }
+        ['cp_bili', 'cp_alb', 'cp_inr', 'cp_asc', 'cp_he'].forEach(id =>
+            document.getElementById(id).addEventListener('change', calcChildPugh));
+
+
+        // ---------- BCLC 2022 ----------
+        function calcBCLC() {
+            const g = id => document.getElementById(id).value;
+            const tb = g('bclc_tumor'), sp = g('bclc_spread'), ps = g('bclc_ps'), lf = g('bclc_liver');
+            if ([tb, sp, ps, lf].some(v => v === '')) {
+                show('bclc_res', '', 'Select all four parameters to determine the BCLC stage.');
+                return;
+            }
+            let stage, name, cls, plan;
+            if (ps === '3' || lf === 'bad') {
+                stage = 'D'; name = 'Terminal'; cls = 'pos';
+                plan = '• Best supportive care. Liver transplantation only if the patient meets transplant criteria and is a candidate.';
+            } else if (ps === '1' || sp === 'yes') {
+                stage = 'C'; name = 'Advanced'; cls = 'pos';
+                plan = '• Systemic therapy is the standard first-line approach. Locoregional treatment is not routinely recommended for portal invasion or extrahepatic spread in this stage; discuss selected cases at tumor board.';
+            } else if (tb === '0') {
+                stage = '0'; name = 'Very early'; cls = 'neg';
+                plan = '• Ablation or resection. If transplant is an option and surgical criteria are met, resection is the first choice; if transplant or resection is not feasible, ablation (similar survival outcomes).<br>• Second-line if the first treatment fails: TACE or TARE.';
+            } else if (tb === '1') {
+                stage = 'A'; name = 'Early'; cls = 'neg';
+                plan = '• Single nodule: resection (preserved liver function, no clinically significant portal hypertension) or liver transplantation; ablation when resection is not suitable (resection is favored over ablation above 2 cm).<br>• Multifocal (≤3 nodules) in non-transplant candidates: ablation for nodules ≤3 cm, otherwise TACE.<br>• Second-line if the first treatment fails or is not feasible: TACE or TARE.';
+            } else {
+                stage = 'B'; name = 'Intermediate'; cls = 'warn';
+                plan = '• Subgroups in the 2022 update:<br>&nbsp;&nbsp;1. Within extended transplant criteria: liver transplantation.<br>&nbsp;&nbsp;2. Well-defined nodules with preserved portal flow: TACE (ablation or TARE in selected cases).<br>&nbsp;&nbsp;3. Diffuse/infiltrative disease or not a TACE candidate: systemic therapy.';
+            }
+            show('bclc_res', cls, `
+                <div class="result-title">BCLC stage ${stage}: ${name}</div>
+                <div class="result-detail">${plan}</div>
+            `);
+        }
+        ['bclc_tumor', 'bclc_spread', 'bclc_ps', 'bclc_liver'].forEach(id =>
+            document.getElementById(id).addEventListener('change', calcBCLC));
+
+        // ---------- 4e. LOCAL ANESTHETIC DOSING ----------
+        const LA = {
+            lido:  { name: 'Lidocaine',      cls: 'Amide', plain: [4.5, 300], epi: [7, 500],     conc: [0.5, 1, 1.5, 2], def: 1 },
+            bupi:  { name: 'Bupivacaine',    cls: 'Amide', plain: [2.5, 175], epi: [3, 225],     conc: [0.25, 0.5, 0.75], def: 0.25 },
+            ropi:  { name: 'Ropivacaine',    cls: 'Amide', plain: [3, 200],   epi: [3, 200],     conc: [0.2, 0.5, 0.75, 1], def: 0.5 },
+            mepi:  { name: 'Mepivacaine',    cls: 'Amide', plain: [4.5, 300], epi: [7, 500],     conc: [1, 1.5, 2, 3], def: 1 },
+            chlor: { name: 'Chloroprocaine', cls: 'Ester', plain: [11, 800],  epi: [14, 1000],   conc: [1, 2, 3], def: 2 }
+        };
+
+        function fillLAConc() {
+            const key = document.getElementById('la_agent').value;
+            const sel = document.getElementById('la_conc');
+            sel.innerHTML = LA[key].conc.map(c =>
+                `<option value="${c}"${c === LA[key].def ? ' selected' : ''}>${c}% (${c * 10} mg/mL)</option>`).join('');
+            calcLA();
+        }
+
+        function calcLA() {
+            const key = document.getElementById('la_agent').value;
+            const conc = parseFloat(document.getElementById('la_conc').value);
+            const epi = document.getElementById('la_epi').checked;
+            const wt = val('la_wt');
+            const given = val('la_given');
+            const agent = LA[key];
+
+            if (isNaN(wt) || wt <= 0) {
+                show('la_res', '', 'Enter weight to calculate the maximum dose.');
+                return;
+            }
+
+            const useEpi = epi && key !== 'ropi';
+            const [mgkg, cap] = useEpi ? agent.epi : agent.plain;
+            const byWeight = mgkg * wt;
+            const maxMg = Math.min(byWeight, cap);
+            const mgPerMl = conc * 10;
+            const maxMl = maxMg / mgPerMl;
+
+            let remaining = '';
+            let cls = 'neg';
+            if (!isNaN(given) && given >= 0) {
+                const givenMg = given * mgPerMl;
+                const remMl = maxMl - given;
+                if (remMl < 0) {
+                    cls = 'pos';
+                    remaining = `<div class="result-detail"><strong style="color:var(--danger);">Maximum exceeded:</strong> ${given} mL (${givenMg.toFixed(0)} mg) already given.</div>`;
+                } else {
+                    cls = remMl < maxMl * 0.25 ? 'warn' : 'neg';
+                    remaining = `<div class="result-detail">Already given: ${given} mL (${givenMg.toFixed(0)} mg)<br><strong>Remaining: ${remMl.toFixed(1)} mL</strong> (${(remMl * mgPerMl).toFixed(0)} mg)</div>`;
+                }
+            }
+
+            show('la_res', cls, `
+                <div class="result-title">${agent.name} ${conc}%${useEpi ? ' with epinephrine' : ''}: max ${maxMl.toFixed(1)} mL</div>
+                <div class="result-detail">
+                    Maximum total dose: <strong>${maxMg.toFixed(0)} mg</strong> (${mgkg} mg/kg${byWeight > cap ? '; absolute cap ' + cap + ' mg applies' : ''})<br>
+                    Class: ${agent.cls}${key === 'ropi' && epi ? ' • Epinephrine does not change the ropivacaine limit used here' : ''}
+                </div>
+                ${remaining}
+            `);
+        }
+
+        (function initLA() {
+            const sel = document.getElementById('la_agent');
+            sel.innerHTML = Object.keys(LA).map(k => `<option value="${k}">${LA[k].name} (${LA[k].cls})</option>`).join('');
+            sel.addEventListener('change', fillLAConc);
+            document.getElementById('la_conc').addEventListener('change', calcLA);
+            document.getElementById('la_epi').addEventListener('change', calcLA);
+            ['la_wt', 'la_given'].forEach(id => calcByInput[id] = calcLA);
+            fillLAConc();
+        })();
+
+
+        // ---------- WELLS DVT / PE ----------
+        function sumChecked(sel) {
+            let s = 0;
+            document.querySelectorAll(sel).forEach(cb => {
+                if (cb.checked) s += parseFloat(cb.dataset.pts);
+            });
+            return s;
+        }
+
+        function calcWellsDVT() {
+            const s = sumChecked('.wd');
+            let tier, cls, risk;
+            if (s <= 0) { tier = 'Low probability'; risk = '≈3–5%'; cls = 'neg'; }
+            else if (s <= 2) { tier = 'Moderate probability'; risk = '≈17%'; cls = 'warn'; }
+            else { tier = 'High probability'; risk = '≈75%'; cls = 'pos'; }
+            const likely = s >= 2;
+            show('wd_res', cls, `
+                <div class="result-title">Wells DVT score: ${s}</div>
+                <div class="result-detail"><strong>Three-tier:</strong> ${tier} (DVT prevalence ${risk})<br>
+                <strong>Two-tier:</strong> DVT ${likely ? 'LIKELY (≥2)' : 'UNLIKELY (≤1)'}</div>
+                <div class="result-detail">
+                    ${likely
+                        ? '• DVT likely: proximal compression ultrasound. If negative despite high suspicion, consider repeat imaging or D-dimer per local protocol.'
+                        : '• DVT unlikely: D-dimer. Negative result excludes DVT; positive result needs compression ultrasound.'}
+                </div>
+            `);
+        }
+
+        function calcWellsPE() {
+            const s = sumChecked('.wp');
+            let tier, cls, risk;
+            if (s < 2) { tier = 'Low probability'; risk = '≈4%'; cls = 'neg'; }
+            else if (s <= 6) { tier = 'Moderate probability'; risk = '≈21%'; cls = 'warn'; }
+            else { tier = 'High probability'; risk = '≈67%'; cls = 'pos'; }
+            const likely = s > 4;
+            show('wp_res', cls, `
+                <div class="result-title">Wells PE score: ${s}</div>
+                <div class="result-detail"><strong>Three-tier:</strong> ${tier} (PE prevalence ${risk})<br>
+                <strong>Two-tier:</strong> PE ${likely ? 'LIKELY (&gt;4)' : 'UNLIKELY (≤4)'}</div>
+                <div class="result-detail">
+                    ${likely
+                        ? '• PE likely: CT pulmonary angiography (V/Q scan if contrast is contraindicated).'
+                        : '• PE unlikely: D-dimer. Negative result excludes PE; positive result needs CT pulmonary angiography.'}
+                </div>
+            `);
+        }
+
+        // ---------- VILLALTA ----------
+        function calcVillalta() {
+            let sym = 0, sig = 0;
+            document.querySelectorAll('.vls').forEach(e => sym += parseInt(e.value, 10) || 0);
+            document.querySelectorAll('.vlg').forEach(e => sig += parseInt(e.value, 10) || 0);
+            const total = sym + sig;
+            const ulcer = document.getElementById('vl_ulcer').checked;
+            let cat, cls;
+            if (total >= 15 || ulcer) { cat = 'Severe PTS'; cls = 'pos'; }
+            else if (total >= 10) { cat = 'Moderate PTS'; cls = 'pos'; }
+            else if (total >= 5) { cat = 'Mild PTS'; cls = 'warn'; }
+            else { cat = 'No PTS'; cls = 'neg'; }
+            show('vl_res', cls, `
+                <div class="result-title">Villalta total: ${total} / 33 &bull; ${cat}</div>
+                <div class="result-detail">Symptoms ${sym} / 15 &bull; Signs ${sig} / 18${ulcer ? '<br><strong>Venous ulcer present: classified as severe regardless of total score.</strong>' : ''}</div>
+            `);
+        }
+
+        (function initVTE() {
+            document.querySelectorAll('.wd').forEach(cb => cb.addEventListener('change', calcWellsDVT));
+            document.querySelectorAll('.wp').forEach(cb => cb.addEventListener('change', calcWellsPE));
+            document.querySelectorAll('.vl').forEach(sl => sl.addEventListener('change', calcVillalta));
+            document.getElementById('vl_ulcer').addEventListener('change', calcVillalta);
+        })();
+
+
+        // ---------- eGFR (CKD-EPI 2021) ----------
+        function calcEGFR() {
+            const age = val('cg_age');
+            const scr = val('cg_scr');
+            const female = document.getElementById('cg_sex').value === 'female';
+            if (isNaN(age) || isNaN(scr) || scr <= 0 || age < 18) {
+                show('egfr_res', '', isNaN(age) || age >= 18 ? 'Enter age, sex and serum creatinine above to calculate.' : 'CKD-EPI 2021 applies to adults 18 years and older.');
+                return;
+            }
+            const k = female ? 0.7 : 0.9;
+            const a = female ? -0.241 : -0.302;
+            const egfr = 142 * Math.pow(Math.min(scr / k, 1), a) * Math.pow(Math.max(scr / k, 1), -1.200)
+                * Math.pow(0.9938, age) * (female ? 1.012 : 1);
+            const v = Math.round(egfr);
+            let stage;
+            if (v >= 90) stage = 'G1 (normal or high)';
+            else if (v >= 60) stage = 'G2 (mildly decreased)';
+            else if (v >= 45) stage = 'G3a (mildly to moderately decreased)';
+            else if (v >= 30) stage = 'G3b (moderately to severely decreased)';
+            else if (v >= 15) stage = 'G4 (severely decreased)';
+            else stage = 'G5 (kidney failure)';
+            let contrast;
+            if (v >= 45) contrast = 'Low risk of contrast-associated AKI; prophylaxis generally not indicated.';
+            else if (v >= 30) contrast = 'Prophylaxis generally not indicated; consider case by case in patients at particularly high risk (e.g., eGFR near 30 with multiple risk factors).';
+            else contrast = 'Prophylaxis is indicated (IV hydration) for eGFR &lt;30 not on maintenance dialysis, or AKI, when contrast is needed.';
+            show('egfr_res', v < 30 ? 'pos' : v < 45 ? 'warn' : 'neg', `
+                <div class="result-title">eGFR: ${v} mL/min/1.73 m²</div>
+                <div class="result-detail"><strong>CKD category ${stage}</strong><br>${contrast}</div>
+            `);
+        }
+
+        // ---------- BSA / BMI / IBW ----------
+        function calcBSA() {
+            const us = document.getElementById('bsa_units').value === 'us';
+            const female = document.getElementById('bsa_sex').value === 'female';
+            document.getElementById('bsa_ht_label').textContent = us ? 'Height (inches):' : 'Height (cm):';
+            document.getElementById('bsa_wt_label').textContent = us ? 'Weight (lb):' : 'Weight (kg):';
+            let h = val('bsa_ht'), w = val('bsa_wt');
+            if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
+                show('bsa_res', '', 'Enter height and weight.');
+                return;
+            }
+            if (us) { h = h * 2.54; w = w * 0.45359237; }
+            const bmi = w / Math.pow(h / 100, 2);
+            const most = Math.sqrt(h * w / 3600);
+            const dub = 0.007184 * Math.pow(w, 0.425) * Math.pow(h, 0.725);
+            const inches = h / 2.54;
+            const ibw = (female ? 45.5 : 50) + 2.3 * Math.max(0, inches - 60);
+            const adj = ibw + 0.4 * (w - ibw);
+            let cat;
+            if (bmi < 18.5) cat = 'Underweight';
+            else if (bmi < 25) cat = 'Normal';
+            else if (bmi < 30) cat = 'Overweight';
+            else if (bmi < 35) cat = 'Obesity class I';
+            else if (bmi < 40) cat = 'Obesity class II';
+            else cat = 'Obesity class III';
+            const conv = kg => us ? `${kg.toFixed(1)} kg (${(kg / 0.45359237).toFixed(1)} lb)` : `${kg.toFixed(1)} kg`;
+            show('bsa_res', '', `
+                <div class="result-title">BSA (Mosteller): ${most.toFixed(2)} m²</div>
+                <div class="result-detail">
+                    BSA (Du Bois): ${dub.toFixed(2)} m²<br>
+                    BMI: ${bmi.toFixed(1)} kg/m² (${cat})<br>
+                    Ideal body weight (Devine): ${conv(ibw)}<br>
+                    Adjusted body weight: ${conv(adj)}<br>
+                    Actual weight is ${((w / ibw) * 100).toFixed(0)}% of ideal
+                </div>
+            `);
+        }
+        ['bsa_ht', 'bsa_wt'].forEach(id => calcByInput[id] = calcBSA);
+        document.getElementById('bsa_units').addEventListener('change', calcBSA);
+        document.getElementById('bsa_sex').addEventListener('change', calcBSA);
+
+        // ---------- FLR / PVE ----------
+        function liverBSA() {
+            const h = val('flr_ht'), w = val('flr_wt');
+            if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) return null;
+            const bsa = Math.sqrt(h * w / 3600);
+            const telv = -794.41 + 1267.28 * bsa;
+            return { bsa: bsa, telv: telv };
+        }
+
+        function calcFLR() {
+            const b = liverBSA();
+            const flr = val('flr_vol');
+            const target = parseInt(document.getElementById('flr_cond').value, 10);
+            if (!b || isNaN(flr) || flr <= 0) {
+                show('flr_res', '', 'Enter height, weight and FLR volume to calculate sFLR.');
+                calcPVE();
+                return;
+            }
+            const sflr = flr / b.telv * 100;
+            let cls, verdict;
+            if (sflr >= target) { cls = 'neg'; verdict = `Meets the ≥${target}% threshold.`; }
+            else if (sflr >= target - 5) { cls = 'warn'; verdict = `Borderline: below the ≥${target}% threshold. Discuss FLR augmentation (e.g., PVE) with the surgical team.`; }
+            else { cls = 'pos'; verdict = `Below the ≥${target}% threshold. FLR augmentation (e.g., PVE) is commonly considered; discuss with the surgical team.`; }
+
+            const tlv = val('flr_tlv'), tum = val('flr_tum');
+            let measured = '';
+            if (!isNaN(tlv) && tlv > 0) {
+                const denom = tlv - (isNaN(tum) ? 0 : Math.max(0, tum));
+                if (denom > 0) measured = `<br>FLR ÷ measured liver volume${!isNaN(tum) && tum > 0 ? ' (minus tumor volume)' : ''}: <strong>${(flr / denom * 100).toFixed(1)}%</strong>`;
+            }
+            show('flr_res', cls, `
+                <div class="result-title">sFLR: ${sflr.toFixed(1)}%</div>
+                <div class="result-detail">
+                    ${verdict}<br>
+                    BSA ${b.bsa.toFixed(2)} m², total estimated liver volume ${Math.round(b.telv)} mL${measured}
+                </div>
+            `);
+            calcPVE();
+        }
+
+        function calcPVE() {
+            const b = liverBSA();
+            const pre = val('pve_pre'), post = val('pve_post'), wk = val('pve_weeks');
+            if (!b || isNaN(pre) || isNaN(post) || isNaN(wk) || pre <= 0 || post <= 0 || wk <= 0) {
+                show('pve_res', '', b ? 'Enter pre- and post-PVE FLR volumes and the interval.' : 'Enter height and weight in the card above, then the PVE volumes.');
+                return;
+            }
+            const s1 = pre / b.telv * 100, s2 = post / b.telv * 100;
+            const dh = s2 - s1;
+            const kgr = dh / wk;
+            const target = parseInt(document.getElementById('flr_cond').value, 10);
+            const goodDH = dh >= 5, goodKGR = kgr >= 2, reached = s2 >= target;
+            const cls = (reached && (goodDH || goodKGR)) ? 'neg' : (goodDH || goodKGR || reached) ? 'warn' : 'pos';
+            show('pve_res', cls, `
+                <div class="result-title">sFLR ${s1.toFixed(1)}% → ${s2.toFixed(1)}%</div>
+                <div class="result-detail">
+                    Degree of hypertrophy: <strong>${dh.toFixed(1)} percentage points</strong> (${goodDH ? '≥5, favorable' : '&lt;5'})<br>
+                    Kinetic growth rate: <strong>${kgr.toFixed(1)}% per week</strong> (${goodKGR ? '≥2, favorable' : '&lt;2'})<br>
+                    Post-PVE sFLR ${reached ? 'meets' : 'is below'} the ≥${target}% target for the selected liver type.
+                </div>
+            `);
+        }
+        ['flr_ht', 'flr_wt', 'flr_vol', 'flr_tlv', 'flr_tum', 'pve_pre', 'pve_post', 'pve_weeks'].forEach(id => calcByInput[id] = calcFLR);
+        document.getElementById('flr_cond').addEventListener('change', calcFLR);
+
+        // ---------- Y-90 LUNG SHUNT / LUNG DOSE ----------
+        function calcY90() {
+            const lung = val('y_lung'), liver = val('y_liver');
+            const direct = val('y_lsf');
+            const act = val('y_act');
+            let mass = val('y_mass');
+            let prior = val('y_prior');
+            if (isNaN(prior) || prior < 0) prior = 0;
+
+            let lsf = null, src = '';
+            if (!isNaN(lung) && !isNaN(liver) && lung >= 0 && liver >= 0 && (lung + liver) > 0) {
+                lsf = lung / (lung + liver) * 100; src = 'from counts';
+            } else if (!isNaN(direct) && direct >= 0 && direct <= 100) {
+                lsf = direct; src = 'entered';
+            }
+            if (lsf === null) {
+                show('y_res', '', 'Enter lung and liver counts (or LSF) and the planned activity.');
+                return;
+            }
+            if (isNaN(mass) || mass <= 0) mass = 1;
+
+            let resin;
+            if (lsf > 20) resin = 'LSF &gt;20%: treatment not recommended (resin microspheres IFU).';
+            else if (lsf > 15) resin = 'LSF &gt;15–20%: reduce resin activity by 40% (BSA method).';
+            else if (lsf >= 10) resin = 'LSF 10–15%: reduce resin activity by 20% (BSA method).';
+            else resin = 'LSF &lt;10%: no resin activity reduction for lung shunt.';
+
+            if (isNaN(act) || act <= 0) {
+                show('y_res', lsf > 20 ? 'pos' : lsf >= 10 ? 'warn' : 'neg', `
+                    <div class="result-title">LSF: ${lsf.toFixed(1)}% (${src})</div>
+                    <div class="result-detail">${resin}<br><em>Enter planned activity to calculate lung dose.</em></div>
+                `);
+                return;
+            }
+
+            const mld = 50 * act * (lsf / 100) / mass;
+            const cum = prior + mld;
+            let maxAct = null;
+            if (lsf > 0) {
+                const a30 = 30 * mass / (50 * lsf / 100);
+                const aCum = Math.max(0, (50 - prior)) * mass / (50 * lsf / 100);
+                maxAct = Math.min(a30, aCum);
+            }
+            const overSingle = mld > 30, overCum = cum > 50;
+            const cls = (overSingle || overCum || lsf > 20) ? 'pos' : (mld > 24 || cum > 40 || lsf >= 10) ? 'warn' : 'neg';
+            show('y_res', cls, `
+                <div class="result-title">Mean lung dose: ${mld.toFixed(1)} Gy</div>
+                <div class="result-detail">
+                    LSF: <strong>${lsf.toFixed(1)}%</strong> (${src}), lung mass ${mass} kg<br>
+                    Single-treatment limit 30 Gy: <strong>${overSingle ? 'EXCEEDED' : 'within limit'}</strong><br>
+                    Cumulative ${cum.toFixed(1)} Gy vs 50 Gy limit: <strong>${overCum ? 'EXCEEDED' : 'within limit'}</strong>
+                    ${maxAct !== null ? `<br>Maximum activity meeting both lung limits: <strong>${maxAct.toFixed(2)} GBq</strong>` : ''}
+                    <br>${resin}
+                </div>
+            `);
+        }
+        ['y_lung', 'y_liver', 'y_lsf', 'y_act', 'y_mass', 'y_prior'].forEach(id => calcByInput[id] = calcY90);
+
+        // ---------- ASA ----------
+        const ASA = {
+            '1': { t: 'ASA I: Normal healthy patient', d: 'Healthy, non-smoking, no or minimal alcohol use.' },
+            '2': { t: 'ASA II: Mild systemic disease', d: 'Mild disease without substantive functional limitation. Examples: current smoker, social alcohol drinker, pregnancy, obesity (BMI 30–40), well-controlled DM/HTN, mild lung disease.' },
+            '3': { t: 'ASA III: Severe systemic disease', d: 'Substantive functional limitation; one or more moderate to severe diseases. Examples: poorly controlled DM/HTN, COPD, morbid obesity (BMI ≥40), active hepatitis, alcohol dependence or abuse, implanted pacemaker, moderate reduction in ejection fraction, ESRD on regularly scheduled dialysis, history (&gt;3 months) of MI, CVA, TIA or CAD/stents.' },
+            '4': { t: 'ASA IV: Severe systemic disease that is a constant threat to life', d: 'Examples: recent (&lt;3 months) MI, CVA, TIA or CAD/stents, ongoing cardiac ischemia or severe valve dysfunction, severe reduction in ejection fraction, shock, sepsis, DIC, ARD, ESRD not on regularly scheduled dialysis.' },
+            '5': { t: 'ASA V: Moribund patient', d: 'Not expected to survive without the operation/procedure. Examples: ruptured abdominal/thoracic aneurysm, massive trauma, intracranial bleed with mass effect, ischemic bowel with significant cardiac pathology or multiple organ dysfunction.' },
+            '6': { t: 'ASA VI: Declared brain-dead patient', d: 'Organs are being removed for donor purposes.' }
+        };
+        function calcASA() {
+            const c = document.getElementById('asa_class').value;
+            if (!c) { show('asa_res', '', 'Select a class to see its definition and examples.'); return; }
+            let e = document.getElementById('asa_e').checked;
+            if (c === '6') e = false;
+            const roman = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV', '5': 'V', '6': 'VI' }[c];
+            const cls = c <= 2 ? 'neg' : c <= 3 ? 'warn' : 'pos';
+            show('asa_res', cls, `
+                <div class="result-title">ASA ${roman}${e ? 'E' : ''}</div>
+                <div class="result-detail"><strong>${ASA[c].t}</strong><br>${ASA[c].d}${e ? '<br><strong>E modifier:</strong> emergency; delay in treatment would lead to a significant increase in threat to life or body part.' : ''}${c === '6' && document.getElementById('asa_e').checked ? '<br><em>The E modifier is not applied to ASA VI.</em>' : ''}</div>
+            `);
+        }
+        document.getElementById('asa_class').addEventListener('change', calcASA);
+        document.getElementById('asa_e').addEventListener('change', calcASA);
+
+        // ---------- ANTICOAGULANT / ANTIPLATELET HOLDS ----------
+        const LOW_DEFAULT = 'Do not withhold for low-bleeding-risk procedures (SIR 2019). Individualize for patient and operator.';
+        const HOLD = [
+            { g: 'Anticoagulants', id: 'warfarin', name: 'Warfarin', sum: '5 days; INR ≤1.8',
+              high: '5 days. Confirm INR ≤1.8 (correct to 1.5–1.8) before the procedure. Consider bridging only in high thromboembolic risk.',
+              low: 'Do not withhold. Proceed if INR ≤3.0.' },
+            { g: 'Anticoagulants', id: 'ufh', name: 'Heparin (IV unfractionated)', sum: '4–6 hours', high: '4–6 hours before the procedure.' },
+            { g: 'Anticoagulants', id: 'lmwhp', name: 'LMWH, prophylactic dose', sum: '1 dose (about 12 h)', high: 'Hold 1 dose (last dose about 12 hours before).' },
+            { g: 'Anticoagulants', id: 'lmwht', name: 'LMWH, therapeutic dose', sum: '24 h (2 doses if BID)', high: 'Last dose at least 24 hours before (hold 2 doses if given twice daily). Consider checking anti-Xa if renal impairment.' },
+            { g: 'Anticoagulants', id: 'fonda', name: 'Fondaparinux', sum: 'CrCl ≥50: 2–3 d; &lt;50: 3–5 d', renal: true,
+              hr: { ge50: '2–3 days.', mid: '3–5 days.', lt30: '3–5 days or longer; fondaparinux is generally avoided at CrCl &lt;30. Consult pharmacy.' } },
+            { g: 'Anticoagulants', id: 'arga', name: 'Argatroban', sum: '4–6 hours', high: '4–6 hours before the procedure.' },
+            { g: 'Anticoagulants', id: 'apix', name: 'Apixaban', sum: '48 h (CrCl ≥25); longer if lower', renal: true,
+              hr: { ge50: '48 hours.', mid: '48 hours (the SIR table assumes CrCl ≥25; some protocols use 72 hours).', lt30: 'At least 72 hours. The SIR table covers CrCl ≥25 only; consider longer and consult pharmacy.' } },
+            { g: 'Anticoagulants', id: 'riva', name: 'Rivaroxaban', sum: '48 h (CrCl ≥30); ≥72 h if lower', renal: true,
+              hr: { ge50: '48 hours.', mid: '48 hours (CrCl ≥30).', lt30: 'At least 72 hours; consider longer and consult pharmacy.' } },
+            { g: 'Anticoagulants', id: 'edox', name: 'Edoxaban', sum: '48 h (CrCl ≥30); ≥72 h if lower', renal: true,
+              hr: { ge50: '48 hours.', mid: '48 hours (CrCl ≥30).', lt30: 'At least 72 hours; consider longer and consult pharmacy.' } },
+            { g: 'Anticoagulants', id: 'dabi', name: 'Dabigatran', sum: 'CrCl ≥50: 2 d; 30–49: 4 d; &lt;30: ≥5 d', renal: true,
+              hr: { ge50: '2 days (48 hours).', mid: '4 days.', lt30: '5 days or longer; dabigatran is generally avoided at CrCl &lt;30. Consult pharmacy.' },
+              warn: 'Dabigatran hold times differ between published summaries. Values here follow ACCP/CHEST 2022 and institutional adaptations of SIR 2019; confirm with SIR Table 6 and pharmacy.' },
+            { g: 'Antiplatelets', id: 'clop', name: 'Clopidogrel', sum: '5 days', high: '5 days before the procedure.' },
+            { g: 'Antiplatelets', id: 'tica', name: 'Ticagrelor', sum: '5 days', high: '5 days before the procedure.' },
+            { g: 'Antiplatelets', id: 'pras', name: 'Prasugrel', sum: '7 days', high: '7 days before the procedure.' },
+            { g: 'Antiplatelets', id: 'asp', name: 'Aspirin', sum: '3–5 days', high: '3–5 days before the procedure. Individualize: low-dose aspirin is often continued for many high-risk vascular procedures, especially with recent stents.' },
+            { g: 'Antiplatelets', id: 'nsaid', name: 'NSAIDs', sum: 'Per half-life', high: 'Hold according to the drug half-life (e.g., about 24 hours for short-acting agents, longer for long-acting agents).' }
+        ];
+
+        function holdText(d, risk, renal) {
+            if (risk === 'low') return { t: d.low || LOW_DEFAULT, ok: true };
+            if (d.renal) {
+                if (!renal) return { t: 'Select creatinine clearance: the hold time for this agent depends on renal function.', ok: false };
+                return { t: d.hr[renal], ok: true };
+            }
+            return { t: d.high, ok: true };
+        }
+
+        function calcHold() {
+            const id = document.getElementById('hold_agent').value;
+            const risk = document.getElementById('hold_risk').value;
+            const renal = document.getElementById('hold_renal').value;
+            const d = HOLD.filter(x => x.id === id)[0];
+            if (!d) { show('hold_res', '', 'Select a medication.'); return; }
+            const r = holdText(d, risk, renal);
+            const cls = !r.ok ? 'warn' : (risk === 'low' ? 'neg' : 'pos');
+            show('hold_res', cls, `
+                <div class="result-title">${d.name}: ${risk === 'low' ? 'low-risk procedure' : 'high-risk procedure'}</div>
+                <div class="result-detail">${r.t}</div>
+                ${d.warn && risk === 'high' ? `<div class="result-detail"><strong>Note:</strong> ${d.warn}</div>` : ''}
+                <div class="result-detail">Resume when hemostasis is secure, based on bleeding and thrombotic risk.</div>
+            `);
+        }
+
+        (function initHold() {
+            const sel = document.getElementById('hold_agent');
+            let html = '<option value="" selected disabled>Select…</option>';
+            ['Anticoagulants', 'Antiplatelets'].forEach(g => {
+                html += `<optgroup label="${g}">`;
+                HOLD.filter(x => x.g === g).forEach(x => { html += `<option value="${x.id}">${x.name}</option>`; });
+                html += '</optgroup>';
+            });
+            sel.innerHTML = html;
+            sel.addEventListener('change', calcHold);
+            document.getElementById('hold_risk').addEventListener('change', calcHold);
+            document.getElementById('hold_renal').addEventListener('change', calcHold);
+            let t = '<thead><tr><th>Medication</th><th>High-risk hold</th></tr></thead><tbody>';
+            HOLD.forEach(x => { t += `<tr><td>${x.name}</td><td>${x.sum}</td></tr>`; });
+            t += '</tbody>';
+            document.getElementById('hold_table').innerHTML = t;
+        })();
+
+        // ---------- HOUNSFIELD UNITS ----------
+        // lk: false = shown in table but excluded from the lookup (open-ended thresholds)
+        const HU_ROWS = [
+            { g: 'Air, lung and fat', n: 'Air', t: '−1000', lo: -1024, hi: -975, note: 'Calibration reference' },
+            { g: 'Air, lung and fat', n: 'Emphysematous lung (threshold)', t: '< −950', lo: -1024, hi: -950, note: 'LAA-950 threshold' },
+            { g: 'Air, lung and fat', n: 'Lung parenchyma (aerated)', t: '−900 to −500', lo: -900, hi: -500, note: 'Typically about −850 to −700 on inspiratory CT' },
+            { g: 'Air, lung and fat', n: 'Fat', t: '−120 to −50', lo: -120, hi: -50, note: 'Pure fat about −100' },
+            { g: 'Fluids', n: 'Water', t: '0', lo: -5, hi: 5, note: 'Calibration reference (±4 HU)' },
+            { g: 'Fluids', n: 'Simple cyst / simple fluid', t: '−10 to +20', lo: -10, hi: 20, note: 'Bosniak I: water density' },
+            { g: 'Fluids', n: 'Urine', t: '0 to +15', lo: 0, hi: 15, note: '' },
+            { g: 'Fluids', n: 'Bile', t: '0 to +20', lo: 0, hi: 20, note: 'Sludge or concentrated bile reads higher' },
+            { g: 'Fluids', n: 'CSF', t: '0 to +15', lo: 0, hi: 15, note: 'Typically about 8–15' },
+            { g: 'Fluids', n: 'Transudate (pleural fluid, ascites)', t: '0 to +15', lo: 0, hi: 15, note: 'Overlaps with exudate; not diagnostic' },
+            { g: 'Fluids', n: 'Exudate / complex fluid', t: '+15 to +40', lo: 15, hi: 40, note: 'Overlaps with transudate; not diagnostic' },
+            { g: 'Fluids', n: 'Pus / abscess contents', t: '+10 to +35', lo: 10, hi: 35, note: 'Variable; gas bubbles may be present' },
+            { g: 'Blood', n: 'Unclotted (circulating) blood', t: '+13 to +50', lo: 13, hi: 50, note: 'Hematocrit dependent; typically about 35–45' },
+            { g: 'Blood', n: 'Acute clotted blood / hematoma', t: '+50 to +80', lo: 50, hi: 80, note: 'Hyperdense to liver and spleen; falls as it ages' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Skeletal muscle', t: '+35 to +55', lo: 35, hi: 55, note: '' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Brain, gray matter', t: '+35 to +45', lo: 35, hi: 45, note: '' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Brain, white matter', t: '+20 to +30', lo: 20, hi: 30, note: '' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Liver', t: '+50 to +70', lo: 50, hi: 70, note: '< 40 suggests moderate-severe steatosis' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Spleen', t: '+40 to +60', lo: 40, hi: 60, note: 'Normally slightly denser than fatty liver' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Pancreas', t: '+35 to +55', lo: 35, hi: 55, note: '' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Kidney', t: '+20 to +45', lo: 20, hi: 45, note: 'Typically about 30–45' },
+            { g: 'Soft tissue and organs (unenhanced)', n: 'Adrenal, lipid-rich adenoma', t: '≤ +10', lo: -30, hi: 10, note: 'Unenhanced threshold for adenoma' },
+            { g: 'Bone, calcium and stones', n: 'Cancellous (trabecular) bone', t: '+100 to +400', lo: 100, hi: 400, note: 'L1 opportunistic screen: > 160 normal, < 100 osteoporosis' },
+            { g: 'Bone, calcium and stones', n: 'Cortical bone', t: '+500 to +1900', lo: 500, hi: 1900, note: 'Dense cortex may exceed 1000 to about 3000' },
+            { g: 'Bone, calcium and stones', n: 'Uric acid stones', t: '+200 to +500', lo: 200, hi: 500, note: 'Usually < 500' },
+            { g: 'Bone, calcium and stones', n: 'Calcium-containing stones', t: '> +1000', lo: 1000, hi: 1800, note: 'Usually > 1000' },
+            { g: 'Bone, calcium and stones', n: 'Coronary calcification (Agatston threshold)', t: '≥ +130', lo: 130, hi: 130, lk: false, note: 'Area ≥ 1 mm²' },
+            { g: 'Bone, calcium and stones', n: 'Metal implants', t: '> +3000', lo: 3000, hi: 3071, note: 'Scale saturates at about +3071 (12-bit)' },
+            { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Arteries, CT angiography', t: '+250 to +400', lo: 250, hi: 400, note: '' },
+            { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Portal vein, portal venous phase', t: '+150 to +200', lo: 150, hi: 200, note: '' },
+            { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Liver, portal venous phase', t: '+100 to +130', lo: 100, hi: 130, note: '' },
+            { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Kidney, nephrographic phase', t: '+100 to +200', lo: 100, hi: 200, note: '' }
+        ];
+
+        (function initHU() {
+            let html = '<thead><tr><th>Tissue / material</th><th>HU</th></tr></thead><tbody>';
+            let last = '';
+            HU_ROWS.forEach(r => {
+                if (r.g !== last) {
+                    html += `<tr><td colspan="2" style="background:#f8fafc; font-weight:700; color:var(--primary-dark);">${r.g}</td></tr>`;
+                    last = r.g;
+                }
+                html += `<tr><td>${r.n}${r.note ? `<br><span style="font-weight:400; color:var(--text-muted); font-size:0.75rem;">${r.note}</span>` : ''}</td><td style="white-space:nowrap;">${r.t}</td></tr>`;
+            });
+            html += '</tbody>';
+            document.getElementById('hu_table').innerHTML = html;
+        })();
+
+        function calcHU() {
+            const v = val('hu_in');
+            if (isNaN(v)) { show('hu_res', '', 'Enter an HU value to see which tissues and materials commonly fall in that range.'); return; }
+            const hits = HU_ROWS.filter(r => r.lk !== false && v >= r.lo && v <= r.hi);
+            if (!hits.length) {
+                show('hu_res', 'warn', `<div class="result-title">${v} HU</div><div class="result-detail">No listed tissue or material typically falls at this value (the lookup lists only the ranges in the table below).</div>`);
+                return;
+            }
+            show('hu_res', '', `<div class="result-title">${v} HU</div><div class="result-detail">Commonly seen in: ${hits.map(h => h.n).join('; ')}.<br><em>Ranges overlap; interpret in context, phase and ROI quality.</em></div>`);
+        }
+        calcByInput['hu_in'] = calcHU;
+
+        // ---------- 6. OTHER RADS DATA & SWITCHER ----------
+        const radsData = {
+            li: {
+                note: 'LI-RADS v2018 (CT/MRI) applies only to patients at high risk for HCC (e.g., cirrhosis, chronic hepatitis B, prior HCC) and not to patients under 18 or with cirrhosis due to congenital hepatic fibrosis or vascular disorders.',
+                items: [
+                    { badge: "LR-NC", title: "Not Categorizable", desc: "Cannot be categorized because of image omission or severe image degradation." },
+                    { badge: "LR-1", title: "Definitely Benign", desc: "Definitely benign observation (e.g., simple cyst, typical hemangioma)." },
+                    { badge: "LR-2", title: "Probably Benign", desc: "Imaging features favor a benign entity. Low probability of malignancy." },
+                    { badge: "LR-3", title: "Intermediate Probability of Malignancy", desc: "Intermediate probability of malignancy (HCC or non-HCC). Typical management: repeat or alternative diagnostic imaging in 3-6 months." },
+                    { badge: "LR-4", title: "Probably HCC", desc: "High probability of HCC but not definite. Typical management: multidisciplinary discussion (options include biopsy, short-interval repeat imaging or treatment)." },
+                    { badge: "LR-5", title: "Definitely HCC", desc: "Definite HCC (≥95% probability). Meets stringent major-feature criteria; noninvasive diagnosis, so biopsy is not required for diagnosis." },
+                    { badge: "LR-M", title: "Malignant, Not Specific for HCC", desc: "Probably or definitely malignant but not HCC-specific (e.g., targetoid features; cholangiocarcinoma, combined HCC-CCA or metastasis). Multidisciplinary discussion; biopsy often needed." },
+                    { badge: "LR-TIV", title: "Tumor in Vein", desc: "Unequivocal enhancing soft tissue in a vein, definitely tumor. Multidisciplinary discussion." }
+                ]
+            },
+            pi: {
+                note: 'PI-RADS v2.1 assesses the likelihood of clinically significant prostate cancer on multiparametric MRI.',
+                items: [
+                    { badge: "PI-RADS 1", title: "Very Low", desc: "Clinically significant prostate cancer is highly unlikely to be present." },
+                    { badge: "PI-RADS 2", title: "Low", desc: "Clinically significant prostate cancer is unlikely to be present." },
+                    { badge: "PI-RADS 3", title: "Intermediate", desc: "The presence of clinically significant cancer is equivocal. Biopsy decision is individualized (e.g., PSA density, clinical factors)." },
+                    { badge: "PI-RADS 4", title: "High", desc: "Clinically significant cancer is likely to be present. Biopsy generally recommended." },
+                    { badge: "PI-RADS 5", title: "Very High", desc: "Clinically significant cancer is highly likely to be present. Biopsy generally recommended." }
+                ]
+            },
+            bi: {
+                note: 'BI-RADS (5th edition) assessment categories. Percentages are the likelihood of malignancy.',
+                items: [
+                    { badge: "BI-RADS 0", title: "Incomplete", desc: "Needs additional imaging evaluation and/or prior exams for comparison." },
+                    { badge: "BI-RADS 1", title: "Negative", desc: "No mass, architectural distortion or suspicious calcifications. Essentially 0% likelihood of malignancy." },
+                    { badge: "BI-RADS 2", title: "Benign Finding", desc: "Definitely benign (e.g., simple cyst, stable fibroadenoma). Essentially 0% likelihood of malignancy." },
+                    { badge: "BI-RADS 3", title: "Probably Benign", desc: "Short-interval (typically 6-month) follow-up suggested. Likelihood of malignancy ≤2%." },
+                    { badge: "BI-RADS 4", title: "Suspicious", desc: "Tissue diagnosis (biopsy) should be considered. Overall >2% to <95%. 4A: >2-10%, 4B: >10-50%, 4C: >50-<95%." },
+                    { badge: "BI-RADS 5", title: "Highly Suggestive of Malignancy", desc: "Likelihood of malignancy ≥95%. Appropriate action (biopsy) should be taken." },
+                    { badge: "BI-RADS 6", title: "Known Biopsy-Proven Malignancy", desc: "Known cancer, imaging performed for staging or response to treatment." }
+                ]
+            }
+        };
+
+        Object.assign(radsData, {
+            lung: {
+                note: 'Lung-RADS v2022 (ACR) for lung cancer screening low-dose CT. Thresholds shown are for baseline nodules by mean diameter; new and growing nodules use different thresholds and v2022 adds slow-growth and atypical-cyst rules, so check the ACR table for those. The risk-of-malignancy column was removed in v2022.',
+                items: [
+                    { badge: "Lung-RADS 0", title: "Incomplete", desc: "Prior chest CT needed for comparison and/or part or all of the lungs cannot be evaluated. Additional imaging or comparison required." },
+                    { badge: "Lung-RADS 1", title: "Negative", desc: "No lung nodules, or nodules with definitely benign features (e.g., complete, central, popcorn or concentric calcification; fat-containing). Continue annual screening LDCT in 12 months." },
+                    { badge: "Lung-RADS 2", title: "Benign Appearance or Behavior", desc: "Solid &lt;6 mm; part-solid &lt;6 mm total; ground-glass &lt;30 mm. Continue annual screening LDCT in 12 months." },
+                    { badge: "Lung-RADS 3", title: "Probably Benign", desc: "Solid 6 to &lt;8 mm; part-solid ≥6 mm total with solid component &lt;6 mm; ground-glass ≥30 mm. Short-term follow-up LDCT in 6 months." },
+                    { badge: "Lung-RADS 4A", title: "Suspicious", desc: "Solid 8 to &lt;15 mm; part-solid with solid component 6 to &lt;8 mm; solid endobronchial nodule at segmental or more proximal level. LDCT in 3 months; PET/CT may be considered if solid component ≥8 mm." },
+                    { badge: "Lung-RADS 4B", title: "Very Suspicious", desc: "Solid ≥15 mm; part-solid with solid component ≥8 mm; slow-growing solid or part-solid nodule. Diagnostic chest CT (± contrast), PET/CT and/or tissue sampling, based on probability of malignancy and comorbidities." },
+                    { badge: "Lung-RADS 4X", title: "Very Suspicious with Added Features", desc: "Category 3 or 4 nodule with additional features that increase suspicion of lung cancer (e.g., spiculation, lymphadenopathy, frank metastatic disease, ground-glass nodule that doubles in one year). Manage as 4B." },
+                    { badge: "Modifier S", title: "Significant Other Finding", desc: "Clinically significant or potentially significant finding not related to lung cancer (e.g., emphysema, coronary artery calcification, aortic aneurysm). Manage according to clinical context." }
+                ]
+            },
+            orus: {
+                note: 'O-RADS US v2022 (ACR) risk stratification of adnexal masses on ultrasound. Management depends on menopausal status, lesion size, color score and morphology, so consult the full ACR table for specifics.',
+                items: [
+                    { badge: "O-RADS US 0", title: "Incomplete Evaluation", desc: "Lesion features cannot be accurately characterized because of technical factors. Repeat US or MRI." },
+                    { badge: "O-RADS US 1", title: "Normal Ovary", desc: "Normal premenopausal ovary (follicle, corpus luteum). No follow-up needed." },
+                    { badge: "O-RADS US 2", title: "Almost Certainly Benign", desc: "Risk of malignancy &lt;1%. Includes classic benign lesions (e.g., simple cyst, hemorrhagic cyst, endometrioma, dermoid) and smooth unilocular cysts; follow-up depends on size and menopausal status." },
+                    { badge: "O-RADS US 3", title: "Low Risk", desc: "Risk of malignancy 1% to &lt;10%. E.g., smooth multilocular cyst &lt;10 cm without solid component, or smooth solid lesion with color score 1. Ultrasound specialist or MRI; gynecology management." },
+                    { badge: "O-RADS US 4", title: "Intermediate Risk", desc: "Risk of malignancy 10% to &lt;50%. Ultrasound specialist or MRI (O-RADS MRI score); management by gynecologic oncology team." },
+                    { badge: "O-RADS US 5", title: "High Risk", desc: "Risk of malignancy ≥50%. E.g., solid lesion with irregular contour, or lesions with ascites/peritoneal nodularity. Referral to a gynecologic oncologist." }
+                ]
+            },
+            ormri: {
+                note: 'O-RADS MRI (ACR) for sonographically indeterminate adnexal masses. Enhancing solid tissue is the main driver of risk. Risk values are approximate positive predictive values from validation studies.',
+                items: [
+                    { badge: "O-RADS MRI 0", title: "Incomplete Evaluation", desc: "Incomplete evaluation (e.g., technical or missing sequences)." },
+                    { badge: "O-RADS MRI 1", title: "Normal Ovaries", desc: "Normal premenopausal ovaries (or postmenopausal with no abnormality)." },
+                    { badge: "O-RADS MRI 2", title: "Almost Certainly Benign", desc: "About &lt;0.5% risk. No enhancing solid tissue (e.g., simple, hemorrhagic or endometriotic cyst, mature teratoma, hydrosalpinx) or solid tissue dark on T2 and DWI." },
+                    { badge: "O-RADS MRI 3", title: "Low Risk", desc: "About 5% risk. E.g., multilocular cyst without solid tissue, or solid tissue with a low-risk time-intensity curve." },
+                    { badge: "O-RADS MRI 4", title: "Intermediate Risk", desc: "About 50% risk. Solid tissue with an intermediate-risk time-intensity curve (or enhancement ≤ myometrium at 30–40 s on non-DCE)." },
+                    { badge: "O-RADS MRI 5", title: "High Risk", desc: "About 90% risk. Solid tissue with a high-risk time-intensity curve (or enhancement &gt; myometrium), or peritoneal/mesenteric/omental nodularity." }
+                ]
+            },
+            cad: {
+                note: 'CAD-RADS 2.0 (SCCT/ACC/ACR/NASCI, 2022) for coronary CT angiography. Category is set by the most severe stenosis per patient. Reported as CAD-RADS category/plaque burden/modifiers (e.g., 3/P2/HRP/I+). Management differs for stable vs acute chest pain.',
+                items: [
+                    { badge: "CAD-RADS 0", title: "No Plaque or Stenosis", desc: "0% stenosis, no visible plaque." },
+                    { badge: "CAD-RADS 1", title: "Minimal Stenosis", desc: "1–24% stenosis, or plaque with positive remodeling." },
+                    { badge: "CAD-RADS 2", title: "Mild Stenosis", desc: "25–49% stenosis." },
+                    { badge: "CAD-RADS 3", title: "Moderate Stenosis", desc: "50–69% stenosis. Consider functional assessment." },
+                    { badge: "CAD-RADS 4A", title: "Severe Stenosis, 1–2 Vessels", desc: "70–99% stenosis in one or two vessels. Consider invasive angiography or functional assessment." },
+                    { badge: "CAD-RADS 4B", title: "Left Main or 3-Vessel Disease", desc: "Left main stenosis ≥50% or three-vessel obstructive disease (≥70%). Invasive coronary angiography recommended." },
+                    { badge: "CAD-RADS 5", title: "Total Occlusion", desc: "At least one totally occluded coronary artery (100%)." },
+                    { badge: "CAD-RADS N", title: "Non-Diagnostic", desc: "Study non-diagnostic for evaluating stenosis; consider additional or alternative testing." },
+                    { badge: "Plaque P1–P4", title: "Plaque Burden", desc: "P1 mild, P2 moderate, P3 severe, P4 extensive (based on total plaque burden, e.g., coronary artery calcium score)." },
+                    { badge: "Modifiers", title: "HRP, I, S, G, E", desc: "HRP: high-risk plaque. I: ischemia (I+, I−, I±). S: stent. G: graft. E: exception (non-atherosclerotic coronary abnormality). N: non-diagnostic segment." }
+                ]
+            },
+            ni: {
+                note: 'NI-RADS (ACR) for surveillance imaging after definitive treatment of head and neck cancer. Not for use during treatment. Primary site and neck are scored separately.',
+                items: [
+                    { badge: "NI-RADS 0", title: "Incomplete", desc: "Prior imaging needed for comparison. A score is assigned in an addendum once prior studies are reviewed." },
+                    { badge: "NI-RADS 1", title: "No Evidence of Recurrence", desc: "Expected post-treatment changes. Continue routine surveillance." },
+                    { badge: "NI-RADS 2a", title: "Low Suspicion: Superficial (Primary Site)", desc: "Focal mucosal abnormality at the primary site. Direct visual inspection (clinical exam / endoscopy)." },
+                    { badge: "NI-RADS 2b", title: "Low Suspicion: Deep (Primary) / Neck", desc: "Deep abnormality at the primary site, or indeterminate neck finding. PET or short-interval follow-up imaging (about 3 months)." },
+                    { badge: "NI-RADS 3", title: "High Suspicion for Recurrence", desc: "New or enlarging discrete mass or nodule. Biopsy if clinically appropriate." },
+                    { badge: "NI-RADS 4", title: "Known Recurrence", desc: "Pathologically proven or definite radiologic and clinical progression. Clinical management." }
+                ]
+            },
+            crads: {
+                note: 'C-RADS (ACR; v2023 update) for CT colonography. Colonic (C) and extracolonic (E) findings are scored separately. Polyps smaller than 6 mm are not reported.',
+                items: [
+                    { badge: "C0", title: "Inadequate Study / Awaiting Priors", desc: "Inadequate prep (cannot exclude lesions ≥10 mm) or insufflation, or awaiting prior studies. Repeat CTC or consider another screening test." },
+                    { badge: "C1", title: "Normal Colon or Benign Lesion", desc: "No polyp ≥6 mm. Continue routine screening (every 5–10 years)." },
+                    { badge: "C2", title: "Intermediate Polyp / Indeterminate", desc: "Polyps 6–9 mm, fewer than 3. Polypectomy (colonoscopy) or surveillance CTC in 3 years." },
+                    { badge: "C3", title: "Possibly Advanced Adenoma", desc: "Polyp ≥10 mm, or ≥3 polyps each 6–9 mm. Colonoscopy with polypectomy." },
+                    { badge: "C4", title: "Colonic Mass, Likely Malignant", desc: "Lesion compromising the lumen or with extracolonic invasion. Surgical consultation." },
+                    { badge: "E0", title: "Limited Exam", desc: "Evaluation of extracolonic soft tissues severely limited (e.g., artifact)." },
+                    { badge: "E1", title: "Normal or Anatomic Variant", desc: "No extracolonic abnormality; no workup." },
+                    { badge: "E2", title: "Clinically Unimportant Finding", desc: "E.g., simple renal cyst, cholelithiasis. No workup." },
+                    { badge: "E3", title: "Likely Unimportant, Incompletely Characterized", desc: "E.g., minimally complex renal cyst. Workup at the discretion of the clinician." },
+                    { badge: "E4", title: "Potentially Important Finding", desc: "E.g., suspicious mass, aortic aneurysm, adenopathy. Communicate to the referring clinician for further workup." }
+                ]
+            },
+            vi: {
+                note: 'VI-RADS for multiparametric bladder MRI (T2W, DWI, DCE). Estimates the likelihood of muscularis propria invasion. Supports, but does not replace, cystoscopy and pathology.',
+                items: [
+                    { badge: "VI-RADS 1", title: "Muscle Invasion Highly Unlikely", desc: "Very low likelihood of muscle invasion (non-muscle-invasive disease)." },
+                    { badge: "VI-RADS 2", title: "Muscle Invasion Unlikely", desc: "Low likelihood; no convincing evidence of muscle involvement." },
+                    { badge: "VI-RADS 3", title: "Equivocal", desc: "Muscle invasion cannot be confidently confirmed or excluded on a technically adequate exam." },
+                    { badge: "VI-RADS 4", title: "Muscle Invasion Likely", desc: "High likelihood of muscle-invasive disease." },
+                    { badge: "VI-RADS 5", title: "Muscle Invasion and Beyond Very Likely", desc: "Very high likelihood of muscle invasion, with possible extravesical extension." }
+                ]
+            }
+        });
+
+        Object.assign(radsData, {
+            bos: {
+                note: 'Bosniak classification of cystic renal masses, version 2019 (CT and MRI, dedicated renal-mass protocol; not for solid masses). v2019 defines thin (≤2 mm), minimally thickened (3 mm) and thick (≥4 mm) walls/septa, "few" (1–3) vs "many" (≥4) septa, and nodule vs irregular thickening. Many guidelines still cite v2005 risk estimates (approx.: I and II ≈0%, IIF ≈5%, III ≈50%, IV ≈90%); v2019 places more masses in lower classes, so real-world risk per class is lower for the lower classes.',
+                items: [
+                    { badge: "Class I", title: "Benign Simple Cyst", desc: "Well-defined thin (≤2 mm) smooth wall; homogeneous simple fluid; no septa, calcification or solid component. No follow-up." },
+                    { badge: "Class II", title: "Benign", desc: "Thin (≤2 mm) smooth wall with few (1–3) thin septa (wall and septa may enhance), or homogeneous masses with high attenuation/T1 signal (e.g., hyperdense cysts). Generally no follow-up." },
+                    { badge: "Class IIF", title: "Probably Benign, Follow-up", desc: "Smooth minimally thickened (3 mm) enhancing wall or septa, or many (≥4) smooth thin enhancing septa. The large majority are benign; imaging follow-up." },
+                    { badge: "Class III", title: "Indeterminate", desc: "One or more enhancing thick (≥4 mm) or irregular walls or septa (irregular = obtuse convex protrusion ≤3 mm). Roughly half are malignant (v2005 estimate). Surgery, ablation or active surveillance, individualized." },
+                    { badge: "Class IV", title: "Likely Malignant", desc: "One or more enhancing nodules (any size with acute margins, or ≥4 mm with obtuse margins). About 90% malignant (v2005 estimate). Surgery or ablation, individualized; percutaneous ablation is an option in selected patients unsuited to surgery." }
+                ]
+            }
+        });
+
+        function switchRADS() {
+            const key = document.getElementById('rads_select').value;
+            const data = radsData[key];
+            document.getElementById('rads_note').textContent = data.note;
+            document.getElementById('rads_content').innerHTML = data.items.map(item => `
+                <div class="rads-item">
+                    <div class="rads-header">
+                        <span class="rads-title">${item.title}</span>
+                        <span class="rads-badge">${item.badge}</span>
+                    </div>
+                    <div class="rads-desc">${item.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('rads_select').addEventListener('change', switchRADS);
+
+        // Initialize on load
+        switchRADS();
+
+        // ---------- TOOL SELECTOR (dropdown navigation) ----------
+        function showTool(id) {
+            const sel = document.getElementById('tool_select');
+            const ids = Array.from(sel.options).map(o => o.value);
+            if (ids.indexOf(id) === -1) id = ids[0];
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            sel.value = id;
+            try { localStorage.setItem('ir_last_tool', id); } catch (e) { /* storage unavailable */ }
+            try { history.replaceState(null, '', '#' + id); } catch (e) { /* ignore */ }
+            window.scrollTo(0, 0);
+        }
+
+        document.getElementById('tool_select').addEventListener('change', function () {
+            showTool(this.value);
+        });
+
+        (function initTool() {
+            let start = (location.hash || '').replace('#', '');
+            if (!start) {
+                try { start = localStorage.getItem('ir_last_tool') || ''; } catch (e) { start = ''; }
+            }
+            showTool(start || 'pmn');
+        })();
+
+        // ---------- FIRST-LAUNCH DISCLAIMER ----------
+        (function initDisclaimer() {
+            const KEY = 'ir_disclaimer_v1';
+            const modal = document.getElementById('disclaimer_modal');
+            let accepted = false;
+            try { accepted = localStorage.getItem(KEY) === 'accepted'; } catch (e) { accepted = false; }
+            if (!accepted) {
+                modal.style.display = 'flex';
+                document.body.classList.add('modal-open');
+            }
+            document.getElementById('disclaimer_accept').addEventListener('click', function () {
+                try { localStorage.setItem(KEY, 'accepted'); } catch (e) { /* storage unavailable */ }
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            });
+        })();
+
+        // ---------- PWA: offline support ----------
+        // Service workers need HTTPS (or localhost); registration is skipped silently otherwise.
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js').catch(function () { /* offline support unavailable */ });
+            });
+        }
+
+    </script>
+</body>
+</html>
