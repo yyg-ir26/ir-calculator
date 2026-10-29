@@ -1,2 +1,2 @@
 # ir-calculator
-Calculations for IR
+Interventional radiology clinical calculators, RADS and staging references.
