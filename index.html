@@ -776,6 +776,16 @@
                     <span style="font-weight:600; font-size:0.9rem;">Chronic liver disease / cirrhosis</span>
                 </label>
 
+                <div class="form-group">
+                    <label for="bleed_art">Arterial access in a low-risk procedure:</label>
+                    <select id="bleed_art">
+                        <option value="" selected>Not applicable</option>
+                        <option value="fem">Femoral artery puncture (INR &lt;1.8)</option>
+                        <option value="rad">Radial artery puncture (INR &lt;2.2)</option>
+                    </select>
+                    <div class="field-hint">SIR 2019 uses a stricter INR target when arterial access is needed. Ignored for high-risk procedures and chronic liver disease.</div>
+                </div>
+
                 <div class="form-grid two-col">
                     <div class="form-group">
                         <label for="bleed_inr">INR:</label>
@@ -787,7 +797,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="bleed_fib">Fibrinogen (mg/dL) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
+                    <label for="bleed_fib">Fibrinogen (mg/dL) <span style="font-weight:400; color:var(--text-muted);">[optional; SIR threshold is for chronic liver disease]</span>:</label>
                     <input type="text" inputmode="decimal" autocomplete="off" class="num" id="bleed_fib" placeholder="e.g. 150">
                 </div>
 
@@ -795,32 +805,33 @@
                     Enter INR and/or platelet count to compare against the SIR thresholds.
                 </div>
 
-                <div class="section-label">Examples: low bleeding risk</div>
+                <div class="section-label">Examples: low bleeding risk (SIR Table 3)</div>
                 <ul class="tight">
-                    <li>Paracentesis, thoracentesis, chest tube</li>
-                    <li>Superficial biopsy, aspiration or drainage (palpable lesion, lymph node, soft tissue, breast; not intrathoracic or intra-abdominal), thyroid biopsy</li>
-                    <li>Superficial bone biopsy (not vertebral body), bone marrow biopsy</li>
-                    <li>Catheter and tube exchange or removal (biliary, nephrostomy, abscess drain, mature-tract G/GJ/J tube)</li>
+                    <li>Paracentesis, thoracentesis, nontunneled chest tube for pleural effusion</li>
+                    <li>Superficial abscess drainage or biopsy (palpable lesion, lymph node, soft tissue, breast, thyroid, superficial bone such as extremities, bone marrow aspiration)</li>
+                    <li>Catheter exchanges (gastrostomy, biliary, nephrostomy, abscess), including gastrostomy/GJ conversions</li>
                     <li>Transjugular liver biopsy</li>
-                    <li>Central venous access: non-tunneled and tunneled catheters, PICC, ports, dialysis catheters</li>
-                    <li>AV fistula/graft evaluation or intervention, routine IVC filter placement/removal, venography and pelvic/extremity venous interventions</li>
-                    <li>Arterial angiography, interventions and embolotherapy with sheath ≤6 Fr</li>
-                    <li>Joint aspiration/injection, non-cervical facet and SI joint injection, transforaminal nerve root injection</li>
+                    <li>Nontunneled venous access and removal (including PICC); tunneled venous catheter and port placement/removal; tunneled drainage catheter placement</li>
+                    <li>Dialysis access interventions; IVC filter placement and uncomplicated removal; diagnostic venography and select venous interventions of the pelvis and extremities</li>
+                    <li>Diagnostic arteriography and arterial interventions (peripheral, sheath &lt;6 Fr), embolotherapy</li>
+                    <li>Lumbar puncture (listed as low risk with a caveat, see the note below)</li>
+                    <li>Thoracic and lumbar facet joint injections and medial branch blocks; peripheral nerve blocks; joint and musculoskeletal injections; trigger point injections; sacroiliac joint injection and sacral lateral branch blocks</li>
                 </ul>
 
-                <div class="section-label">Examples: high bleeding risk</div>
+                <div class="section-label">Examples: high bleeding risk (SIR Table 3)</div>
                 <ul class="tight">
-                    <li>Arterial interventions with ≥7 Fr sheath, or aortic, pelvic, mesenteric or CNS arterial work (e.g., uterine fibroid embolization)</li>
-                    <li>Solid organ biopsy (liver, kidney, spleen, lung); deep non-organ biopsy (spine, intra-abdominal, retroperitoneal, pelvic compartments)</li>
-                    <li>Deep abscess drainage or drain placement (lung parenchyma, abdominal, pelvic, retroperitoneal)</li>
-                    <li>Biliary interventions (including cholecystostomy); new nephrostomy and other urinary tract interventions (ureteral dilation, stone removal); original gastrostomy/GJ/J tube placement</li>
-                    <li>TIPS, portal vein interventions, catheter-directed thrombolysis (DVT, PE, portal vein), intrathoracic and CNS venous interventions, complex IVC filter removal</li>
-                    <li>Spine procedures with risk of spinal or epidural hematoma (lumbar puncture, vertebroplasty/kyphoplasty, epidural injection, cervical facet block)</li>
-                    <li>Ablation of solid organ, bone or soft tissue (commonly managed as high risk)</li>
+                    <li>Ablation of solid organs, bone, soft tissue and lung</li>
+                    <li>Arterial interventions with a sheath &gt;7 Fr, or aortic, pelvic, mesenteric or CNS arterial interventions</li>
+                    <li>Biliary interventions (including cholecystostomy tube placement)</li>
+                    <li>Catheter-directed thrombolysis (DVT, PE, portal vein); portal vein interventions; complex IVC filter removal</li>
+                    <li>Solid organ biopsy; deep non-organ biopsy (e.g., spine, soft tissue in intra-abdominal, retroperitoneal or pelvic compartments); deep abscess drainage (lung parenchyma, abdominal, pelvic, retroperitoneal)</li>
+                    <li>Gastrostomy/gastrojejunostomy placement; urinary tract interventions (nephrostomy placement, ureteral dilation, stone removal)</li>
+                    <li>TIPS (chronic liver disease thresholds apply); intrathoracic and CNS venous interventions</li>
+                    <li>Spine procedures with risk of spinal or epidural hematoma (kyphoplasty, vertebroplasty, epidural injections, cervical facet blocks)</li>
                 </ul>
 
                 <div class="footnote">
-                    Source: SIR consensus guidelines, Patel et al., JVIR 2019;30:1168–1184 (Part II). <strong>Low risk:</strong> correct INR to ≤3.0 (range 2.0–3.0); transfuse platelets if &lt;20 ×10³/µL. <strong>High risk:</strong> correct INR to within 1.5–1.8; transfuse platelets if &lt;50 ×10³/µL. <strong>Chronic liver disease</strong> (suggested thresholds, expert opinion): low risk, no INR threshold, platelets &gt;20, fibrinogen &gt;100 mg/dL; high risk, INR &lt;2.5, platelets &gt;30, fibrinogen &gt;100 mg/dL (cryoprecipitate if lower). In cirrhosis INR and platelets poorly reflect bleeding risk, and other societies differ (AASLD advises against routine correction; AGA and ACG suggest platelets &gt;50). Screening labs are not routinely recommended before low-risk procedures unless the patient has bleeding risk factors or takes warfarin or heparin. Warfarin: low risk target INR ≤3.0; high risk withhold 5 days to INR ≤1.8 (see the Holds tool for other agents). The procedure lists are examples adapted from SIR 2019 and institutional adaptations; classification of a specific procedure is the operator's judgment, and your institution may differ.
+                    Source: SIR consensus guidelines, Patel et al., JVIR 2019;30:1168–1184 (Part II), Tables 3 and 4. <strong>Low risk:</strong> correct INR to within 2.0–3.0 or less (for arterial access, &lt;1.8 femoral and &lt;2.2 radial); consider platelet transfusion if &lt;20 ×10³/µL. <strong>High risk:</strong> correct INR to within 1.5–1.8 or less; consider platelet transfusion if &lt;50 ×10³/µL. The INR is an upper limit adjusted to the procedure (for example, &lt;1.8 may be acceptable for liver biopsy, &lt;1.5 may be preferred before an aortic intervention, and &lt;2.0 for catheter placement with a subcutaneous tunnel). <strong>Chronic liver disease</strong> (suggested thresholds, expert opinion): low risk, INR not applicable, platelets &gt;20, fibrinogen &gt;100 mg/dL; high risk, INR &lt;2.5, platelets &gt;30, fibrinogen &gt;100 mg/dL. SIR suggests vitamin K 10 mg slow IV if INR &gt;2.5, a dose of platelets if the spleen is large and the count is below threshold, and cryoprecipitate (1 dose under 80 kg, 2 doses over 80 kg) for low fibrinogen. Plasma and platelets should be used judiciously in cirrhosis, and AASLD advises against correcting the INR with plasma. <strong>Lumbar puncture</strong> appears in the SIR low-risk table, with a pointer to the discussion that cites a platelet threshold of 50 (AABB); many centers manage it as high risk. Screening labs are not routinely recommended before low-risk procedures unless the patient has bleeding risk factors or takes warfarin or heparin. Targets for catheter-directed lysis and complex IVC filter retrieval should be individualized. Warfarin: low risk target INR ≤3.0; high risk withhold 5 days to INR ≤1.8 (see the Holds tool). Classification of a specific procedure is the operator's judgment, and your institution may differ.
                 </div>
             </div>
         </div>
@@ -1377,7 +1388,10 @@
                     <strong>Low-risk procedures:</strong> SIR 2019 recommends continuing most anticoagulants and antiplatelets (warfarin: target INR ≤3.0). The exceptions are the glycoprotein IIb/IIIa inhibitors, which SIR lists as withheld for both risk levels.<br><br>
                     <strong>DOAC timing:</strong> the SIR table gives DOAC holds in <em>doses</em>, not days. For twice-daily agents (apixaban, dabigatran) 2 doses is about 1 day; for once-daily agents (rivaroxaban, edoxaban) 1 dose is about 1 day. Renal tiers are CrCl ≥50, 30 to &lt;50 and 15 to &lt;30 mL/min as listed by SIR; where SIR gives no value, the tool says so.<br><br>
                     <strong>Emergent procedures:</strong> SIR recommends reversal agents when a DOAC-treated patient needs a STAT or emergent high-risk procedure. Patients who cannot safely stop anticoagulation (e.g., recent coronary or cerebrovascular stents) need an individualized plan, and bridging decisions belong with cardiology/hematology. DOACs are not bridged.<br><br>
-                    <strong>Verify before acting:</strong> times are taken from SIR 2019 Table 6 (Patel et al., JVIR 2019;30:1168–1184, Part II) as reproduced in institutional adaptations of the table. Check the original table, your pharmacy and local protocol. See the Bleeding Risk tab for procedure risk lists and lab thresholds.
+                    <strong>Restart times</strong> assume the procedural bleeding risk has resolved (clot stabilization takes about 6–8 hours) and also depend on comorbidities such as chronic liver or kidney disease; multidisciplinary discussion may be warranted in high-risk patients. SIR notes the recommendations may not apply to emergency or highly urgent procedures where the risk of delay outweighs the bleeding risk, and they assume no other coagulation defect or interacting drug.<br><br>
+                    <strong>Cardiac stent on dual antiplatelet therapy (SIR Figure 2):</strong> for low-risk procedures, continue DAPT. For high-risk procedures, if the stent was placed less than 1 year ago, consult cardiology, vascular or internal medicine. If the stent is older than 1 year, continue aspirin; the second antiplatelet agent may be held 5 days before the procedure; consider consultation.<br><br>
+                    <strong>Neuraxial procedures:</strong> SIR cites multisociety guidance to stop factor Xa inhibitors 3–5 days and dabigatran 4–5 days before neuraxial procedures and to restart 24 hours afterward. This is a cautious strategy, and patients at high thrombotic risk may warrant bridging.<br><br>
+                    <strong>Source:</strong> SIR 2019 Table 6 (Patel et al., JVIR 2019;30:1168–1184, Part II) and Part I (Davidson et al., JVIR 2019;30:1155–1167). Every row was checked against the published tables; no newer SIR guideline was found as of October 2026. Confirm with your pharmacy and local protocol. See the Bleeding Risk tab for procedure lists and lab thresholds.
                 </div>
             </div>
         </div>
@@ -1705,7 +1719,7 @@
                 <h3>Bleeding Risk Labs</h3>
                 <ul class="tight">
                     <li>Patel IJ, Rahim S, Davidson JC, et al. Society of Interventional Radiology consensus guidelines for the periprocedural management of thrombotic and bleeding risk in patients undergoing percutaneous image-guided interventions. Part II: Recommendations. <em>J Vasc Interv Radiol</em> 2019;30:1168–1184. <a href="https://www.jvir.org/article/S1051-0443(19)30407-5/fulltext" target="_blank" rel="noopener">jvir.org</a></li>
-                    <li>Davidson JC, Rahim S, Hanks SE, et al. SIR consensus guidelines… Part I: Review of anticoagulation agents and clinical considerations. <em>J Vasc Interv Radiol</em> 2019;30:1155–1167. <a href="https://doi.org/10.1016/j.jvir.2019.04.016" target="_blank" rel="noopener">doi:10.1016/j.jvir.2019.04.016</a></li>
+                    <li>Davidson JC, Rahim S, Hanks SE, et al. SIR consensus guidelines… Part I: Review of anticoagulation agents and clinical considerations. <em>J Vasc Interv Radiol</em> 2019;30:1155–1167. Corrigendum, <em>J Vasc Interv Radiol</em> 2024;35:946. <a href="https://doi.org/10.1016/j.jvir.2019.04.016" target="_blank" rel="noopener">doi:10.1016/j.jvir.2019.04.016</a></li>
                 </ul>
 
                 <h3>Liver Scores</h3>
@@ -2130,8 +2144,11 @@
             }
 
             let inrTxt, inrOk = null;
+            const art = document.getElementById('bleed_art').value;
             if (risk === 'low') {
                 if (cld) { inrTxt = 'No INR threshold in chronic liver disease'; inrOk = isNaN(inr) ? null : true; }
+                else if (art === 'fem') { inrTxt = 'INR &lt; 1.8 (femoral arterial access)'; inrOk = isNaN(inr) ? null : inr < 1.8; }
+                else if (art === 'rad') { inrTxt = 'INR &lt; 2.2 (radial arterial access)'; inrOk = isNaN(inr) ? null : inr < 2.2; }
                 else { inrTxt = 'INR ≤ 3.0 (correct to 2.0–3.0)'; inrOk = isNaN(inr) ? null : inr <= 3.0; }
             } else {
                 if (cld) { inrTxt = 'INR &lt; 2.5 (chronic liver disease)'; inrOk = isNaN(inr) ? null : inr < 2.5; }
@@ -2147,14 +2164,25 @@
                 pltTxt = `≥ ${m}`;
                 pltOk = isNaN(plt) ? null : plt >= m;
             }
-            const fibOk = isNaN(fib) ? null : fib >= 100;
+            // SIR Table 4 gives a fibrinogen threshold (>100 mg/dL) only for chronic liver disease
+            const fibOk = (cld && !isNaN(fib)) ? fib > 100 : null;
 
             const mark = ok => ok === null ? '–' : ok ? '✓' : '✗';
             const lines = [];
-            lines.push(`${mark(inrOk)} <strong>INR${isNaN(inr) ? '' : ' ' + inr}:</strong> ${inrTxt}${inrOk === false ? ' → <strong>correct before procedure (e.g., FFP/PCC/vitamin K per clinical context)</strong>' : ''}`);
-            lines.push(`${mark(pltOk)} <strong>Platelets${isNaN(plt) ? '' : ' ' + plt}:</strong> ${pltTxt} ×10³/µL${pltOk === false ? ' → <strong>consider platelet transfusion</strong>' : ''}`);
+            const inrFix = cld
+                ? ' → <strong>above the SIR limit for chronic liver disease; SIR suggests vitamin K 10 mg slow IV if INR is above 2.5 and judicious use of plasma</strong>'
+                : ' → <strong>correct before the procedure per local protocol</strong>';
+            const pltFix = cld
+                ? ' → <strong>consider a platelet dose if the spleen is large</strong>'
+                : ' → <strong>consider platelet transfusion</strong>';
+            lines.push(`${mark(inrOk)} <strong>INR${isNaN(inr) ? '' : ' ' + inr}:</strong> ${inrTxt}${inrOk === false ? inrFix : ''}`);
+            lines.push(`${mark(pltOk)} <strong>Platelets${isNaN(plt) ? '' : ' ' + plt}:</strong> ${pltTxt} ×10³/µL${pltOk === false ? pltFix : ''}`);
             if (!isNaN(fib)) {
-                lines.push(`${mark(fibOk)} <strong>Fibrinogen ${fib}:</strong> &gt; 100 mg/dL${fibOk === false ? ' → <strong>consider cryoprecipitate / fibrinogen replacement</strong>' : ''}`);
+                if (cld) {
+                    lines.push(`${mark(fibOk)} <strong>Fibrinogen ${fib}:</strong> &gt; 100 mg/dL${fibOk === false ? ' → <strong>cryoprecipitate: 1 dose if under 80 kg, 2 doses if over 80 kg</strong>' : ''}`);
+                } else {
+                    lines.push(`– <strong>Fibrinogen ${fib}:</strong> SIR gives a fibrinogen threshold only for chronic liver disease`);
+                }
             }
 
             const anyFail = [inrOk, pltOk, fibOk].some(x => x === false);
@@ -2174,6 +2202,7 @@
         ['bleed_inr', 'bleed_plt', 'bleed_fib'].forEach(id => calcByInput[id] = calcBleed);
         document.getElementById('bleed_risk').addEventListener('change', calcBleed);
         document.getElementById('bleed_cld').addEventListener('change', calcBleed);
+        document.getElementById('bleed_art').addEventListener('change', calcBleed);
 
         // ---------- 4c. MELD 3.0 / MELD-Na ----------
         function calcMELD() {
@@ -2670,9 +2699,9 @@
         const HOLD = [
             { g: 'Anticoagulants', id: 'warfarin', name: 'Warfarin', sum: '5 days, until INR ≤1.8',
               high: 'Withhold 5 days until INR ≤1.8. Consider bridging in high thrombosis risk patients; if STAT or emergent, use a reversal agent.',
-              low: 'Do not withhold. Target INR ≤3.0. Consider bridging in high thrombosis risk patients.',
-              rsHigh: 'Resume the day after the procedure. High-thrombosis-risk patients may benefit from LMWH bridging and multidisciplinary management, especially if a reversal agent and vitamin K were used.',
-              rsLow: 'Not applicable (same-day restart for bridged patients).' },
+              low: 'Do not withhold. Target INR ≤3.0. If arterial access is needed, the target INR is &lt;1.8 for femoral puncture and &lt;2.2 for radial access. Consider bridging in high thrombosis risk patients. If the therapeutic INR range is above 3 (e.g., mechanical heart valves), check laboratory parameters; withholding warfarin and/or bridging may be needed, with multidisciplinary shared decision-making.',
+              rsHigh: 'Resume the day after the procedure. High-thrombosis-risk cases may benefit from bridging with LMWH and multidisciplinary management, especially if a reversal agent was used along with vitamin K.',
+              rsLow: 'Not applicable, or same-day restart for bridged patients. If warfarin was withheld, restart on the procedure day is possible because its effect is delayed.' },
             { g: 'Anticoagulants', id: 'ufh', name: 'Heparin, unfractionated', sum: 'IV: 4–6 hours',
               high: 'Withhold IV heparin 4–6 hours before the procedure; check aPTT or anti-Xa. For BID or TID subcutaneous heparin, the procedure may be performed 6 hours after the last dose.',
               rsHigh: '6–8 hours.' },
@@ -2684,37 +2713,51 @@
               hr: { ge50: '2–3 days.', mid: '3–5 days.', lt30: '3–5 days (the SIR table lists CrCl ≤50). Fondaparinux labeling lists CrCl &lt;30 as a contraindication; consult pharmacy.' },
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'arga', name: 'Argatroban', sum: '2–4 hours',
-              high: 'Withhold 2–4 hours before the procedure; check aPTT.', rsHigh: '4–6 hours.' },
+              high: 'Withhold 2–4 hours before the procedure; check aPTT.', extra: 'Intravenous direct thrombin inhibitors are used in PCI for only about 24 hours but longer in heparin-induced thrombocytopenia. Restart is similar to unfractionated heparin (4–6 hours).', rsHigh: '4–6 hours.' },
             { g: 'Anticoagulants', id: 'biva', name: 'Bivalirudin', sum: '2–4 hours',
-              high: 'Withhold 2–4 hours before the procedure; check aPTT.', rsHigh: '4–6 hours.' },
+              high: 'Withhold 2–4 hours before the procedure; check aPTT.', extra: 'Intravenous direct thrombin inhibitors are used in PCI for only about 24 hours but longer in heparin-induced thrombocytopenia. Restart is similar to unfractionated heparin (4–6 hours).', rsHigh: '4–6 hours.' },
             { g: 'Anticoagulants', id: 'apix', name: 'Apixaban', sum: '4 doses (CrCl ≥50); 6 doses (CrCl 30 to &lt;50)', renal: true,
               hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6 doses (about 3 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Consider a longer hold and checking an anti-Xa or apixaban level; consult pharmacy.' },
-              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or an apixaban level, especially with impaired renal function.',
+              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or an apixaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'dabi', name: 'Dabigatran', sum: '4 doses (CrCl ≥50); 6–8 doses (CrCl 30 to &lt;50)', renal: true,
               hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6–8 doses (about 3–4 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Dabigatran is renally cleared; consult pharmacy and consider a thrombin time or dabigatran level.' },
-              extra: 'If STAT or emergent: reversal agent (idarucizumab). Consider checking thrombin time or a dabigatran level with impaired renal function.',
+              extra: 'If STAT or emergent: reversal agent (idarucizumab). Consider checking thrombin time or a dabigatran level with impaired renal function. SIR Part I: a normal thrombin time excludes the presence of dabigatran.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'edox', name: 'Edoxaban', sum: '2 doses',
               high: 'Withhold 2 doses (about 2 days). The SIR table gives no renal adjustment; consider checking anti-Xa activity, especially with impaired renal function. If STAT or emergent: reversal agent (andexanet alfa).',
+              extra: 'SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'riva', name: 'Rivaroxaban', sum: '2 doses (CrCl ≥30); 3 doses (CrCl 15 to &lt;30)', renal: true,
               hr: { ge50: 'Withhold 2 doses (about 2 days).', mid: 'Withhold 2 doses (about 2 days).', lt30: 'Withhold 3 doses (about 3 days) for CrCl 15 to &lt;30. Not specified below 15; consult pharmacy.' },
-              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or a rivaroxaban level, especially with impaired renal function.',
+              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or a rivaroxaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
+              rsHigh: '24 hours.' },
+            { g: 'Anticoagulants', id: 'betri', name: 'Betrixaban', sum: '3 doses',
+              high: 'Withhold 3 doses. If STAT or emergent: reversal agent (andexanet alfa); consider checking anti-Xa activity, especially with impaired renal function.',
+              extra: 'SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Antiplatelets', id: 'clop', name: 'Clopidogrel', sum: '5 days',
               high: 'Withhold 5 days before the procedure.',
+              extra: 'Consider checking drug effect: as many as 30% of patients are poor responders and may not need to wait the full 5 days.',
               rsHigh: 'Can restart 6 hours after the procedure with a 75 mg dose; 24 hours after if a loading dose (300–600 mg) is used.' },
             { g: 'Antiplatelets', id: 'tica', name: 'Ticagrelor', sum: '5 days',
               high: 'Withhold 5 days before the procedure.', rsHigh: 'Resume the day after the procedure.' },
             { g: 'Antiplatelets', id: 'pras', name: 'Prasugrel', sum: '7 days',
               high: 'Withhold 7 days before the procedure.', rsHigh: 'Resume the day after the procedure.' },
             { g: 'Antiplatelets', id: 'asp', name: 'Aspirin (and aspirin/dipyridamole)', sum: '3–5 days',
-              high: 'Withhold 3–5 days before the procedure. Individualize for recent stents or high ischemic risk.', rsHigh: 'Resume the day after the procedure.' },
+              high: 'Withhold 3–5 days before the procedure.',
+              extra: 'SIR advises a patient-specific approach: consider the indication for aspirin, thrombotic risk and expected procedural bleeding risk. For high-risk or complex cardiovascular cases, multidisciplinary shared decision-making may help.',
+              rsHigh: 'Resume the day after the procedure.' },
             { g: 'Antiplatelets', id: 'nsaid', name: 'NSAIDs', sum: 'No SIR recommendation',
-              high: 'The SIR table gives no recommendation for high-risk procedures. Individualize by drug half-life (short-acting 2–6 h, intermediate 7–15 h, long-acting &gt;20 h).' },
+              high: 'The SIR table gives no recommendation for high-risk procedures. Individualize by drug half-life (short-acting 2–6 h, intermediate 7–15 h, long-acting &gt;20 h).',
+              extra: 'SIR footnote: stopping a non-aspirin NSAID for 5 half-lives should be enough to mitigate its effect on platelet function, and selective COX-2 inhibitors such as celecoxib do not impair platelet aggregation. There are insufficient data for a formal recommendation.' },
             { g: 'Antiplatelets', id: 'cilo', name: 'Cilostazol', sum: 'Do not withhold',
               high: 'Do not withhold (SIR 2019).', low: 'Do not withhold (SIR 2019).' },
+            { g: 'Antiplatelets', id: 'cang', name: 'Cangrelor', sum: 'Defer until off drug; emergent: 1 hour',
+              high: 'Defer the procedure until off medication. If the procedure is emergent, withhold 1 hour before. Multidisciplinary discussion with cardiology is suggested.',
+              low: 'Defer the procedure until off medication. If the procedure is emergent, withhold 1 hour before. Multidisciplinary discussion with cardiology is suggested.',
+              rsHigh: 'Patients on cangrelor are undergoing PCI or are in the immediate period after cardiac intervention; multidisciplinary shared decision-making is recommended.',
+              rsLow: 'Multidisciplinary shared decision-making is recommended.' },
             { g: 'Antiplatelets', id: 'abx', name: 'Abciximab', sum: '24 hours (low or high risk)',
               high: 'Withhold 24 hours before the procedure. Usually given around PCI; defer non-urgent procedures if possible.',
               low: 'Withhold 24 hours before the procedure (SIR lists the same for low-risk procedures). Usually given around PCI; defer non-urgent procedures if possible.' },
