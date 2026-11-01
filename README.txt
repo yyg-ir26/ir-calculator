@@ -24,22 +24,24 @@ Open it once while online; after that it works offline.
 
 PUBLISHING AN UPDATE
   1. Edit index.html.
-  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v15'; increment this value for each subsequent release).
+  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v16'; increment this value for each subsequent release).
   3. Re-upload the files. Users receive the update the next time they open the app online
      (close and reopen the app once if it still shows the old version).
 
 NOTES
-  - No patient data is collected, sent or stored. Only two preferences are kept in the browser:
-    disclaimer accepted, and last tool opened.
+  - No patient data is collected, sent or stored. Browser local storage keeps the disclaimer preference,
+    last tool opened, and the two resource URLs entered by the user. Resource URLs remain on that device/browser profile.
   - Calculators are decision-support references. Verify against current guidelines and institutional protocols.
 
 
-IR TEAM RESOURCES LINK
-  In index.html, search for: const IR_RESOURCES_URL = '';
-  Paste the full UH SharePoint folder URL between the quotes, for example:
-    const IR_RESOURCES_URL = 'https://your-organization.sharepoint.com/sites/...';
-  Save the file and publish the updated package. The link opens in a new browser context;
-  users may need to sign in with their UH institutional account.
+RESOURCES PAGE
+  The Resources page has two independent link fields: Shared Folder and Institutional Resource Page.
+  Each user can enter their own HTTPS URL and select Save link. The URLs are saved in localStorage
+  for that browser profile on that device; they are not built into the app and are not shared with
+  other users or devices. Users can change or clear either link at any time. No default institution
+  or default URL is configured. Opening a link may require the user's institutional sign-in.
+  Do not enter passwords or patient-identifiable information. On a shared computer, anyone using
+  the same browser profile may be able to see the saved URLs.
 
 NEW REFERENCE PAGE
   The SIR Antibiotic Guidelines page provides a condensed summary based on the 2018 SIR Practice Parameter Update.
@@ -54,7 +56,9 @@ VERSION 1.6 UPDATE (November 2026)
     for ideal/adjusted calculations, and the weight actually used is displayed.
   - LAST: expanded the reference using the ASRA 2020 checklist, including lipid dosing, repeat/double
     instructions, maximum dose, seizure/ACLS cautions, and observation windows.
-  - Incremented service-worker cache to ir-suite-v15.
+  - Incremented service-worker cache to ir-suite-v16.
+  - Resources page now supports independently saved Shared Folder and Institutional Resource Page URLs,
+    stored locally per browser/device with no institution-specific default.
 
 LIMITATIONS
   This release has passed source-level checks only. It has not undergone formal clinical validation,

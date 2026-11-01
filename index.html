@@ -145,7 +145,45 @@
             text-overflow: ellipsis;
         }
 
-        input.num:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2,132,199,0.15); }
+        input.num:focus, select:focus, .resource-url:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2,132,199,0.15); }
+
+        /* Locally configurable institutional resource links */
+        .resource-link-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 14px;
+            background: #f8fafc;
+        }
+        .resource-link-card h3 { margin-top: 0; margin-bottom: 6px; }
+        .resource-description { margin-bottom: 12px; }
+        .resource-url {
+            width: 100%;
+            min-height: 46px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text);
+            outline: none;
+            background: #fff;
+        }
+        .resource-actions { display: flex; gap: 10px; }
+        .resource-save-btn, .resource-clear-btn {
+            min-height: 44px;
+            padding: 9px 16px;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .resource-save-btn { flex: 1; color: #fff; background: var(--primary); }
+        .resource-save-btn:active { background: var(--primary-dark); }
+        .resource-clear-btn { color: var(--text-muted); background: #fff; border-color: var(--border); }
+        .resource-status { margin-top: 8px; color: var(--text-muted); font-size: 0.75rem; }
+        .resource-open-link { display: inline-block; margin-top: 4px; color: var(--primary-dark); font-weight: 700; overflow-wrap: anywhere; }
+        .resource-open-link[hidden], .resource-clear-btn[hidden] { display: none; }
 
         .checkbox-container {
             display: flex;
@@ -582,7 +620,7 @@
             </optgroup>
             <optgroup label="IR Practice Resources">
                 <option value="antibiotics">SIR Antibiotic Guidelines</option>
-                <option value="ir_resources">IR Team Resources</option>
+                <option value="ir_resources">Resources</option>
             </optgroup>
             <optgroup label="About">
                 <option value="refs">References</option>
@@ -1827,18 +1865,43 @@
             </div>
         </div>
 
-        <!-- IR TEAM RESOURCES -->
+        <!-- INSTITUTIONAL RESOURCES -->
         <div id="ir_resources" class="tab-content">
             <div class="card">
-                <h2>IR Team Resources</h2>
-                <div class="card-subtitle">Shared materials and workflows for the IR team</div>
-                <p>Access shared resources contributed by colleagues, including practical tips, workflows and reference materials.</p>
-                <div class="resource-link-card" style="border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:14px; background:var(--surface, #f8fafc);">
-                    <h3 style="margin-top:0;">Shared Tips &amp; Workflows</h3>
-                    <p style="margin-bottom:12px;">A shared UH SharePoint folder for IR team tips, workflows and helpful resources. UH institutional login may be required.</p>
-                    <a id="ir_sharepoint_link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" style="display:inline-block; font-weight:700; color:var(--primary);">SharePoint folder link will be added</a>
+                <h2>Resources</h2>
+                <div class="card-subtitle">Add links to resources provided by your institution. Each link is saved in this browser on this device.</div>
+
+                <div class="resource-link-card">
+                    <h3>Shared Folder</h3>
+                    <p class="resource-description">Enter the link to your department's shared folder, such as a SharePoint folder.</p>
+                    <div class="form-group">
+                        <label for="ir_shared_folder_input">Shared folder URL</label>
+                        <input class="resource-url" type="url" id="ir_shared_folder_input" inputmode="url" autocomplete="url" placeholder="https://..." aria-describedby="ir_shared_folder_status">
+                    </div>
+                    <div class="resource-actions">
+                        <button type="button" class="resource-save-btn" id="ir_shared_folder_save">Save link</button>
+                        <button type="button" class="resource-clear-btn" id="ir_shared_folder_clear" hidden>Clear</button>
+                    </div>
+                    <p class="resource-status" id="ir_shared_folder_status" role="status" aria-live="polite">No link saved.</p>
+                    <a class="resource-open-link" id="ir_shared_folder_open" target="_blank" rel="noopener noreferrer" hidden>Open shared folder</a>
                 </div>
-                <div class="footnote">Use institutional-approved resources and avoid uploading or sharing patient-identifiable information.</div>
+
+                <div class="resource-link-card">
+                    <h3>Institutional Resource Page</h3>
+                    <p class="resource-description">Enter the link to your institution's IR resource page, protocol portal, or internal reference website.</p>
+                    <div class="form-group">
+                        <label for="ir_institutional_page_input">Institutional resource page URL</label>
+                        <input class="resource-url" type="url" id="ir_institutional_page_input" inputmode="url" autocomplete="url" placeholder="https://..." aria-describedby="ir_institutional_page_status">
+                    </div>
+                    <div class="resource-actions">
+                        <button type="button" class="resource-save-btn" id="ir_institutional_page_save">Save link</button>
+                        <button type="button" class="resource-clear-btn" id="ir_institutional_page_clear" hidden>Clear</button>
+                    </div>
+                    <p class="resource-status" id="ir_institutional_page_status" role="status" aria-live="polite">No link saved.</p>
+                    <a class="resource-open-link" id="ir_institutional_page_open" target="_blank" rel="noopener noreferrer" hidden>Open institutional resource page</a>
+                </div>
+
+                <div class="footnote">Links are stored locally in this browser and are not shared with other users or devices. Anyone using the same browser profile may be able to see them. Institutional sign-in may be required when opening a link. Use institutionally approved resources and do not enter patient-identifiable information or passwords here.</div>
             </div>
         </div>
 
@@ -3388,21 +3451,73 @@
         // Initialize on load
         switchRADS();
 
-        // ---------- IR TEAM RESOURCES LINK ----------
-        // Paste the full UH SharePoint folder URL between the quotes when available.
-        const IR_RESOURCES_URL = '';
-        (function initIRResourcesLink() {
-            const link = document.getElementById('ir_sharepoint_link');
-            if (!link) return;
-            if (IR_RESOURCES_URL && /^https:\/\//i.test(IR_RESOURCES_URL)) {
-                link.href = IR_RESOURCES_URL;
-                link.textContent = 'Open Shared Tips & Workflows';
-                link.removeAttribute('aria-disabled');
-                link.style.opacity = '1';
-            } else {
-                link.addEventListener('click', function (e) { e.preventDefault(); });
-                link.style.opacity = '0.65';
+        // ---------- USER-CONFIGURABLE INSTITUTIONAL RESOURCE LINKS ----------
+        // URLs are stored locally in this browser profile; no default institution is configured.
+        (function initInstitutionalResourceLinks() {
+            const resources = [
+                { key: 'ir_resource_shared_folder_url', input: 'ir_shared_folder_input', save: 'ir_shared_folder_save', clear: 'ir_shared_folder_clear', status: 'ir_shared_folder_status', open: 'ir_shared_folder_open' },
+                { key: 'ir_resource_institutional_page_url', input: 'ir_institutional_page_input', save: 'ir_institutional_page_save', clear: 'ir_institutional_page_clear', status: 'ir_institutional_page_status', open: 'ir_institutional_page_open' }
+            ];
+
+            function normalizeHttpsUrl(value) {
+                const raw = String(value || '').trim();
+                if (!raw) return null;
+                try {
+                    const parsed = new URL(raw);
+                    if (parsed.protocol !== 'https:' || !parsed.hostname || parsed.username || parsed.password) return null;
+                    return parsed.href;
+                } catch (e) { return null; }
             }
+
+            resources.forEach(function (item) {
+                const input = document.getElementById(item.input);
+                const save = document.getElementById(item.save);
+                const clear = document.getElementById(item.clear);
+                const status = document.getElementById(item.status);
+                const open = document.getElementById(item.open);
+                if (!input || !save || !clear || !status || !open) return;
+
+                function renderSavedUrl(url) {
+                    if (url) {
+                        input.value = url;
+                        open.href = url;
+                        open.hidden = false;
+                        clear.hidden = false;
+                        status.textContent = 'Saved on this device.';
+                    } else {
+                        input.value = '';
+                        open.removeAttribute('href');
+                        open.hidden = true;
+                        clear.hidden = true;
+                        status.textContent = 'No link saved.';
+                    }
+                }
+
+                let saved = '';
+                try { saved = localStorage.getItem(item.key) || ''; } catch (e) { /* storage unavailable */ }
+                renderSavedUrl(normalizeHttpsUrl(saved));
+
+                save.addEventListener('click', function () {
+                    const url = normalizeHttpsUrl(input.value);
+                    if (!url) {
+                        status.textContent = 'Enter a valid HTTPS web address (starting with https://).';
+                        open.hidden = true;
+                        return;
+                    }
+                    try {
+                        localStorage.setItem(item.key, url);
+                        renderSavedUrl(url);
+                    } catch (e) {
+                        status.textContent = 'Unable to save in this browser. Check browser storage settings and try again.';
+                    }
+                });
+
+                clear.addEventListener('click', function () {
+                    try { localStorage.removeItem(item.key); } catch (e) { /* storage may be unavailable */ }
+                    renderSavedUrl('');
+                    status.textContent = 'Saved link cleared.';
+                });
+            });
         })();
 
         // ---------- TOOL SELECTOR (dropdown navigation) ----------
