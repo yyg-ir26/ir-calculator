@@ -74,8 +74,10 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Card Styles */
+        /* Card Styles: ordinary card text is unified at 0.9rem.
+           Headings, subtitles, tables, controls and footnotes use deliberate hierarchy styles. */
         .card {
+            font-size: 0.9rem;
             background: var(--card-bg);
             border-radius: 12px;
             border: 1px solid var(--border);
@@ -222,7 +224,7 @@
             margin-bottom: 6px;
         }
 
-        .result-detail { font-size: 0.85rem; margin-top: 6px; }
+        .result-detail { font-size: 0.9rem; line-height: 1.5; margin-top: 6px; }
 
         .footnote {
             font-size: 0.75rem;
@@ -264,7 +266,7 @@
         }
 
         .rads-title { font-weight: 700; font-size: 0.95rem; }
-        .rads-desc  { font-size: 0.85rem; color: var(--text-muted); }
+        .rads-desc  { font-size: 0.9rem; line-height: 1.5; color: var(--text-muted); }
 
         footer {
             text-align: center;
@@ -310,7 +312,7 @@
         table.ref td:first-child { font-weight: 600; }
 
         .section-label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text);
             margin-top: 16px;
@@ -326,7 +328,7 @@
             margin: 1px 2px 1px 0;
         }
         .tag.ester { background: #fef3c7; color: #92400e; }
-        ul.tight { margin: 6px 0 0 18px; font-size: 0.82rem; line-height: 1.45; }
+        ul.tight { margin: 6px 0 0 18px; line-height: 1.5; }
         ul.tight li { margin-bottom: 3px; }
         .card h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px; }
 
@@ -1815,14 +1817,13 @@
             </div>
             <div class="card">
                 <h3>Important interpretation notes</h3>
-                <ul class="tight">
-                    <li>These are procedure-level recommendations based on the 2018 SIR practice parameter, not patient-specific prescriptions.</li>
-                    <li>For biliary-enteric anastomosis, prior sphincterotomy, biliary stents or other biliary colonization, the risk profile for hepatic embolization, radioembolization and ablation changes materially.</li>
-                    <li>For infected/obstructed systems, distinguish treatment of an established infection from prophylaxis.</li>
-                    <li>Penicillin-allergy alternatives shown in this 2018 paper may not reflect newer allergy guidance. Review the allergy section and current institutional recommendations; do not assume all reported penicillin allergy requires avoiding cefazolin.</li>
-                    <li>Adult and pediatric dosing differ. This page is a condensed adult-focused quick reference; consult the original publication for pediatric dosing and full regimen details.</li>
-                </ul>
-                <div class="footnote">Source: Chehab MA, Thakor AS, Tulin-Silver S, et al. Adult and Pediatric Antibiotic Prophylaxis during Vascular and IR Procedures: A Society of Interventional Radiology Practice Parameter Update. <em>J Vasc Interv Radiol</em>. 2018;29(11):1483–1501.e2. doi:10.1016/j.jvir.2018.06.007. The full Table 2 includes additional procedures and alternative regimens not reproduced in this summary.</div>
+                <div class="footnote">
+                    <strong>Procedure-level guidance:</strong> These are recommendations based on the 2018 SIR practice parameter, not patient-specific prescriptions.<br><br>
+                    <strong>Biliary risk:</strong> Biliary-enteric anastomosis, prior sphincterotomy, biliary stents or other biliary colonization materially change the risk profile for hepatic embolization, radioembolization and ablation.<br><br>
+                    <strong>Infection:</strong> For infected or obstructed systems, distinguish treatment of an established infection from prophylaxis.<br><br>
+                    <strong>Allergy:</strong> Penicillin-allergy alternatives in the 2018 publication may not reflect newer allergy guidance. Review the allergy section and current institutional recommendations; do not assume all reported penicillin allergy requires avoiding cefazolin.<br><br>
+                    <strong>Dosing:</strong> Adult and pediatric dosing differ. This page is a condensed adult-focused quick reference; consult the full publication for pediatric dosing and additional procedures and regimens.
+                </div>
             </div>
         </div>
 

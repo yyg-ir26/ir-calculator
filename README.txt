@@ -24,7 +24,7 @@ Open it once while online; after that it works offline.
 
 PUBLISHING AN UPDATE
   1. Edit index.html.
-  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v12'; increment this value for each subsequent release).
+  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v15'; increment this value for each subsequent release).
   3. Re-upload the files. Users receive the update the next time they open the app online
      (close and reopen the app once if it still shows the old version).
 
@@ -54,7 +54,7 @@ VERSION 1.6 UPDATE (November 2026)
     for ideal/adjusted calculations, and the weight actually used is displayed.
   - LAST: expanded the reference using the ASRA 2020 checklist, including lipid dosing, repeat/double
     instructions, maximum dose, seizure/ACLS cautions, and observation windows.
-  - Incremented service-worker cache to ir-suite-v12.
+  - Incremented service-worker cache to ir-suite-v15.
 
 LIMITATIONS
   This release has passed source-level checks only. It has not undergone formal clinical validation,
