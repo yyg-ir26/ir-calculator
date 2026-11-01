@@ -352,6 +352,8 @@
             margin-left: auto;
             margin-right: auto;
         }
+        .num.input-invalid { border-color: #dc2626 !important; background: #fef2f2; }
+        .input-error-note { display:block; color:#b91c1c; font-size:0.75rem; margin-top:4px; }
         .visually-hidden {
             position: absolute !important;
             width: 1px; height: 1px;
@@ -576,6 +578,10 @@
                 <option value="rads_ref">RADS &amp; Staging Guides</option>
                 <option value="hu">Hounsfield Unit Table</option>
             </optgroup>
+            <optgroup label="IR Practice Resources">
+                <option value="antibiotics">SIR Antibiotic Guidelines</option>
+                <option value="ir_resources">IR Team Resources</option>
+            </optgroup>
             <optgroup label="About">
                 <option value="refs">References</option>
                 <option value="about">Disclaimer &amp; About</option>
@@ -713,8 +719,20 @@
                         <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_age" placeholder="e.g. 65">
                     </div>
                     <div class="form-group">
-                        <label for="cg_wt">Weight (kg):</label>
+                        <label for="cg_wt">Actual body weight (kg):</label>
                         <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_wt" placeholder="e.g. 70">
+                    </div>
+                    <div class="form-group">
+                        <label for="cg_ht">Height (cm) <span style="font-weight:400; color:var(--text-muted);">[needed for IBW/adjusted]</span>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="cg_ht" placeholder="e.g. 175">
+                    </div>
+                    <div class="form-group">
+                        <label for="cg_weight_type">Weight used for Cockcroft–Gault:</label>
+                        <select id="cg_weight_type">
+                            <option value="actual">Actual body weight</option>
+                            <option value="ideal">Ideal body weight (Devine)</option>
+                            <option value="adjusted">Adjusted body weight (0.4 correction)</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="cg_scr">Serum Creatinine (mg/dL):</label>
@@ -733,7 +751,7 @@
                     Enter patient parameters to calculate CrCl.
                 </div>
                 <div class="footnote">
-                    Cockcroft-Gault is conventionally calculated with actual body weight; in obese patients consider ideal or adjusted body weight. Contrast-risk thresholds (ACR–NKF consensus) are based on eGFR (&lt;30 mL/min/1.73 m²), which can differ from CrCl.
+                    Cockcroft–Gault weight selection is context-dependent. Actual body weight is the conventional default; some drug references use IBW or adjusted body weight in obesity. The calculator displays the selected weight and the Devine/0.4-correction method used. Height is required for IBW or adjusted weight. Confirm the weight convention for the specific medication and institutional protocol. Contrast-risk thresholds (ACR–NKF) are based on eGFR (&lt;30 mL/min/1.73 m²), not CrCl.
                 </div>
             </div>
 
@@ -744,7 +762,7 @@
                     Enter age, sex and serum creatinine above to calculate.
                 </div>
                 <div class="footnote">
-                    CKD-EPI 2021 creatinine equation (Inker et al., NEJM 2021), for adults ≥18 years; result is indexed to 1.73 m² body surface area. Contrast guidance below follows the ACR–NKF consensus for IV iodinated contrast; intra-arterial administration with first-pass renal exposure is generally treated similarly. Confirm with your institutional policy.
+                    CKD-EPI 2021 creatinine equation (Inker et al., NEJM 2021), for adults ≥18 years; result is indexed to 1.73 m² body surface area. The ACR–NKF consensus cited below applies to IV iodinated contrast only. Intra-arterial contrast with first-pass renal exposure is a distinct setting; follow current IR-specific and institutional protocols rather than assuming the IV recommendations apply.
                 </div>
             </div>
 
@@ -948,19 +966,20 @@
                     <div class="form-group">
                         <label for="meld_sex">Sex:</label>
                         <select id="meld_sex">
+                            <option value="" selected>Select…</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="meld_age">Age (years) <span style="font-weight:400; color:var(--text-muted);">[optional]</span>:</label>
-                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="meld_age" placeholder="adult if blank">
+                        <label for="meld_age">Age (years):</label>
+                        <input type="text" inputmode="numeric" autocomplete="off" class="num" id="meld_age" placeholder="Required for MELD 3.0">
                     </div>
                 </div>
 
                 <label class="checkbox-container" for="meld_dial">
                     <input type="checkbox" id="meld_dial">
-                    <span style="font-weight:600; font-size:0.9rem;">Dialysis ≥2 times in the past week</span>
+                    <span style="font-weight:600; font-size:0.9rem;">Dialysis ≥2 times or CVVHD ≥24 hours in the past 7 days</span>
                 </label>
 
                 <div id="meld_res" class="result-box" aria-live="polite">
@@ -1108,11 +1127,16 @@
                 <div id="la_res" class="result-box" aria-live="polite">
                     Enter weight to calculate the maximum dose.
                 </div>
+                <div class="footnote"><strong>Combined local-anesthetic toxicity:</strong> systemic toxicity is additive when multiple local anesthetics are administered. Track cumulative exposure across agents; as a conservative approach, the sum of each agent's fraction of its individual maximum dose should remain below 1.0. This calculator displays one agent at a time and does not perform a combined-dose calculation.</div>
                 <div class="footnote">
                     Commonly cited maximum doses for infiltration (lower of the mg/kg dose or the absolute cap): lidocaine 4.5 mg/kg (300 mg) or 7 mg/kg with epinephrine (500 mg); bupivacaine 2.5 mg/kg (175 mg) or 3 mg/kg with epinephrine (225 mg); ropivacaine 3 mg/kg (200 mg); mepivacaine 4.5 mg/kg (300 mg) or 7 mg/kg with epinephrine (500 mg); chloroprocaine 11 mg/kg (800 mg) or 14 mg/kg with epinephrine (1000 mg). Published limits vary between sources and labels, so confirm against your institutional formulary. Consider ideal/lean body weight in obese patients and reduce doses in hepatic impairment, elderly or frail patients, and when injecting into highly vascular areas. Concentration: 1% = 10 mg/mL.
                 </div>
                 <div class="footnote">
-                    <strong>Suspected LAST</strong> (perioral numbness, tinnitus, seizure, arrhythmia): stop injecting, call for help, secure airway and give 100% oxygen; give 20% lipid emulsion (e.g., 1.5 mL/kg bolus then 0.25 mL/kg/min). Follow your institutional LAST protocol.
+                    <strong>Suspected local anesthetic systemic toxicity (LAST) — ASRA 2020 checklist summary:</strong>
+                    Stop local-anesthetic administration; call for help; obtain the LAST rescue kit and consider a cardiopulmonary-bypass team. Consider 20% lipid emulsion early. Manage airway/oxygenation and seizures (benzodiazepines preferred; if propofol is the only option, use low-dose increments such as 20 mg). For arrhythmia or hypotension, remember LAST resuscitation differs from standard ACLS: use smaller-than-usual epinephrine doses (start at ≤1 mcg/kg) and avoid vasopressin, beta-blockers, calcium-channel blockers and additional local anesthetics.
+                </div>
+                <div class="footnote">
+                    <strong>20% lipid emulsion (ASRA 2020):</strong> Patient &lt;70 kg: bolus about 1.5 mL/kg over 2–3 minutes, then infuse about 0.25 mL/kg/min. Patient &gt;70 kg: bolus about 100 mL over 2–3 minutes, then infuse about 250 mL over 15–20 minutes. If instability persists, repeat the bolus and double the infusion. Continue infusion for more than 15 minutes after hemodynamic stability; maximum total dose 12 mL/kg. The ASRA graphic specifies &lt;70 kg and &gt;70 kg; for exactly 70 kg, follow the institution's LAST protocol. Observe at least 2 hours after seizure, 4–6 hours after cardiovascular instability, and as appropriate after cardiac arrest. ASRA's website states this 2020 checklist is under review, with an update expected in early 2027; recheck the official checklist when revised. This is a concise reference, not a substitute for the full ASRA checklist or local emergency protocol.
                 </div>
             </div>
         </div>
@@ -1185,7 +1209,7 @@
                         <tbody>
                             <tr>
                                 <td>Iodinated contrast (prior allergic-like reaction)</td>
-                                <td>Premedication (see below); use a different iodinated agent if the culprit is known; consider CO₂ angiography for below-diaphragm vascular imaging (avoid intra-arterial CO₂ above the diaphragm, e.g., cerebral/coronary); non-contrast, US or MRI-based alternatives. Gadolinium as an angiographic substitute is off-label, so discuss risks and dose limits.</td>
+                                <td>Use the 2025 ACR–AAAAI approach below: classify the prior reaction, switch the iodinated agent when feasible, and reserve premedication for selected moderate/severe situations. Consider alternative imaging; CO₂ angiography may be an option for selected below-diaphragm vascular imaging (avoid intra-arterial CO₂ above the diaphragm, e.g., cerebral/coronary). Gadolinium as an angiographic substitute is off-label, so discuss risks and dose limits.</td>
                             </tr>
                             <tr>
                                 <td>Shellfish / "iodine" allergy</td>
@@ -1205,7 +1229,7 @@
                             </tr>
                             <tr>
                                 <td>Penicillin (antibiotic prophylaxis)</td>
-                                <td>Cefazolin is generally acceptable unless the reaction was severe or IgE-mediated (it has a distinct side chain). Otherwise, alternatives per institutional antibiotic protocol (e.g., vancomycin).</td>
+                                <td>The 2022 drug-allergy practice parameter supports routine cefazolin administration in most patients with a penicillin-allergy history, including prior penicillin anaphylaxis, because cefazolin has a non-cross-reactive side chain. This does not apply to severe delayed immunologic/organ-specific reactions (e.g., SJS/TEN, DRESS, hemolytic anemia, drug-induced liver injury or interstitial nephritis), or known cefazolin/cephalosporin allergy. Confirm the reaction history and follow institutional allergy pathways.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1213,8 +1237,26 @@
             </div>
 
             <div class="card">
-                <h2>Contrast Premedication (ACR Manual)</h2>
-                <div class="card-subtitle">For prior allergic-like reaction to the same class of contrast agent</div>
+                <h2>2025 ACR–AAAAI Contrast Reaction Consensus</h2>
+                <div class="card-subtitle">Applies to immediate hypersensitivity reactions to intravenous iodinated contrast media (ICM)</div>
+                <div class="tbl-wrap">
+                    <table class="ref">
+                        <thead><tr><th>Prior reaction</th><th>Recommended approach</th></tr></thead>
+                        <tbody>
+                            <tr><td>Mild immediate</td><td>Premedication is not recommended. Switch to a different ICM when feasible.</td></tr>
+                            <tr><td>Moderate immediate</td><td>Switch ICM when feasible. Premedication may be considered.</td></tr>
+                            <tr><td>Severe immediate</td><td>First consider an alternative imaging study. If no acceptable alternative exists, switch ICM when feasible and give premedication; perform in a hospital setting with rapid-response personnel and equipment available.</td></tr>
+                            <tr><td>Physiologic / chemotoxic reaction</td><td>Premedication is not indicated for a prior physiologic or chemotoxic reaction.</td></tr>
+                            <tr><td>Isolated shellfish or iodine allergy</td><td>Premedication is not indicated for this history alone.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footnote">This 2025 joint consensus applies to IV iodinated contrast hypersensitivity, not automatically to intra-arterial administration or gadolinium-based contrast. Document the specific culprit agent and reaction phenotype in the allergy record. Use shared decision-making and local radiology/allergy pathways where evidence is limited.</div>
+            </div>
+
+            <div class="card">
+                <h2>Premedication Regimens (ACR Manual) — If Chosen</h2>
+                <div class="card-subtitle">Reference regimens when premedication is selected under the 2025 consensus or institutional protocol</div>
                 <div class="tbl-wrap">
                     <table class="ref">
                         <thead><tr><th>Regimen</th><th>Dosing</th></tr></thead>
@@ -1243,7 +1285,7 @@
                     </table>
                 </div>
                 <div class="footnote">
-                    IV steroids have not been shown to be effective when given less than 4–6 h before contrast. Premedication reduces but does not eliminate the risk of reaction. Patients on chronic steroids may need adjustment. Emergent studies: a regimen with diphenhydramine alone is a last resort. Always have reaction-management medications and equipment available. Source: ACR Manual on Contrast Media; follow your institutional protocol.
+                    These are ACR Manual regimen examples, not a recommendation to premedicate every prior reactor. The 2025 ACR–AAAAI consensus does not recommend premedication for mild immediate reactions or physiologic/chemotoxic reactions; for severe immediate reactions, alternative imaging is considered first. IV steroids given less than 4–6 h before contrast have not been shown effective. Premedication does not eliminate risk. Always have reaction-management medications and equipment available. Follow the current ACR Manual and institutional protocol.
                 </div>
             </div>
         </div>
@@ -1385,6 +1427,7 @@
                 <div class="section-label">Summary: high bleeding risk procedures</div>
                 <div class="tbl-wrap">
                     <table class="ref" id="hold_table"></table>
+                <div class="footnote"><strong>U.S. availability note:</strong> Andexanet alfa (historical reversal-agent reference) and betrixaban are currently unavailable in the United States. Do not interpret the historical mentions above as confirmation that either medication can be obtained or administered. Verify current formulary status and reversal options with pharmacy and institutional protocol.</div>
                 </div>
 
                 <div class="footnote">
@@ -1491,7 +1534,7 @@
                 <div class="form-group">
                     <label for="y_lsf">Or enter LSF directly (%):</label>
                     <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_lsf" placeholder="e.g. 8.5">
-                    <div class="field-hint">Counts are used if both lung and liver counts are entered.</div>
+                    <div class="field-hint">Counts are used if both lung and liver counts are entered. Do not enter background-subtracted or decay-corrected counts unless consistent with the validated local/vendor method.</div>
                 </div>
                 <div class="form-grid two-col">
                     <div class="form-group">
@@ -1499,8 +1542,8 @@
                         <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_act" placeholder="e.g. 2.5">
                     </div>
                     <div class="form-group">
-                        <label for="y_mass">Lung mass (kg):</label>
-                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_mass" value="1">
+                        <label for="y_mass">Lung mass used for dosimetry (kg) <strong>(required; no default)</strong>:</label>
+                        <input type="text" inputmode="decimal" autocomplete="off" class="num" id="y_mass" placeholder="Enter validated lung mass">
                     </div>
                 </div>
                 <div class="form-group">
@@ -1525,7 +1568,7 @@
                     </table>
                 </div>
                 <div class="footnote">
-                    LSF = lung counts ÷ (lung + liver counts). Mean lung dose = 50 Gy·kg/GBq × activity (GBq) × LSF ÷ lung mass (kg), with 1 kg as the conventional assumed lung mass. Commonly applied limits: ≤30 Gy per treatment and ≤50 Gy cumulative. The 20% LSF ceiling is part of the resin microsphere instructions for use; glass microspheres use the dose-based limits. These limits were derived from planar imaging; check your vendor instructions for use, dosimetry model (partition/MIRD vs BSA) and institutional protocol, particularly with SPECT/CT-based LSF. This tool checks lung dose only and does not calculate prescribed activity.
+                    LSF = lung counts ÷ (lung + liver counts). Mean lung dose = 50 Gy·kg/GBq × activity (GBq) × LSF ÷ lung mass (kg). Although 1 kg is a conventional assumed lung mass in some simplified calculations, this tool deliberately does NOT assume it: enter the lung mass selected by your validated dosimetry method. A missing, zero or invalid mass prevents dose calculation. Commonly cited limits are ≤30 Gy per treatment and ≤50 Gy cumulative; these are not universal guarantees of safety. The 20% LSF ceiling is part of resin-microsphere instructions for use; glass microspheres use dose-based limits. Limits were derived from planar imaging; follow the specific product instructions, validated dosimetry model (partition/MIRD vs BSA), imaging method and institutional protocol, especially with SPECT/CT-based LSF. This tool checks lung dose only and does not calculate prescribed activity.
                 </div>
             </div>
         </div>
@@ -1612,7 +1655,7 @@
                     Enter height and weight.
                 </div>
                 <div class="footnote">
-                    BSA (Mosteller) = √(height cm × weight kg ÷ 3600). BSA (Du Bois) = 0.007184 × weight<sup>0.425</sup> × height<sup>0.725</sup>. Ideal body weight (Devine): male 50 kg, female 45.5 kg, plus 2.3 kg per inch above 60 inches (set to the base value if shorter). Adjusted body weight = IBW + 0.4 × (actual − IBW). Which weight to use for drug dosing depends on the drug; check its labeling.
+                    BSA (Mosteller) = √(height cm × weight kg ÷ 3600). BSA (Du Bois) = 0.007184 × weight<sup>0.425</sup> × height<sup>0.725</sup>. Ideal body weight (Devine): male 50 kg, female 45.5 kg, plus 2.3 kg per inch above or below 60 inches (linear extrapolation below 5 ft). Below 5 ft, this extrapolation is outside the conventional reference range and is not validated; use clinical judgment before applying it to weight-based dosing. Adjusted body weight = IBW + 0.4 × (actual − IBW), displayed only when actual weight exceeds IBW. Which weight to use for drug dosing depends on the drug; check its labeling.
                 </div>
             </div>
         </div>
@@ -1657,7 +1700,7 @@
         <div id="about" class="tab-content">
             <div class="card">
                 <h2>Disclaimer &amp; About</h2>
-                <div class="card-subtitle">IR Decision Support Suite, version 1.1 (October 2026)</div>
+                <div class="card-subtitle">IR Decision Support Suite, version 1.6 (November 2026)</div>
                 <div class="section-label" style="margin-top:0;">Medical disclaimer</div>
                 <ul class="tight">
                     <li><strong>This is an independent reference tool. It is not an official, institution-approved, employer-approved or clinically validated application</strong>, and it is not endorsed by any hospital, employer or professional society. It has not undergone formal clinical validation or institutional review.</li>
@@ -1681,7 +1724,7 @@
                 <div class="section-label">Versions used (last checked October 2026)</div>
                 <ul class="tight">
                     <li>BI-RADS v2025; Lung-RADS v2022; LI-RADS CT/MRI v2018; PI-RADS v2.1; ACR TI-RADS (2017); O-RADS US v2022 and O-RADS MRI; CAD-RADS 2.0; C-RADS v2023; NI-RADS (CT/PET table; an MRI version also exists and is not covered); VI-RADS; Bosniak v2019; BCLC 2022.</li>
-                    <li>SIR periprocedural guideline 2019 (Part II); MELD 3.0; CKD-EPI 2021; ACR Manual on Contrast Media premedication regimens.</li>
+                    <li>SIR periprocedural guideline 2019 (Part II); SIR antibiotic prophylaxis practice parameter 2018; MELD 3.0; CKD-EPI 2021; 2025 ACR–AAAAI contrast hypersensitivity consensus; 2022 drug-allergy practice parameter.</li>
                     <li>Guidelines are updated periodically. Check the issuing organization for newer versions.</li>
                 </ul>
                 <div class="footnote">
@@ -1714,6 +1757,84 @@
             </div>
         </div>
 
+        <!-- SIR ANTIBIOTIC GUIDELINES -->
+        <div id="antibiotics" class="tab-content">
+            <div class="card">
+                <h2>SIR Antibiotic Prophylaxis Guidelines</h2>
+                <div class="card-subtitle">Procedure-specific summary based on the 2018 SIR Practice Parameter Update (JVIR, November 2018)</div>
+                <div class="footnote"><strong>Scope:</strong> This is a condensed summary of the 2018 SIR practice parameter, not a comprehensive or necessarily current guideline. The underlying evidence is often retrospective, and recommendations may vary with patient risk, local microbiology and clinical judgment. Confirm agent selection, dose, timing, allergy history, renal adjustment and duration against current institutional protocols and antimicrobial-stewardship guidance.</div>
+            </div>
+            <div class="card">
+                <h3>Vascular procedures</h3>
+                <table class="ref">
+                    <thead><tr><th>Procedure</th><th>2018 SIR recommendation / examples</th></tr></thead>
+                    <tbody>
+                        <tr><td>Diagnostic angiography / angioplasty</td><td>Routine prophylaxis not recommended. In high-risk patients, cefazolin 1–2 g IV may be considered; the publication lists vancomycin for penicillin-allergic patients.</td></tr>
+                        <tr><td>Bare-metal stent; AV fistula/graft interventions; closure devices</td><td>Routine prophylaxis not recommended. Consider cefazolin 1–2 g IV in selected high-risk cases, especially covered-stent placement for dialysis access.</td></tr>
+                        <tr><td>Arterial endografts</td><td>Prophylaxis recommended: cefazolin 1–2 g IV. The publication lists vancomycin for penicillin-allergic patients.</td></tr>
+                        <tr><td>Uterine artery embolization</td><td>Prophylaxis recommended; no consensus first-choice agent. Suggested regimen: cefazolin 1–2 g IV. Alternatives listed include clindamycin plus gentamicin, ampicillin, ampicillin/sulbactam, and (in women with hydrosalpinx) doxycycline.</td></tr>
+                        <tr><td>Thrombolysis</td><td>Routine prophylaxis not recommended. Cefazolin 1–2 g IV may be considered in high-risk patients.</td></tr>
+                        <tr><td>IVC filter placement</td><td>Routine prophylaxis not recommended.</td></tr>
+                        <tr><td>IVC filter retrieval</td><td>Generally no prophylaxis; consider piperacillin/tazobactam or ampicillin/sulbactam for embedded filters with known bowel penetration.</td></tr>
+                        <tr><td>Totally implanted access ports</td><td>Routine prophylaxis not recommended in the table; cefazolin 1–2 g IV is listed as a suggested regimen when prophylaxis is used.</td></tr>
+                        <tr><td>Tunneled dialysis catheters</td><td>Prophylaxis recommended in the table; cefazolin 1–2 g IV is listed.</td></tr>
+                        <tr><td>Other central venous catheters</td><td>Generally no prophylaxis, except consider in high-risk patients (including immunocompromised patients); cefazolin 1–2 g IV is listed when used.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h3>Embolization and ablation</h3>
+                <table class="ref">
+                    <thead><tr><th>Procedure</th><th>2018 SIR recommendation / examples</th></tr></thead>
+                    <tbody>
+                        <tr><td>Hepatic embolization / chemoembolization</td><td>Prophylaxis recommended. With a competent sphincter of Oddi, suggested options include ampicillin/sulbactam 1.5–3 g IV, cefazolin 1 g plus metronidazole 500 mg IV, or other listed IV regimens. With an incompetent sphincter (e.g., biliary-enteric anastomosis, biliary stent or sphincterotomy), the publication describes broader and often prolonged regimens; refer to the full publication and local protocol.</td></tr>
+                        <tr><td>Radioembolization (TARE/Y-90)</td><td>No consensus for routine prophylaxis. The paper lists no prophylaxis with a competent sphincter of Oddi; consider tailored prophylaxis for biliary colonization/incompetence or proximal infusion near the cystic artery. Several regimens and durations are described; individualize with the treating team and pharmacy.</td></tr>
+                        <tr><td>Gastrointestinal embolization</td><td>Not recommended for average-risk patients; antibiotics recommended when hemobilia is present. Suggested IV options include ceftriaxone or ampicillin/sulbactam.</td></tr>
+                        <tr><td>Partial splenic embolization for hypersplenism</td><td>Antibiotics recommended when more than 70% of the spleen is expected to be embolized. The paper lists multidrug/prolonged regimens; refer to the full publication and local protocol.</td></tr>
+                        <tr><td>Liver tumor ablation</td><td>Prophylaxis recommended especially in high-risk patients (e.g., biliary-enteric anastomosis, cirrhosis, diabetes). Low-risk example: cefazolin 1–2 g IV. Prior biliary intervention/sphincter incompetence may require a broader, prolonged regimen.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h3>Biliary, urinary and GI access procedures</h3>
+                <table class="ref">
+                    <thead><tr><th>Procedure</th><th>2018 SIR recommendation / examples</th></tr></thead>
+                    <tbody>
+                        <tr><td>Percutaneous transhepatic biliary drain / cholecystostomy</td><td>Prophylaxis recommended for new placement and routine biliary tube exchanges. Suggested IV options include ceftriaxone, ampicillin/sulbactam, cefotetan plus mezlocillin, or ampicillin plus gentamicin. For cholecystostomy, patients already receiving therapeutic antibiotics generally do not need additional prophylaxis.</td></tr>
+                        <tr><td>Percutaneous nephrostomy</td><td>Prophylaxis always recommended for pyonephrosis or known UTI if the patient is not already receiving IV antibiotics. For an uninfected system, base prophylaxis on risk factors. Low-risk routine catheter exchanges may be performed without prophylaxis; high-risk features include ureteral stents, ureteroileal anastomosis, malposition or obstruction.</td></tr>
+                        <tr><td>Gastrostomy (push or pull)</td><td>Prophylaxis recommended for both. Push-type: cefazolin 1–2 g IV single dose (or clindamycin if penicillin-allergic, as described in the publication). Pull-type: the publication describes cefazolin preprocedure followed by cephalexin, or a clindamycin alternative, for 5 days.</td></tr>
+                        <tr><td>Paracentesis / thoracentesis</td><td>Clean procedures; routine prophylaxis is not indicated.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h3>Important interpretation notes</h3>
+                <ul class="tight">
+                    <li>These are procedure-level recommendations based on the 2018 SIR practice parameter, not patient-specific prescriptions.</li>
+                    <li>For biliary-enteric anastomosis, prior sphincterotomy, biliary stents or other biliary colonization, the risk profile for hepatic embolization, radioembolization and ablation changes materially.</li>
+                    <li>For infected/obstructed systems, distinguish treatment of an established infection from prophylaxis.</li>
+                    <li>Penicillin-allergy alternatives shown in this 2018 paper may not reflect newer allergy guidance. Review the allergy section and current institutional recommendations; do not assume all reported penicillin allergy requires avoiding cefazolin.</li>
+                    <li>Adult and pediatric dosing differ. This page is a condensed adult-focused quick reference; consult the original publication for pediatric dosing and full regimen details.</li>
+                </ul>
+                <div class="footnote">Source: Chehab MA, Thakor AS, Tulin-Silver S, et al. Adult and Pediatric Antibiotic Prophylaxis during Vascular and IR Procedures: A Society of Interventional Radiology Practice Parameter Update. <em>J Vasc Interv Radiol</em>. 2018;29(11):1483–1501.e2. doi:10.1016/j.jvir.2018.06.007. The full Table 2 includes additional procedures and alternative regimens not reproduced in this summary.</div>
+            </div>
+        </div>
+
+        <!-- IR TEAM RESOURCES -->
+        <div id="ir_resources" class="tab-content">
+            <div class="card">
+                <h2>IR Team Resources</h2>
+                <div class="card-subtitle">Shared materials and workflows for the IR team</div>
+                <p>Access shared resources contributed by colleagues, including practical tips, workflows and reference materials.</p>
+                <div class="resource-link-card" style="border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:14px; background:var(--surface, #f8fafc);">
+                    <h3 style="margin-top:0;">Shared Tips &amp; Workflows</h3>
+                    <p style="margin-bottom:12px;">A shared UH SharePoint folder for IR team tips, workflows and helpful resources. UH institutional login may be required.</p>
+                    <a id="ir_sharepoint_link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" style="display:inline-block; font-weight:700; color:var(--primary);">SharePoint folder link will be added</a>
+                </div>
+                <div class="footnote">Use institutional-approved resources and avoid uploading or sharing patient-identifiable information.</div>
+            </div>
+        </div>
+
         <!-- REFERENCES -->
         <div id="refs" class="tab-content">
             <div class="card">
@@ -1743,6 +1864,11 @@
                     <li>ACR Committee on Drugs and Contrast Media. <em>ACR Manual on Contrast Media</em> (current edition), including premedication regimens. <a href="https://www.acr.org/Clinical-Resources/Contrast-Manual" target="_blank" rel="noopener">acr.org/Clinical-Resources/Contrast-Manual</a></li>
                 </ul>
 
+                <h3>SIR Antibiotic Prophylaxis</h3>
+                <ul class="tight">
+                    <li>Chehab MA, Thakor AS, Tulin-Silver S, et al. Adult and Pediatric Antibiotic Prophylaxis during Vascular and IR Procedures: A Society of Interventional Radiology Practice Parameter Update. <em>J Vasc Interv Radiol</em> 2018;29(11):1483–1501.e2. <a href="https://doi.org/10.1016/j.jvir.2018.06.007" target="_blank" rel="noopener">doi:10.1016/j.jvir.2018.06.007</a></li>
+                </ul>
+
                 <h3>Bleeding Risk Labs</h3>
                 <ul class="tight">
                     <li>Patel IJ, Rahim S, Davidson JC, et al. Society of Interventional Radiology consensus guidelines for the periprocedural management of thrombotic and bleeding risk in patients undergoing percutaneous image-guided interventions. Part II: Recommendations. <em>J Vasc Interv Radiol</em> 2019;30:1168–1184. <a href="https://www.jvir.org/article/S1051-0443(19)30407-5/fulltext" target="_blank" rel="noopener">jvir.org</a></li>
@@ -1758,8 +1884,15 @@
                     <li>Pugh RNH, Murray-Lyon IM, Dawson JL, Pietroni MC, Williams R. Transection of the oesophagus for bleeding oesophageal varices. <em>Br J Surg</em> 1973;60:646–649.</li>
                 </ul>
 
+                <h3>Contrast Hypersensitivity and Beta-Lactam Allergy</h3>
+                <ul class="tight">
+                    <li>Wang C, Ramsey A, Lang D, et al. Management and Prevention of Hypersensitivity Reactions to Radiocontrast Media: A Consensus Statement from the ACR and AAAAI. <em>Radiology</em>. 2025;315(2):e240100. <a href="https://doi.org/10.1148/radiol.240100" target="_blank" rel="noopener">doi:10.1148/radiol.240100</a></li>
+                    <li>Khan DA, Banerji A, Blumenthal KG, et al. Drug allergy: A 2022 practice parameter update. <em>J Allergy Clin Immunol</em>. 2022;150(6):1333–1393. <a href="https://doi.org/10.1016/j.jaci.2022.08.028" target="_blank" rel="noopener">doi:10.1016/j.jaci.2022.08.028</a></li>
+                </ul>
+
                 <h3>Local Anesthetics and Allergy</h3>
                 <ul class="tight">
+                    <li>Neal JM, Neal EJ, Weinberg GL. American Society of Regional Anesthesia and Pain Medicine Local Anesthetic Systemic Toxicity checklist: 2020 version. <em>Reg Anesth Pain Med</em> 2021;46:81–82. doi:10.1136/rapm-2020-101986. <a href="https://asra.com/news-publications/asra-updates/blog-landing/guidelines/2020/11/01/checklist-for-treatment-of-local-anesthetic-systemic-toxicity" target="_blank" rel="noopener noreferrer">ASRA checklist</a>.</li>
                     <li>Neal JM, et al. The Third American Society of Regional Anesthesia and Pain Medicine Practice Advisory on Local Anesthetic Systemic Toxicity. <em>Reg Anesth Pain Med</em> 2018;43:113–123.</li>
                     <li>Diphenhydramine as an alternative local anesthetic agent. <em>J Clin Aesthet Dermatol</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2923931" target="_blank" rel="noopener">PMC2923931</a></li>
                     <li>True allergy to amide local anesthetics: a review and case presentation. <em>Anesth Prog</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6022794" target="_blank" rel="noopener">PMC6022794</a></li>
@@ -1847,7 +1980,11 @@
             if (!el) return NaN;
             const s = String(el.value).trim().replace(',', '.');
             if (s === '' || !/^-?\d*\.?\d+$|^-?\d+\.$/.test(s)) return NaN;
-            return parseFloat(s);
+            const n = parseFloat(s);
+            // Negative values are only meaningful in the Hounsfield-unit lookup. Reject them
+            // centrally so another field's change cannot trigger a calculation using a stale negative input.
+            if (n < 0 && id !== 'hu_in') return NaN;
+            return n;
         }
 
         // Truncate (never round up) so a displayed maximum never exceeds the calculated limit
@@ -1867,21 +2004,35 @@
             pmn_wbc: calcPMN, pmn_percent: calcPMN, pmn_rbc: calcPMN,
             saag_serum: calcSAAG, saag_ascites: calcSAAG, saag_prot: calcSAAG,
             lp_p: calcLights, ls_p: calcLights, lp_ldh: calcLights, ls_ldh: calcLights, ls_ldh_uln: calcLights,
-            cg_age: calcCrCl, cg_wt: calcCrCl, cg_scr: calcCrCl,
+            cg_age: calcCrCl, cg_wt: calcCrCl, cg_ht: calcCrCl, cg_scr: calcCrCl,
             tr_size: calcTIRADS
         };
 
         document.querySelectorAll('input.num').forEach(inp => {
             inp.addEventListener('input', () => {
-                // strip anything that isn't a digit, dot or comma
-                const cleaned = inp.id === 'hu_in' ? inp.value.replace(/[^0-9.,\-]/g, '') : inp.value.replace(/[^0-9.,]/g, '');
+                // Preserve a leading minus sign so invalid negative clinical inputs are never silently converted to positive values.
+                const cleaned = inp.value.replace(/(?!^)-/g, '').replace(/[^0-9.,\-]/g, '');
                 if (cleaned !== inp.value) inp.value = cleaned;
+                const negativeNotAllowed = inp.id !== 'hu_in' && /^\s*-/.test(inp.value);
+                let error = inp.parentElement.querySelector('.input-error-note');
+                if (negativeNotAllowed) {
+                    inp.classList.add('input-invalid');
+                    inp.setAttribute('aria-invalid', 'true');
+                    if (!error) { error = document.createElement('small'); error.className = 'input-error-note'; inp.insertAdjacentElement('afterend', error); }
+                    error.textContent = 'Negative values are not valid for this input. Correct the value before calculating.';
+                    return;
+                } else {
+                    inp.classList.remove('input-invalid');
+                    inp.removeAttribute('aria-invalid');
+                    if (error) error.remove();
+                }
                 const fn = calcByInput[inp.id];
                 if (fn) fn();
             });
         });
 
         document.getElementById('cg_sex').addEventListener('change', calcCrCl);
+        document.getElementById('cg_weight_type').addEventListener('change', calcCrCl);
         ['tr_comp', 'tr_echo', 'tr_shape', 'tr_margin'].forEach(id =>
             document.getElementById(id).addEventListener('change', calcTIRADS));
 
@@ -1910,9 +2061,11 @@
             const uncorrected = (wbc * pmnPct) / 100;
             let absolutePmn = uncorrected;
             let note = '';
+            let correctionPending = false;
 
             if (isBloody) {
                 if (isNaN(rbc)) {
+                    correctionPending = true;
                     note = '<br><small><strong>Enter the ascitic RBC count to apply the Runyon correction.</strong></small>';
                 } else {
                     const subtracted = rbc / 250;
@@ -1922,6 +2075,13 @@
             }
 
             const isSbp = absolutePmn >= 250 - 1e-9;
+            if (correctionPending && isSbp) {
+                show('pmn_res', 'warn', `
+                    <div class="result-title">Uncorrected PMN: ${Math.round(uncorrected * 10) / 10} cells/mm³</div>
+                    <div class="result-detail"><strong>No SBP verdict yet.</strong> Because the tap is bloody and the RBC count is missing, the Runyon correction cannot be applied. Enter ascitic RBC count to determine the corrected PMN. The uncorrected value is an upper bound.</div>
+                `);
+                return;
+            }
             // display rounds down below the cutoff so the number never reads 250 for a negative result
             const pmnVal = isSbp ? Math.round(absolutePmn * 10) / 10 : Math.floor(absolutePmn * 10 + 1e-9) / 10;
 
@@ -2024,16 +2184,53 @@
             calcMACD();
             calcEGFR();
             const age = val('cg_age');
-            const wt = val('cg_wt');
+            const actualWt = val('cg_wt');
+            const ht = val('cg_ht');
             const scr = val('cg_scr');
             const sex = document.getElementById('cg_sex').value;
+            const weightType = document.getElementById('cg_weight_type').value;
 
-            if (isNaN(age) || isNaN(wt) || isNaN(scr) || scr <= 0 || wt <= 0 || age <= 0) {
-                show('crcl_res', '', 'Enter age, weight, and serum creatinine.');
+            if (isNaN(age) || isNaN(actualWt) || isNaN(scr) || scr <= 0 || actualWt <= 0 || age <= 0) {
+                show('crcl_res', '', 'Enter age, actual body weight, and serum creatinine.');
+                return;
+            }
+            if (age < 18) {
+                show('crcl_res', 'warn', 'Cockcroft–Gault is not validated for patients under 18. Use an appropriate pediatric kidney-function equation and clinical guidance.');
+                return;
+            }
+            if (age > 120 || actualWt > 500 || scr > 30) {
+                show('crcl_res', 'warn', 'One or more values are outside the calculator plausibility checks (age ≤120 years, weight ≤500 kg, serum creatinine ≤30 mg/dL). Verify the entered units and values.');
                 return;
             }
 
-            let crcl = ((140 - age) * wt) / (72 * scr);
+            let weightUsed = actualWt;
+            let weightLabel = 'Actual body weight';
+            let ibw = null;
+            if (weightType !== 'actual') {
+                if (isNaN(ht) || ht < 100 || ht > 250) {
+                    show('crcl_res', 'warn', 'Enter a plausible height (100–250 cm) to calculate Devine ideal or adjusted body weight.');
+                    return;
+                }
+                const inches = ht / 2.54;
+                const base = sex === 'female' ? 45.5 : 50;
+                ibw = base + 2.3 * (inches - 60);
+                if (ibw <= 0) {
+                    show('crcl_res', 'warn', 'The entered height produces an implausible Devine ideal body weight. Verify height and units.');
+                    return;
+                }
+                if (weightType === 'ideal') {
+                    weightUsed = ibw;
+                    weightLabel = 'Ideal body weight (Devine)';
+                } else if (actualWt > ibw) {
+                    weightUsed = ibw + 0.4 * (actualWt - ibw);
+                    weightLabel = 'Adjusted body weight (IBW + 0.4 × [actual − IBW])';
+                } else {
+                    weightUsed = actualWt;
+                    weightLabel = 'Actual body weight (adjusted weight not applicable because actual ≤ IBW)';
+                }
+            }
+
+            let crcl = ((140 - age) * weightUsed) / (72 * scr);
             if (sex === 'female') crcl *= 0.85;
             crcl = Math.max(0, Math.round(crcl * 10) / 10);
 
@@ -2041,9 +2238,11 @@
             show('crcl_res', cls, `
                 <div class="result-title">Estimated CrCl: ${crcl} mL/min</div>
                 <div class="result-detail">
-                    ${crcl < 30 ? '<strong>Severe Renal Impairment (&lt;30):</strong> High risk for contrast media &amp; dose adjustments.' :
-                      crcl < 60 ? '<strong>Moderate Renal Impairment (30–59):</strong> Monitor hydration and nephrotoxins.' :
-                      '<strong>Normal / Mildly Reduced Renal Function (≥60).</strong>'}
+                    Weight used: <strong>${weightUsed.toFixed(1)} kg</strong> (${weightLabel})<br>
+                    ${ibw !== null ? `Devine IBW: ${ibw.toFixed(1)} kg<br>` : ''}
+                    ${crcl < 30 ? '<strong>Severe Renal Impairment (&lt;30):</strong> Verify medication dosing and renal-risk context.' :
+                      crcl < 60 ? '<strong>Moderate Renal Impairment (30–59):</strong> Review medication dosing and clinical context.' :
+                      '<strong>≥60 mL/min.</strong> Interpret with the clinical context and the limitations of Cockcroft–Gault.'}
                 </div>
             `);
         }
@@ -2094,7 +2293,9 @@
             let fociPts = 0;
             document.querySelectorAll('.tr_foci:checked').forEach(cb => { fociPts += parseInt(cb.value, 10); });
 
-            const totalPts = comp + echo + shape + margin + fociPts;
+            const selectedComposition = document.getElementById('tr_comp').selectedOptions[0].textContent.toLowerCase();
+            const spongiform = selectedComposition.startsWith('spongiform');
+            const totalPts = spongiform ? 0 : comp + echo + shape + margin + fociPts;
 
             let level;
             if (totalPts === 0) level = 'TR1';
@@ -2134,7 +2335,7 @@
             show('tirads_res', cls, `
                 <div class="result-title">Total Score: ${totalPts} points &bull; ${level}: ${info.name}</div>
                 <div class="result-detail">
-                    Composition ${comp} + Echogenicity ${echo} + Shape ${shape} + Margin ${margin} + Foci ${fociPts} = <strong>${totalPts}</strong><br>
+                    ${spongiform ? 'Spongiform composition is assigned 0 points (TR1) without scoring the other features.' : `Composition ${comp} + Echogenicity ${echo} + Shape ${shape} + Margin ${margin} + Foci ${fociPts} = <strong>${totalPts}</strong>`}<br>
                     Approx. malignancy risk: ${info.risk}
                 </div>
                 <div class="result-detail"><strong>ACR Recommendations:</strong><br>${recs}</div>
@@ -2157,7 +2358,7 @@
             show('macd_res', macd < 100 ? 'warn' : 'neg', `
                 <div class="result-title">MACD: ${macd} mL</div>
                 <div class="result-detail">
-                    Calculated ${Math.floor(raw + 1e-9)} mL${capped ? ' (capped at 300 mL)' : ''}.
+                    Calculated ${Math.floor(raw + 1e-9)} mL${capped ? ' (capped at 300 mL)' : ''}. This is a historical empirical estimate, not a validated safe contrast limit.
                     ${macd < 100 ? '<br><strong>Low allowable volume:</strong> minimize contrast, consider CO₂ / non-contrast alternatives and hydration.' : ''}
                 </div>
             `);
@@ -2219,11 +2420,14 @@
             }
 
             const anyFail = [inrOk, pltOk, fibOk].some(x => x === false);
-            const allKnown = (inrOk !== null || (cld && risk === 'low')) && pltOk !== null;
+            if (cld && isNaN(fib)) {
+                lines.push(`– <strong>Fibrinogen:</strong> not entered; SIR chronic liver disease threshold is &gt;100 mg/dL.`);
+            }
+            const allKnown = (inrOk !== null || (cld && risk === 'low')) && pltOk !== null && (!cld || fibOk !== null);
             const cls = anyFail ? 'pos' : (allKnown ? 'neg' : 'warn');
             const title = anyFail ? 'Correction suggested before procedure'
                         : allKnown ? 'Within SIR thresholds'
-                        : 'Within thresholds for values entered (enter remaining labs)';
+                        : 'Incomplete assessment — enter remaining labs';
 
             show('bleed_res', cls, `
                 <div class="result-title">${title}</div>
@@ -2243,18 +2447,27 @@
             let na = val('meld_na');
             let alb = val('meld_alb');
             const age = val('meld_age');
-            const female = document.getElementById('meld_sex').value === 'female';
+            const sex = document.getElementById('meld_sex').value;
+            const female = sex === 'female';
             const dial = document.getElementById('meld_dial').checked;
 
-            if (isNaN(bili) || isNaN(inr) || isNaN(cr) || isNaN(na)) {
-                show('meld_res', '', 'Enter bilirubin, INR, creatinine and sodium (plus albumin for MELD 3.0).');
+            if ([bili, inr, cr, na].some(v => isNaN(v))) {
+                show('meld_res', '', 'Enter bilirubin, INR, creatinine and sodium (plus albumin, age and sex for MELD 3.0).');
                 return;
             }
+            if (bili < 0 || inr < 0 || cr < 0 || na < 0 || (!isNaN(alb) && alb < 0)) {
+                show('meld_res', 'warn', 'Negative laboratory values are invalid. Check the entered values.');
+                return;
+            }
+            if (!isNaN(age) && (age < 0 || age > 120)) {
+                show('meld_res', 'warn', 'Enter a valid age from 0 to 120 years.');
+                return;
+            }
+            const peds = !isNaN(age) && age >= 12 && age < 18;
+            const meld3InputsReady = !isNaN(alb) && !isNaN(age) && (peds || sex !== '');
             if (!isNaN(age) && age < 12) {
-                show('meld_res', 'warn', 'MELD 3.0 applies to patients 12 years and older. Use PELD for younger patients.');
-                return;
+                // Classic MELD/MELD-Na can still be shown; MELD 3.0 is not calculated below age 12.
             }
-            const peds = !isNaN(age) && age < 18;   // 12-17 y: no sex term, constant 7.33
 
             // OPTN limits: values below 1.0 set to 1.0; sodium 125-137
             bili = Math.max(1, bili);
@@ -2272,9 +2485,14 @@
             }
             meldNa = Math.max(6, Math.min(40, meldNa));
 
-            // MELD 3.0 (creatinine cap 3.0; dialysis = 3.0; albumin 1.5-3.5)
+            // MELD 3.0: age and sex are explicit inputs; ages 12–17 use the adolescent equation.
             let meld3 = null, surv = null, used = '';
-            if (!isNaN(alb)) {
+            let meld3Note = '';
+            if (!isNaN(age) && age < 12) {
+                meld3Note = 'MELD 3.0 is not calculated below age 12; use the appropriate pediatric score (e.g., PELD) and specialist guidance.';
+            } else if (!meld3InputsReady) {
+                meld3Note = 'To calculate MELD 3.0, enter albumin and age; select sex for patients aged 18 years or older. MELD and MELD-Na are shown below without these inputs.';
+            } else {
                 const a = Math.min(3.5, Math.max(1.5, alb));
                 let c3 = Math.max(1, cr);
                 c3 = dial ? 3 : Math.min(3, c3);
@@ -2282,8 +2500,8 @@
                     - 0.24 * (137 - na) * Math.log(bili) + 9.09 * Math.log(inr)
                     + 11.14 * Math.log(c3) + 1.85 * (3.5 - a) - 1.83 * (3.5 - a) * Math.log(c3) + (peds ? 7.33 : 6);
                 meld3 = Math.max(6, Math.min(40, Math.round(raw)));
-                surv = Math.pow(0.946, Math.exp(0.17698 * meld3 - 3.56)) * 100;
-                used = `Values used for MELD 3.0 after OPTN limits: bilirubin ${bili}, INR ${inr}, creatinine ${c3}${dial ? ' (dialysis)' : ''}, sodium ${na}, albumin ${a}, ${peds ? 'age 12–17 equation' : (female ? 'female' : 'male')}`;
+                surv = peds ? null : Math.pow(0.946, Math.exp(0.17698 * meld3 - 3.56)) * 100;
+                used = `Values used for MELD 3.0 after OPTN limits: bilirubin ${bili}, INR ${inr}, creatinine ${c3}${dial ? ' (dialysis/CVVHD)' : ''}, sodium ${na}, albumin ${a}, age ${age}, ${peds ? 'age 12–17 equation' : (female ? 'female' : 'male')}`;
             }
 
             const lead = meld3 !== null ? meld3 : meldNa;
@@ -2292,8 +2510,8 @@
             show('meld_res', cls, `
                 ${meld3 !== null
                     ? `<div class="result-title">MELD 3.0: ${meld3}</div>
-                       <div class="result-detail">Estimated 90-day survival: <strong>${surv.toFixed(0)}%</strong></div>`
-                    : `<div class="result-detail"><em>Enter albumin to calculate MELD 3.0.</em></div>`}
+                       ${surv !== null ? `<div class="result-detail">Estimated 90-day survival: <strong>${surv.toFixed(0)}%</strong></div>` : '<div class="result-detail"><em>Adult 90-day survival estimate is not displayed for the adolescent equation.</em></div>'}`
+                    : `<div class="result-detail"><em>${meld3Note || 'Enter albumin, age and sex to calculate MELD 3.0.'}</em></div>`}
                 <div class="result-detail"><strong>MELD-Na: ${meldNa}</strong> &bull; MELD (original): ${meld}</div>
                 <div class="result-detail">
                     ${lead >= 15 ? '• MELD ≥15: consider transplant evaluation/referral.<br>' : ''}
@@ -2531,7 +2749,7 @@
             let contrast;
             if (v >= 45) contrast = 'Low risk of contrast-associated AKI; prophylaxis generally not indicated.';
             else if (v >= 30) contrast = 'Prophylaxis generally not indicated; consider case by case in patients at particularly high risk (e.g., eGFR near 30 with multiple risk factors).';
-            else contrast = 'Prophylaxis is indicated (IV hydration) for eGFR &lt;30 not on maintenance dialysis, or AKI, when contrast is needed.';
+            else contrast = 'IV isotonic saline prophylaxis is indicated for eGFR &lt;30 or AKI in patients not on maintenance dialysis when IV contrast is needed and there is no contraindication (e.g., heart failure or hypervolemia). Individualize fluid rate and volume; consult the treating team.';
             show('egfr_res', v < 30 ? 'pos' : v < 45 ? 'warn' : 'neg', `
                 <div class="result-title">eGFR: ${v} mL/min/1.73 m²</div>
                 <div class="result-detail"><strong>CKD category ${stage}</strong><br>${contrast}</div>
@@ -2554,8 +2772,10 @@
             const most = Math.sqrt(h * w / 3600);
             const dub = 0.007184 * Math.pow(w, 0.425) * Math.pow(h, 0.725);
             const inches = h / 2.54;
-            const ibw = (female ? 45.5 : 50) + 2.3 * Math.max(0, inches - 60);
+            const ibw = (female ? 45.5 : 50) + 2.3 * (inches - 60);
             const adj = ibw + 0.4 * (w - ibw);
+            const adjustedApplicable = w > ibw;
+            const shortHeightWarning = inches < 60;
             let cat;
             if (bmi < 18.5) cat = 'Underweight';
             else if (bmi < 25) cat = 'Normal';
@@ -2570,8 +2790,9 @@
                     BSA (Du Bois): ${dub.toFixed(2)} m²<br>
                     BMI: ${bmi.toFixed(1)} kg/m² (${cat})<br>
                     Ideal body weight (Devine): ${conv(ibw)}<br>
-                    Adjusted body weight: ${conv(adj)}<br>
+                    ${adjustedApplicable ? `Adjusted body weight: ${conv(adj)}<br>` : 'Adjusted body weight: not applicable (actual weight does not exceed IBW)<br>'}
                     Actual weight is ${((w / ibw) * 100).toFixed(0)}% of ideal
+                    ${shortHeightWarning ? '<div class="footnote" style="margin-top:8px; color:#9a3412;"><strong>Height below 5 ft:</strong> Devine IBW is extrapolated beyond its conventional reference range and has not been validated for this height. Use clinical judgment before applying to weight-based dosing.</div>' : ''}
                 </div>
             `);
         }
@@ -2651,7 +2872,24 @@
             const act = val('y_act');
             let mass = val('y_mass');
             let prior = val('y_prior');
-            if (isNaN(prior) || prior < 0) prior = 0;
+            const priorRaw = document.getElementById('y_prior').value.trim();
+            if (priorRaw !== '' && isNaN(prior)) {
+                show('y_res', 'warn', 'Enter a valid numeric prior cumulative lung dose in Gy, or leave the field blank if none.');
+                return;
+            }
+            if (!isNaN(prior) && prior < 0) {
+                show('y_res', 'warn', 'Prior cumulative lung dose cannot be negative. Correct the value before calculating.');
+                return;
+            }
+            if (isNaN(prior)) prior = 0;
+            if ((!isNaN(lung) && lung < 0) || (!isNaN(liver) && liver < 0) || (!isNaN(direct) && (direct < 0 || direct > 100)) || (!isNaN(act) && act < 0) || (!isNaN(mass) && mass < 0)) {
+                show('y_res', 'warn', 'Counts, activity and lung mass must be nonnegative; directly entered LSF must be between 0% and 100%. Verify inputs and units.');
+                return;
+            }
+            if ((!isNaN(lung) && lung > 1e12) || (!isNaN(liver) && liver > 1e12) || (!isNaN(act) && act > 100) || (!isNaN(mass) && mass > 20) || (!isNaN(prior) && prior > 500)) {
+                show('y_res', 'warn', 'One or more Y-90 inputs are outside broad plausibility checks. Verify counts, GBq, lung mass (kg), and prior dose (Gy).');
+                return;
+            }
 
             let lsf = null, src = '';
             if (!isNaN(lung) && !isNaN(liver) && lung >= 0 && liver >= 0 && (lung + liver) > 0) {
@@ -2663,13 +2901,16 @@
                 show('y_res', '', 'Enter lung and liver counts (or LSF) and the planned activity.');
                 return;
             }
-            if (isNaN(mass) || mass <= 0) mass = 1;
-
             let resin;
             if (lsf > 20) resin = 'LSF &gt;20%: treatment not recommended (resin microspheres IFU).';
             else if (lsf > 15) resin = 'LSF &gt;15–20%: reduce resin activity by 40% (BSA method).';
             else if (lsf >= 10) resin = 'LSF 10–15%: reduce resin activity by 20% (BSA method).';
             else resin = 'LSF &lt;10%: no resin activity reduction for lung shunt.';
+
+            if (isNaN(mass) || mass <= 0) {
+                show('y_res', 'warn', `<div class="result-title">LSF: ${lsf.toFixed(1)}% (${src})</div><div class="result-detail">${resin}<br>Enter a valid lung mass in kg. No default lung mass is assumed.</div>`);
+                return;
+            }
 
             if (isNaN(act) || act <= 0) {
                 show('y_res', lsf > 20 ? 'pos' : lsf >= 10 ? 'warn' : 'neg', `
@@ -2751,22 +2992,22 @@
               high: 'Withhold 2–4 hours before the procedure; check aPTT.', extra: 'Intravenous direct thrombin inhibitors are used in PCI for only about 24 hours but longer in heparin-induced thrombocytopenia. Restart is similar to unfractionated heparin (4–6 hours).', rsHigh: '4–6 hours.' },
             { g: 'Anticoagulants', id: 'apix', name: 'Apixaban', sum: '4 doses (CrCl ≥50); 6 doses (CrCl 30 to &lt;50)', renal: true,
               hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6 doses (about 3 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Consider a longer hold and checking an anti-Xa or apixaban level; consult pharmacy.' },
-              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or an apixaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
+              extra: 'If STAT or emergent: historical reversal-agent reference: andexanet alfa (currently unavailable in the U.S.). Consider checking anti-Xa activity or an apixaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'dabi', name: 'Dabigatran', sum: '4 doses (CrCl ≥50); 6–8 doses (CrCl 30 to &lt;50)', renal: true,
               hr: { ge50: 'Withhold 4 doses (about 2 days).', mid: 'Withhold 6–8 doses (about 3–4 days).', lt30: 'Not specified in the SIR table for CrCl &lt;30. Dabigatran is renally cleared; consult pharmacy and consider a thrombin time or dabigatran level.' },
               extra: 'If STAT or emergent: reversal agent (idarucizumab). Consider checking thrombin time or a dabigatran level with impaired renal function. SIR Part I: a normal thrombin time excludes the presence of dabigatran.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'edox', name: 'Edoxaban', sum: '2 doses',
-              high: 'Withhold 2 doses (about 2 days). The SIR table gives no renal adjustment; consider checking anti-Xa activity, especially with impaired renal function. If STAT or emergent: reversal agent (andexanet alfa).',
+              high: 'Withhold 2 doses (about 2 days). The SIR table gives no renal adjustment; consider checking anti-Xa activity, especially with impaired renal function. If STAT or emergent: historical reversal-agent reference: andexanet alfa (currently unavailable in the U.S.).',
               extra: 'SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'riva', name: 'Rivaroxaban', sum: '2 doses (CrCl ≥30); 3 doses (CrCl 15 to &lt;30)', renal: true,
               hr: { ge50: 'Withhold 2 doses (about 2 days).', mid: 'Withhold 2 doses (about 2 days).', lt30: 'Withhold 3 doses (about 3 days) for CrCl 15 to &lt;30. Not specified below 15; consult pharmacy.' },
-              extra: 'If STAT or emergent: reversal agent (andexanet alfa). Consider checking anti-Xa activity or a rivaroxaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
+              extra: 'If STAT or emergent: historical reversal-agent reference: andexanet alfa (currently unavailable in the U.S.). Consider checking anti-Xa activity or a rivaroxaban level, especially with impaired renal function. SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Anticoagulants', id: 'betri', name: 'Betrixaban', sum: '3 doses',
-              high: 'Withhold 3 doses. If STAT or emergent: reversal agent (andexanet alfa); consider checking anti-Xa activity, especially with impaired renal function.',
+              high: 'Withhold 3 doses. If STAT or emergent: historical reversal-agent reference: andexanet alfa (currently unavailable in the U.S.); consider checking anti-Xa activity, especially with impaired renal function.',
               extra: 'SIR Part I: an anti-Xa activity <0.2 U/mL should be safe for most interventional procedures.',
               rsHigh: '24 hours.' },
             { g: 'Antiplatelets', id: 'clop', name: 'Clopidogrel', sum: '5 days',
@@ -3139,6 +3380,23 @@
 
         // Initialize on load
         switchRADS();
+
+        // ---------- IR TEAM RESOURCES LINK ----------
+        // Paste the full UH SharePoint folder URL between the quotes when available.
+        const IR_RESOURCES_URL = '';
+        (function initIRResourcesLink() {
+            const link = document.getElementById('ir_sharepoint_link');
+            if (!link) return;
+            if (IR_RESOURCES_URL && /^https:\/\//i.test(IR_RESOURCES_URL)) {
+                link.href = IR_RESOURCES_URL;
+                link.textContent = 'Open Shared Tips & Workflows';
+                link.removeAttribute('aria-disabled');
+                link.style.opacity = '1';
+            } else {
+                link.addEventListener('click', function (e) { e.preventDefault(); });
+                link.style.opacity = '0.65';
+            }
+        })();
 
         // ---------- TOOL SELECTOR (dropdown navigation) ----------
         function showTool(id) {
