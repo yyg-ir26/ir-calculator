@@ -15,7 +15,7 @@ DISCLAIMER
   Phones and tablets: shown once, on first launch. Computers (mouse/trackpad devices): shown every time the app opens,
   so it is never mistaken for an official or institution-approved application.
   The full text is under "Disclaimer & About". If you change the wording, change the disclaimer key
-  ('ir_disclaimer_v2' in index.html) to 'ir_disclaimer_v3' so phone users are asked to accept it again.
+  ('ir_disclaimer_v3' in index.html) to 'ir_disclaimer_v4' so phone users are asked to accept it again.
 
 INSTALL ON PHONES
   Android (Chrome): open the site > menu (three dots) > "Install app" or "Add to Home screen".
@@ -24,13 +24,14 @@ Open it once while online; after that it works offline.
 
 PUBLISHING AN UPDATE
   1. Edit index.html.
-  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v16'; increment this value for each subsequent release).
+  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v17'; increment this value for each subsequent release).
   3. Re-upload the files. Users receive the update the next time they open the app online
      (close and reopen the app once if it still shows the old version).
 
 NOTES
-  - No patient data is collected, sent or stored. Browser local storage keeps the disclaimer preference,
-    last tool opened, and the two resource URLs entered by the user. Resource URLs remain on that device/browser profile.
+  - No patient data is collected, transmitted or centrally stored. Browser localStorage keeps the disclaimer preference,
+    last tool opened, and the two resource URLs entered by the user. Resource URLs remain on that device/browser profile
+    and are not transmitted by the app to the developer or an external server.
   - Calculators are decision-support references. Verify against current guidelines and institutional protocols.
 
 
@@ -65,3 +66,15 @@ LIMITATIONS
   institutional approval, or complete testing on physical iOS/Android devices, PWA installation,
   offline operation, or service-worker update behavior. RADS summaries and numeric plausibility
   checks have not been exhaustively verified across every field.
+
+
+VERSION 1.6 MAINTENANCE UPDATE (November 2026)
+  - Hounsfield Unit reference expanded with approximate attenuation ranges for non-biological materials and implants,
+    including aluminum, orthopedic metals, clips/coils/stents, glass, asphalt/tarmac, stone/gravel, plastics, wood,
+    and PMMA bone cement.
+  - Added supporting material/foreign-body and metal-implant references to the References tab.
+  - Clarified that conventional CT may clip dense metals at approximately +3071 HU and that material HU values
+    overlap and are not definitive identification thresholds.
+  - Updated Privacy wording to disclose locally saved resource URLs and browser preferences; disclaimer acceptance
+    key incremented to ir_disclaimer_v3 so users see the revised text.
+  - Incremented service-worker cache to ir-suite-v17. App version remains v1.6.

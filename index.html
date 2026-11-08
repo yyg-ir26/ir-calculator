@@ -1717,6 +1717,9 @@
                 <div class="tbl-wrap">
                     <table class="ref" id="hu_table"></table>
                 </div>
+                <div class="footnote">
+                    <strong>Foreign materials:</strong> These are broad, approximate reference values, not validated material-identification cutoffs. Metal alloy, object size and geometry, kVp, reconstruction, metal-artifact-reduction processing and scanner HU limits can substantially change measured values. Standard 12-bit CT images commonly clip at approximately +3071 HU; a displayed value at this ceiling does not represent the material's true attenuation. Glass, stone and asphalt can overlap. Use morphology, location, history and artifact pattern rather than HU alone.
+                </div>
 
                 <div class="section-label">Clinically useful thresholds</div>
                 <ul class="tight">
@@ -1752,9 +1755,11 @@
                 </ul>
                 <div class="section-label">Privacy</div>
                 <ul class="tight">
-                    <li>All calculations run on your device. The app does not send, collect or store patient data and has no analytics or accounts.</li>
-                    <li>Only two small preferences are saved in your browser: that you accepted the disclaimer, and the last tool you opened.</li>
-                    <li>Do not enter patient names or other identifiers.</li>
+                    <li>All calculations run on your device. The app does not collect, transmit or centrally store patient data. It has no user accounts, analytics or tracking cookies.</li>
+                    <li>The Resources page lets you enter and save URLs for a shared folder and an institutional resource page. These URLs are stored locally in your browser using localStorage; the app does not transmit them to the developer or an external server.</li>
+                    <li>Saved resource links remain only in the browser profile and on the device where they were entered. They are not synchronized across devices or browsers and may be erased if browser site data is cleared. Other people using the same browser profile may be able to see them.</li>
+                    <li>The app also stores your disclaimer-acceptance preference and the last tool you opened in that browser.</li>
+                    <li>Do not enter patient names, other patient identifiers, passwords or links containing embedded access credentials.</li>
                 </ul>
                 <div class="section-label">Attribution</div>
                 <ul class="tight">
@@ -2011,6 +2016,11 @@
                     <li>Caoili EM, Korobkin M, Francis IR, et al. Adrenal masses: characterization with combined unenhanced and delayed enhanced CT. <em>Radiology</em> 2002;222:629–633.</li>
                     <li>Pickhardt PJ, Pooler BD, Lauder T, et al. Opportunistic screening for osteoporosis using abdominal computed tomography scans obtained for other indications. <em>Ann Intern Med</em> 2013;158:588–595.</li>
                     <li>Agatston AS, Janowitz WR, Hildner FJ, et al. Quantification of coronary artery calcium using ultrafast computed tomography. <em>J Am Coll Cardiol</em> 1990;15:827–832.</li>
+                    <li>Tseng HJ, Hanna TN, Shuaib W, Aized M, Khosa F, Linnau KF. Imaging foreign bodies: ingested, aspirated, and inserted. <em>Ann Emerg Med</em> 2015;66(6):570–582.e5. doi:10.1016/j.annemergmed.2015.07.499. (Foreign-body CT ranges for wood, plastic, glass, stone and metal; values vary by composition.)</li>
+                    <li>Haghnegahdar A, Shakibafard A, Khosravifard N. Comparison between computed tomography and ultrasonography in detecting foreign bodies regarding their composition and depth: an in vitro study. <em>J Dent (Shiraz)</em> 2016;17(3):177–184. (Single-scanner in-vitro measurements; standard-scale clipping affected metal and stone.)</li>
+                    <li>Bolliger SA, Oesterhelweg L, Spendlove D, Ross S, Thali MJ. Is differentiation of frequently encountered foreign bodies in corpses possible by Hounsfield density measurement? <em>J Forensic Sci</em> 2009;54(5):1119–1122. doi:10.1111/j.1556-4029.2009.01100.x. (Includes tarmac/asphalt and glass measurements in a forensic setting.)</li>
+                    <li>Whitmarsh T, Treece GM, Gee AH, et al. An exploratory study into measuring the cortical bone thickness from CT in the presence of metal implants. <em>Int J Comput Assist Radiol Surg</em> 2017;12:2079–2086. doi:10.1007/s11548-017-1539-z. (Reports approximate extended-scale titanium and stainless-steel values and standard-scale clipping.)</li>
+                    <li>DenOtter TD, Schubert J. Hounsfield Unit. In: <em>StatPearls</em>. Updated March 6, 2023. (General HU principles and technical limitations.)</li>
                 </ul>
 
                 <h3>RADS Systems and Renal Cyst Classification</h3>
@@ -3185,6 +3195,15 @@
             { g: 'Bone, calcium and stones', n: 'Calcium-containing stones', t: '> +1000', lo: 1000, hi: 1800, note: 'Usually > 1000' },
             { g: 'Bone, calcium and stones', n: 'Coronary calcification (Agatston threshold)', t: '≥ +130', lo: 130, hi: 130, lk: false, note: 'Area ≥ 1 mm²' },
             { g: 'Bone, calcium and stones', n: 'Metal implants', t: '> +3000', lo: 3000, hi: 3071, note: 'Scale saturates at about +3071 (12-bit)' },
+            { g: 'Foreign materials and implants', n: 'Aluminum (metal)', t: '+700 to +800', lo: 700, hi: 800, note: 'Exception: substantially lower attenuation than most metals' },
+            { g: 'Foreign materials and implants', n: 'Metallic orthopedic implants / artificial joints', t: '> +3000', lo: 3000, hi: 3071, note: 'Titanium, cobalt-chromium and stainless-steel alloys; routine 12-bit CT commonly clips at +3071. Extended-scale reports: titanium ~+8000; stainless steel ~+13000 HU; strongly kVp- and alloy-dependent' },
+            { g: 'Foreign materials and implants', n: 'Metallic clips, coils, stents and fixation hardware', t: '> +3000', lo: 3000, hi: 3071, note: 'Alloy and device dependent; commonly clipped at +3071 on standard CT; streak / beam-hardening artifact may dominate' },
+            { g: 'Foreign materials and implants', n: 'Glass (window, bottle, automotive)', t: '+500 to +2700', lo: 500, hi: 2700, note: 'Windowpane ~+500; bottle / automotive glass commonly ~+2000 to +2700; composition and scanner dependent' },
+            { g: 'Foreign materials and implants', n: 'Asphalt / tarmac', t: '+2100 to +2300', lo: 2100, hi: 2300, note: 'Approximate range reported in a forensic material study; not a validated material-identification threshold' },
+            { g: 'Foreign materials and implants', n: 'Stone / gravel / concrete-like debris', t: '> +1000 (often +1500 to +2800)', lo: 1000, hi: 3000, note: 'Examples: sandstone ~+1600; limestone ~+2800; substantial composition dependence' },
+            { g: 'Foreign materials and implants', n: 'Plastic (various polymers)', t: '+10 to +500', lo: 10, hi: 500, note: 'Highly polymer- and density-dependent; some plastics may approach soft-tissue attenuation' },
+            { g: 'Foreign materials and implants', n: 'Wood (dry to hydrated / aged)', t: 'Variable: ~−650 to +250', lo: -650, hi: 250, note: 'Dry wood may mimic air; fresh or hydrated wood can approach soft tissue. Appearance changes with moisture and time' },
+            { g: 'Foreign materials and implants', n: 'PMMA (polymethylmethacrylate) bone cement', t: '+100 to +150', lo: 100, hi: 150, note: 'Approximate phantom/material measurements; not a universal in-vivo value' },
             { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Arteries, CT angiography', t: '+250 to +400', lo: 250, hi: 400, note: '' },
             { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Portal vein, portal venous phase', t: '+150 to +200', lo: 150, hi: 200, note: '' },
             { g: 'Contrast-enhanced (approximate, protocol dependent)', n: 'Liver, portal venous phase', t: '+100 to +130', lo: 100, hi: 130, note: '' },
@@ -3638,7 +3657,7 @@
         }
 
         (function initDisclaimer() {
-            const KEY = 'ir_disclaimer_v2';
+            const KEY = 'ir_disclaimer_v3';
             const modal = document.getElementById('disclaimer_modal');
             const desktop = isDesktop();
             let accepted = false;
