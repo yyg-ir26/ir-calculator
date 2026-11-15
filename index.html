@@ -117,8 +117,12 @@
             background: #f8fafc;
         }
         .mallampati-item svg { width: 100%; max-width: 220px; height: auto; display: block; }
-        .mallampati-item strong { color: var(--primary-dark); font-size: 0.95rem; }
-        .mallampati-item span { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; }
+        .mallampati-item > strong { color: var(--primary-dark); font-size: 0.95rem; }
+        .mallampati-item > span { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; }
+        .mallampati-mnemonic { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin: 3px auto 2px; min-width: 112px; text-align: left; }
+        .mallampati-mnemonic .mnemonic-row { display: grid; grid-template-columns: 16px auto; align-items: baseline; column-gap: 5px; color: var(--text); font-size: 0.8rem; line-height: 1.3; }
+        .mallampati-mnemonic b { display: block; width: 16px; box-sizing: border-box; text-align: center; color: var(--primary-dark); font-size: 0.95rem; font-weight: 800; }
+        .mallampati-mnemonic .mnemonic-key { margin-bottom: 2px; color: var(--text-muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em; text-transform: none; }
         @media (min-width: 900px) { .mallampati-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
         /* Form Layout */
@@ -1676,6 +1680,13 @@
                             <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Full uvula + pillars visible</text>
                         </svg>
                         <strong>Class I</strong>
+                        <div class="mallampati-mnemonic" aria-label="PUSH: pillars, uvula, soft palate, hard palate">
+                            <div class="mnemonic-key">Mnemonic: PUSH</div>
+                            <div class="mnemonic-row"><b>P</b><span>illars</span></div>
+                            <div class="mnemonic-row"><b>U</b><span>vula</span></div>
+                            <div class="mnemonic-row"><b>S</b><span>oft palate</span></div>
+                            <div class="mnemonic-row"><b>H</b><span>ard palate</span></div>
+                        </div>
                         <span>Soft palate, fauces, uvula, and tonsillar pillars visible</span>
                     </div>
                     <div class="mallampati-item">
@@ -1688,6 +1699,12 @@
                             <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Uvula visible; pillars obscured</text>
                         </svg>
                         <strong>Class II</strong>
+                        <div class="mallampati-mnemonic" aria-label="USH: uvula, soft palate, hard palate">
+                            <div class="mnemonic-key">Mnemonic: USH</div>
+                            <div class="mnemonic-row"><b>U</b><span>vula</span></div>
+                            <div class="mnemonic-row"><b>S</b><span>oft palate</span></div>
+                            <div class="mnemonic-row"><b>H</b><span>ard palate</span></div>
+                        </div>
                         <span>Soft palate, fauces, and uvula visible; pillars obscured</span>
                     </div>
                     <div class="mallampati-item">
@@ -1700,6 +1717,11 @@
                             <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Only palate + uvular base visible</text>
                         </svg>
                         <strong>Class III</strong>
+                        <div class="mallampati-mnemonic" aria-label="SH: soft palate, hard palate">
+                            <div class="mnemonic-key">Mnemonic: SH</div>
+                            <div class="mnemonic-row"><b>S</b><span>oft palate</span></div>
+                            <div class="mnemonic-row"><b>H</b><span>ard palate</span></div>
+                        </div>
                         <span>Soft palate and base of uvula visible</span>
                     </div>
                     <div class="mallampati-item">
@@ -1710,6 +1732,10 @@
                             <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Hard palate only</text>
                         </svg>
                         <strong>Class IV</strong>
+                        <div class="mallampati-mnemonic" aria-label="H: hard palate">
+                            <div class="mnemonic-key">Mnemonic: H</div>
+                            <div class="mnemonic-row"><b>H</b><span>ard palate</span></div>
+                        </div>
                         <span>Hard palate only visible</span>
                     </div>
                 </div>

@@ -91,3 +91,5 @@ VERSION 1.6 ASA AIRWAY GUIDANCE UPDATE (November 2026)
   - Added a concise list of airway warning signs that may prompt Anesthesiology evaluation; this is not intended as a comprehensive airway assessment.
   - Added a reminder to involve Anesthesiology when difficult airway management is suspected, before proceeding with sedation and consistent with institutional policy.
   - Incremented service-worker cache to ir-suite-v19. App version remains v1.6.
+
+- Updated Mallampati reference with the PUSH mnemonic: Class I (PUSH), II (USH), III (SH), and IV (H), displayed as vertically stacked anatomical terms with bold initial letters.
