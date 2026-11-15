@@ -24,7 +24,7 @@ Open it once while online; after that it works offline.
 
 PUBLISHING AN UPDATE
   1. Edit index.html.
-  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v17'; increment this value for each subsequent release).
+  2. In sw.js change CACHE_VERSION (currently 'ir-suite-v18'; increment this value for each subsequent release).
   3. Re-upload the files. Users receive the update the next time they open the app online
      (close and reopen the app once if it still shows the old version).
 
@@ -78,3 +78,16 @@ VERSION 1.6 MAINTENANCE UPDATE (November 2026)
   - Updated Privacy wording to disclose locally saved resource URLs and browser preferences; disclaimer acceptance
     key incremented to ir_disclaimer_v3 so users see the revised text.
   - Incremented service-worker cache to ir-suite-v17. App version remains v1.6.
+
+
+VERSION 1.6 ASA PAGE UPDATE (November 2026)
+  - Removed the redundant ASA class selector and result panel; retained the full ASA I-VI summary table.
+  - Clarified the Emergency (E) modifier separately from the classification table.
+  - Added a Mallampati I-IV visual reference with class descriptions and airway-assessment caveat.
+  - Incremented service-worker cache to ir-suite-v18. App version remains v1.6.
+
+
+VERSION 1.6 ASA AIRWAY GUIDANCE UPDATE (November 2026)
+  - Added a concise list of airway warning signs that may prompt Anesthesiology evaluation; this is not intended as a comprehensive airway assessment.
+  - Added a reminder to involve Anesthesiology when difficult airway management is suspected, before proceeding with sedation and consistent with institutional policy.
+  - Incremented service-worker cache to ir-suite-v19. App version remains v1.6.

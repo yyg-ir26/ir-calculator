@@ -98,6 +98,29 @@
             margin-bottom: 16px;
         }
 
+
+        .mallampati-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin: 12px 0 14px;
+        }
+        .mallampati-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            padding: 10px 8px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        .mallampati-item svg { width: 100%; max-width: 150px; height: auto; }
+        .mallampati-item strong { color: var(--primary-dark); font-size: 0.95rem; }
+        .mallampati-item span { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; }
+        @media (min-width: 600px) { .mallampati-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
         /* Form Layout */
         .form-grid {
             display: grid;
@@ -1619,28 +1642,9 @@
                 <h2>ASA Physical Status</h2>
                 <div class="card-subtitle">Pre-anesthesia / pre-sedation comorbidity classification (ASA, amended 2020)</div>
 
-                <div class="form-group">
-                    <label for="asa_class">Select class:</label>
-                    <select id="asa_class">
-                        <option value="" selected disabled>Select…</option>
-                        <option value="1">ASA I: Normal healthy patient</option>
-                        <option value="2">ASA II: Mild systemic disease</option>
-                        <option value="3">ASA III: Severe systemic disease</option>
-                        <option value="4">ASA IV: Severe disease, constant threat to life</option>
-                        <option value="5">ASA V: Moribund</option>
-                        <option value="6">ASA VI: Declared brain-dead organ donor</option>
-                    </select>
-                </div>
-                <label class="checkbox-container" for="asa_e">
-                    <input type="checkbox" id="asa_e">
-                    <span style="font-weight:600; font-size:0.9rem;">Emergency (E modifier): delay would lead to a significant increase in threat to life or body part</span>
-                </label>
+                <div class="footnote" style="margin-bottom:12px;">The E modifier may be appended to the ASA class when a delay in treatment would lead to a significant increase in threat to life or body part. It is not a separate physical-status class and is not applied to ASA VI.</div>
 
-                <div id="asa_res" class="result-box" aria-live="polite">
-                    Select a class to see its definition and examples.
-                </div>
-
-                <div class="section-label">Summary table</div>
+                <div class="section-label">ASA Physical Status Classification</div>
                 <div class="tbl-wrap">
                     <table class="ref">
                         <thead><tr><th>Class</th><th>Definition and adult examples</th></tr></thead>
@@ -1657,6 +1661,65 @@
                 <div class="footnote">
                     The ASA classification communicates pre-anesthesia comorbidity and does not by itself predict perioperative risk. Distinguishing II from III depends on functional limitation, and III from IV on whether the disease is a constant threat to life. The E modifier is not applied to ASA VI. Sedation and anesthesia-consult thresholds are set by your institution. Source: ASA Statement on Physical Status Classification System (approved 2014, last amended December 13, 2020).
                 </div>
+
+                <div class="section-label" style="margin-top:22px;">Mallampati Classification</div>
+                <div class="card-subtitle">Visual assessment of oropharyngeal anatomy to help anticipate airway difficulty</div>
+                <div class="mallampati-grid">
+                    <div class="mallampati-item">
+                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class I schematic: soft palate, fauces, uvula and pillars visible">
+                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
+                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
+                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M77 43 Q80 58 83 43" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
+                            <path d="M35 36 Q42 66 51 73 M125 36 Q118 66 109 73" fill="none" stroke="#f3b7a9" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M30 103 Q80 84 130 103 Q119 123 80 123 Q41 123 30 103Z" fill="#d97983"/>
+                        </svg>
+                        <strong>Class I</strong>
+                        <span>Soft palate, fauces, uvula, and pillars visible</span>
+                    </div>
+                    <div class="mallampati-item">
+                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class II schematic: soft palate, fauces and uvula visible">
+                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
+                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
+                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M77 43 Q80 58 83 43" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
+                            <path d="M30 91 Q80 63 130 91 Q119 121 80 123 Q41 121 30 91Z" fill="#d97983"/>
+                        </svg>
+                        <strong>Class II</strong>
+                        <span>Soft palate, fauces, and uvula visible</span>
+                    </div>
+                    <div class="mallampati-item">
+                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class III schematic: soft palate and base of uvula visible">
+                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
+                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
+                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M78 44 Q80 50 82 44" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
+                            <path d="M20 72 Q80 48 140 72 L132 118 Q80 132 28 118Z" fill="#d97983"/>
+                        </svg>
+                        <strong>Class III</strong>
+                        <span>Soft palate and base of uvula visible</span>
+                    </div>
+                    <div class="mallampati-item">
+                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class IV schematic: hard palate only visible">
+                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
+                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
+                            <path d="M18 54 Q80 31 142 54 L132 119 Q80 134 28 119Z" fill="#d97983"/>
+                        </svg>
+                        <strong>Class IV</strong>
+                        <span>Hard palate only visible</span>
+                    </div>
+                </div>
+                <div class="footnote">Assess with the patient sitting upright, mouth fully open, tongue protruded, and without phonation. Mallampati class is one component of airway assessment and should not be used alone to predict difficult airway management. Schematic illustrations are educational approximations.</div>
+
+                <div class="section-label" style="margin-top:22px;">When to Consider Anesthesiology Evaluation</div>
+                <div class="card-subtitle">Brief screening reminders for IR residents — not a comprehensive airway assessment</div>
+                <ul>
+                    <li>History of difficult intubation or difficult mask ventilation.</li>
+                    <li>Known or suspected upper-airway obstruction, neck mass, or prior head/neck surgery or radiation.</li>
+                    <li>Significantly limited mouth opening or neck mobility.</li>
+                    <li>Concerning craniofacial anatomy, or significant obesity/OSA in the context of planned sedation.</li>
+                </ul>
+                <div class="footnote">If a difficult airway is suspected or there are significant concerns about airway management, request Anesthesiology evaluation before proceeding with sedation, consistent with institutional policy. Mallampati classification alone does not reliably predict airway difficulty.</div>
             </div>
         </div>
 
@@ -3022,30 +3085,6 @@
             `);
         }
         ['y_lung', 'y_liver', 'y_lsf', 'y_act', 'y_mass', 'y_prior'].forEach(id => calcByInput[id] = calcY90);
-
-        // ---------- ASA ----------
-        const ASA = {
-            '1': { t: 'ASA I: Normal healthy patient', d: 'Healthy, non-smoking, no or minimal alcohol use.' },
-            '2': { t: 'ASA II: Mild systemic disease', d: 'Mild disease without substantive functional limitation. Examples: current smoker, social alcohol drinker, pregnancy, obesity (BMI 30–40), well-controlled DM/HTN, mild lung disease.' },
-            '3': { t: 'ASA III: Severe systemic disease', d: 'Substantive functional limitation; one or more moderate to severe diseases. Examples: poorly controlled DM/HTN, COPD, morbid obesity (BMI ≥40), active hepatitis, alcohol dependence or abuse, implanted pacemaker, moderate reduction in ejection fraction, ESRD on regularly scheduled dialysis, history (&gt;3 months) of MI, CVA, TIA or CAD/stents.' },
-            '4': { t: 'ASA IV: Severe systemic disease that is a constant threat to life', d: 'Examples: recent (&lt;3 months) MI, CVA, TIA or CAD/stents, ongoing cardiac ischemia or severe valve dysfunction, severe reduction in ejection fraction, shock, sepsis, DIC, ARD, ESRD not on regularly scheduled dialysis.' },
-            '5': { t: 'ASA V: Moribund patient', d: 'Not expected to survive without the operation/procedure. Examples: ruptured abdominal/thoracic aneurysm, massive trauma, intracranial bleed with mass effect, ischemic bowel with significant cardiac pathology or multiple organ dysfunction.' },
-            '6': { t: 'ASA VI: Declared brain-dead patient', d: 'Organs are being removed for donor purposes.' }
-        };
-        function calcASA() {
-            const c = document.getElementById('asa_class').value;
-            if (!c) { show('asa_res', '', 'Select a class to see its definition and examples.'); return; }
-            let e = document.getElementById('asa_e').checked;
-            if (c === '6') e = false;
-            const roman = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV', '5': 'V', '6': 'VI' }[c];
-            const cls = c <= 2 ? 'neg' : c <= 3 ? 'warn' : 'pos';
-            show('asa_res', cls, `
-                <div class="result-title">ASA ${roman}${e ? 'E' : ''}</div>
-                <div class="result-detail"><strong>${ASA[c].t}</strong><br>${ASA[c].d}${e ? '<br><strong>E modifier:</strong> emergency; delay in treatment would lead to a significant increase in threat to life or body part.' : ''}${c === '6' && document.getElementById('asa_e').checked ? '<br><em>The E modifier is not applied to ASA VI.</em>' : ''}</div>
-            `);
-        }
-        document.getElementById('asa_class').addEventListener('change', calcASA);
-        document.getElementById('asa_e').addEventListener('change', calcASA);
 
         // ---------- ANTICOAGULANT / ANTIPLATELET HOLDS (SIR 2019, Table 6) ----------
         // Note: SIR specifies DOAC holds in DOSES (BID agents: 2 doses is about 1 day; once-daily agents: 1 dose is about 1 day).
