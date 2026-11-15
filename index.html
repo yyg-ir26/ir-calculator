@@ -102,8 +102,8 @@
         .mallampati-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-            margin: 12px 0 14px;
+            gap: 14px;
+            margin: 14px 0 16px;
         }
         .mallampati-item {
             display: flex;
@@ -116,10 +116,10 @@
             border-radius: 10px;
             background: #f8fafc;
         }
-        .mallampati-item svg { width: 100%; max-width: 150px; height: auto; }
+        .mallampati-item svg { width: 100%; max-width: 220px; height: auto; display: block; }
         .mallampati-item strong { color: var(--primary-dark); font-size: 0.95rem; }
         .mallampati-item span { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; }
-        @media (min-width: 600px) { .mallampati-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (min-width: 900px) { .mallampati-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
         /* Form Layout */
         .form-grid {
@@ -633,7 +633,7 @@
             </optgroup>
             <optgroup label="Sedation, Anesthesia &amp; Allergy">
                 <option value="la">Local Anesthetic Max Dose</option>
-                <option value="asa">ASA Physical Status</option>
+                <option value="asa">Pre-Procedure Assessment</option>
                 <option value="allergy">Allergy Alternatives &amp; Premedication</option>
             </optgroup>
             <optgroup label="Imaging References">
@@ -1639,7 +1639,7 @@
         <!-- ASA -->
         <div id="asa" class="tab-content">
             <div class="card">
-                <h2>ASA Physical Status</h2>
+                <h2>Pre-Procedure Assessment</h2>
                 <div class="card-subtitle">Pre-anesthesia / pre-sedation comorbidity classification (ASA, amended 2020)</div>
 
                 <div class="footnote" style="margin-bottom:12px;">The E modifier may be appended to the ASA class when a delay in treatment would lead to a significant increase in threat to life or body part. It is not a separate physical-status class and is not applied to ASA VI.</div>
@@ -1663,53 +1663,57 @@
                 </div>
 
                 <div class="section-label" style="margin-top:22px;">Mallampati Classification</div>
-                <div class="card-subtitle">Visual assessment of oropharyngeal anatomy to help anticipate airway difficulty</div>
+                <div class="card-subtitle">Compare the visible structures at the back of the mouth with the patient sitting upright, mouth fully open, tongue protruded, and without phonation.</div>
                 <div class="mallampati-grid">
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class I schematic: soft palate, fauces, uvula and pillars visible">
-                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
-                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
-                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M77 43 Q80 58 83 43" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
-                            <path d="M35 36 Q42 66 51 73 M125 36 Q118 66 109 73" fill="none" stroke="#f3b7a9" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M30 103 Q80 84 130 103 Q119 123 80 123 Q41 123 30 103Z" fill="#d97983"/>
+                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class I: soft palate, fauces, full uvula and tonsillar pillars visible">
+                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
+                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
+                            <path d="M57 62 Q40 90 62 112 M163 62 Q180 90 158 112" fill="none" stroke="#efaa9f" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M102 79 Q110 82 118 79 L116 111 Q110 123 104 111Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
+                            <path d="M28 137 Q110 111 192 137 Q180 169 110 173 Q40 169 28 137Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
+                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Full uvula + pillars visible</text>
                         </svg>
                         <strong>Class I</strong>
-                        <span>Soft palate, fauces, uvula, and pillars visible</span>
+                        <span>Soft palate, fauces, uvula, and tonsillar pillars visible</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class II schematic: soft palate, fauces and uvula visible">
-                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
-                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
-                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M77 43 Q80 58 83 43" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
-                            <path d="M30 91 Q80 63 130 91 Q119 121 80 123 Q41 121 30 91Z" fill="#d97983"/>
+                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class II: soft palate, fauces and uvula visible; tonsillar pillars obscured">
+                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
+                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
+                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M102 79 Q110 82 118 79 L116 111 Q110 123 104 111Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
+                            <path d="M28 112 Q110 91 192 112 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
+                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Uvula visible; pillars obscured</text>
                         </svg>
                         <strong>Class II</strong>
-                        <span>Soft palate, fauces, and uvula visible</span>
+                        <span>Soft palate, fauces, and uvula visible; pillars obscured</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class III schematic: soft palate and base of uvula visible">
-                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
-                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
-                            <path d="M48 38 Q80 51 112 38" fill="none" stroke="#b96e70" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M78 44 Q80 50 82 44" fill="#e99a9a" stroke="#b96e70" stroke-width="1.5"/>
-                            <path d="M20 72 Q80 48 140 72 L132 118 Q80 132 28 118Z" fill="#d97983"/>
+                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class III: soft palate and base of uvula visible; most of uvula obscured">
+                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
+                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
+                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M103 79 Q110 82 117 79 L114 91 Q110 96 106 91Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
+                            <path d="M25 91 Q110 67 195 91 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
+                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Only palate + uvular base visible</text>
                         </svg>
                         <strong>Class III</strong>
                         <span>Soft palate and base of uvula visible</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 160 132" role="img" aria-label="Mallampati class IV schematic: hard palate only visible">
-                            <path d="M25 18 Q80 -2 135 18 L145 88 Q140 122 80 126 Q20 122 15 88 Z" fill="#334155"/>
-                            <path d="M42 25 Q80 7 118 25 Q112 44 80 48 Q48 44 42 25Z" fill="#f3b7a9"/>
-                            <path d="M18 54 Q80 31 142 54 L132 119 Q80 134 28 119Z" fill="#d97983"/>
+                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class IV: hard palate only visible; soft palate and uvula not visible">
+                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
+                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
+                            <path d="M24 67 Q110 43 196 67 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
+                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Hard palate only</text>
                         </svg>
                         <strong>Class IV</strong>
                         <span>Hard palate only visible</span>
                     </div>
                 </div>
-                <div class="footnote">Assess with the patient sitting upright, mouth fully open, tongue protruded, and without phonation. Mallampati class is one component of airway assessment and should not be used alone to predict difficult airway management. Schematic illustrations are educational approximations.</div>
+                <div class="footnote">Illustrations are simplified educational schematics. Mallampati class is only one component of airway assessment and should not be used alone to predict difficult airway management.</div>
 
                 <div class="section-label" style="margin-top:22px;">When to Consider Anesthesiology Evaluation</div>
                 <div class="card-subtitle">Brief screening reminders for IR residents — not a comprehensive airway assessment</div>
