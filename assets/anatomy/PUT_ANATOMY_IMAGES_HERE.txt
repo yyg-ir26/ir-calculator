@@ -1,1 +1,0 @@
-Place downloaded SVG files here using the filenames listed in ../ANATOMY_DOWNLOAD_LINKS.md.
