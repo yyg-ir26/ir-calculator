@@ -116,7 +116,7 @@
             border-radius: 10px;
             background: #f8fafc;
         }
-        .mallampati-item svg { width: 100%; max-width: 220px; height: auto; display: block; }
+        .mallampati-item svg { width: 100%; max-width: 200px; height: auto; display: block; }
         .mallampati-item > strong { color: var(--primary-dark); font-size: 0.95rem; }
         .mallampati-item > span { color: var(--text-muted); font-size: 0.78rem; line-height: 1.35; }
         .mallampati-mnemonic { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin: 3px auto 2px; min-width: 112px; text-align: left; }
@@ -644,6 +644,7 @@
                 <option value="tirads">TI-RADS Calculator</option>
                 <option value="rads_ref">RADS &amp; Staging Guides</option>
                 <option value="hu">Hounsfield Unit Table</option>
+                <option value="anatomy_ref">IR Vascular &amp; Organ Anatomy</option>
             </optgroup>
             <optgroup label="IR Practice Resources">
                 <option value="antibiotics">SIR Antibiotic Guidelines</option>
@@ -1670,15 +1671,39 @@
                 <div class="card-subtitle">Compare the visible structures at the back of the mouth with the patient sitting upright, mouth fully open, tongue protruded, and without phonation.</div>
                 <div class="mallampati-grid">
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class I: soft palate, fauces, full uvula and tonsillar pillars visible">
-                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
-                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
-                            <path d="M57 62 Q40 90 62 112 M163 62 Q180 90 158 112" fill="none" stroke="#efaa9f" stroke-width="10" stroke-linecap="round"/>
-                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M102 79 Q110 82 118 79 L116 111 Q110 123 104 111Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
-                            <path d="M28 137 Q110 111 192 137 Q180 169 110 173 Q40 169 28 137Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
-                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Full uvula + pillars visible</text>
-                        </svg>
+                        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mallampati class I: soft palate, fauces, full uvula and tonsillar pillars visible">
+<defs>
+<clipPath id="cavmA1"><ellipse cx="110" cy="92" rx="84" ry="70"/></clipPath>
+<linearGradient id="hpmA1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1c4b5"/><stop offset="1" stop-color="#e8aaa3"/></linearGradient>
+<linearGradient id="spmA1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4787d"/><stop offset="1" stop-color="#c5656f"/></linearGradient>
+<radialGradient id="tgmA1" cx="0.5" cy="0.2" r="0.9"><stop offset="0" stop-color="#e8939b"/><stop offset="1" stop-color="#c4636f"/></radialGradient>
+<linearGradient id="uvmA1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e48f94"/><stop offset="1" stop-color="#d2767d"/></linearGradient>
+</defs>
+<ellipse cx="110" cy="92" rx="100" ry="84" fill="#c5675f"/><ellipse cx="110" cy="92" rx="92" ry="77" fill="#b3524f"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="#5a1f2b"/>
+<g clip-path="url(#cavmA1)">
+<path d="M0 0 H220 V58 Q110 40 0 58Z" fill="url(#hpmA1)"/>
+<path d="M110 22 V50" stroke="#cf8582" stroke-width="1.5" opacity=".6"/><path d="M82 44 Q96 40 108 42 M138 44 Q124 40 112 42" stroke="#cf8582" stroke-width="1.3" fill="none" opacity=".5"/>
+<path d="M0 58 Q110 40 220 58 V150 H0Z" fill="url(#spmA1)"/>
+<path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150Z" fill="#5a1f2b"/>
+<path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150" fill="none" stroke="#e8a09c" stroke-width="11" stroke-linecap="round"/>
+<path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150" fill="none" stroke="#8e3b4a" stroke-width="1" opacity=".35" transform="translate(0,-5.5)"/>
+<ellipse cx="68" cy="118" rx="9" ry="14" fill="#c46b74" opacity=".95"/><ellipse cx="152" cy="118" rx="9" ry="14" fill="#c46b74" opacity=".95"/>
+<path d="M103 78 Q110 72 117 78 L116 108 Q110 122 104 108Z" fill="url(#uvmA1)" stroke="#8e3b4a" stroke-opacity=".35" stroke-width="1"/>
+<path d="M20 175 L20 172 Q50 156 80 136 Q110 124 140 136 Q170 156 200 172 L200 175Z" fill="url(#tgmA1)" stroke="#8e3b4a" stroke-opacity=".5" stroke-width="1.5"/>
+<path d="M110 134 V172" stroke="#a64a58" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+</g>
+<rect x="37" y="40.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-7.3 44 48.0)"/>
+<rect x="53" y="33.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-5.6 60 41.2)"/>
+<rect x="69" y="28.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-3.8 76 36.2)"/>
+<rect x="85" y="25.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-2.0 92 33.2)"/>
+<rect x="101" y="24.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-0.2 108 32.0)"/>
+<rect x="117" y="24.7" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(1.6 124 32.7)"/>
+<rect x="133" y="27.3" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(3.3 140 35.3)"/>
+<rect x="149" y="31.8" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(5.1 156 39.8)"/>
+<rect x="165" y="38.1" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(6.9 172 46.1)"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="none" stroke="#7d2f38" stroke-width="2"/>
+</svg>
                         <strong>Class I</strong>
                         <div class="mallampati-mnemonic" aria-label="PUSH: pillars, uvula, soft palate, hard palate">
                             <div class="mnemonic-key">Mnemonic: PUSH</div>
@@ -1690,14 +1715,36 @@
                         <span>Soft palate, fauces, uvula, and tonsillar pillars visible</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class II: soft palate, fauces and uvula visible; tonsillar pillars obscured">
-                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
-                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
-                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M102 79 Q110 82 118 79 L116 111 Q110 123 104 111Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
-                            <path d="M28 112 Q110 91 192 112 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
-                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Uvula visible; pillars obscured</text>
-                        </svg>
+                        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mallampati class II: soft palate, fauces and uvula visible; tonsillar pillars obscured">
+<defs>
+<clipPath id="cavmA2"><ellipse cx="110" cy="92" rx="84" ry="70"/></clipPath>
+<linearGradient id="hpmA2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1c4b5"/><stop offset="1" stop-color="#e8aaa3"/></linearGradient>
+<linearGradient id="spmA2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4787d"/><stop offset="1" stop-color="#c5656f"/></linearGradient>
+<radialGradient id="tgmA2" cx="0.5" cy="0.2" r="0.9"><stop offset="0" stop-color="#e8939b"/><stop offset="1" stop-color="#c4636f"/></radialGradient>
+<linearGradient id="uvmA2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e48f94"/><stop offset="1" stop-color="#d2767d"/></linearGradient>
+</defs>
+<ellipse cx="110" cy="92" rx="100" ry="84" fill="#c5675f"/><ellipse cx="110" cy="92" rx="92" ry="77" fill="#b3524f"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="#5a1f2b"/>
+<g clip-path="url(#cavmA2)">
+<path d="M0 0 H220 V58 Q110 40 0 58Z" fill="url(#hpmA2)"/>
+<path d="M110 22 V50" stroke="#cf8582" stroke-width="1.5" opacity=".6"/><path d="M82 44 Q96 40 108 42 M138 44 Q124 40 112 42" stroke="#cf8582" stroke-width="1.3" fill="none" opacity=".5"/>
+<path d="M0 58 Q110 40 220 58 V150 H0Z" fill="url(#spmA2)"/>
+<path d="M62 150 C58 108 78 88 110 88 C142 88 162 108 158 150Z" fill="#5a1f2b"/>
+<path d="M103 88 Q110 82 117 88 L116 110 Q110 120 104 110Z" fill="url(#uvmA2)" stroke="#8e3b4a" stroke-opacity=".35" stroke-width="1"/>
+<path d="M20 175 L20 154 Q50 138 80 118 Q110 106 140 118 Q170 138 200 154 L200 175Z" fill="url(#tgmA2)" stroke="#8e3b4a" stroke-opacity=".5" stroke-width="1.5"/>
+<path d="M110 116 V172" stroke="#a64a58" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+</g>
+<rect x="37" y="40.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-7.3 44 48.0)"/>
+<rect x="53" y="33.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-5.6 60 41.2)"/>
+<rect x="69" y="28.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-3.8 76 36.2)"/>
+<rect x="85" y="25.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-2.0 92 33.2)"/>
+<rect x="101" y="24.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-0.2 108 32.0)"/>
+<rect x="117" y="24.7" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(1.6 124 32.7)"/>
+<rect x="133" y="27.3" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(3.3 140 35.3)"/>
+<rect x="149" y="31.8" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(5.1 156 39.8)"/>
+<rect x="165" y="38.1" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(6.9 172 46.1)"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="none" stroke="#7d2f38" stroke-width="2"/>
+</svg>
                         <strong>Class II</strong>
                         <div class="mallampati-mnemonic" aria-label="USH: uvula, soft palate, hard palate">
                             <div class="mnemonic-key">Mnemonic: USH</div>
@@ -1708,14 +1755,36 @@
                         <span>Soft palate, fauces, and uvula visible; pillars obscured</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class III: soft palate and base of uvula visible; most of uvula obscured">
-                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
-                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
-                            <path d="M75 75 Q110 91 145 75" fill="none" stroke="#a85e66" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M103 79 Q110 82 117 79 L114 91 Q110 96 106 91Z" fill="#e99b9c" stroke="#a85e66" stroke-width="2"/>
-                            <path d="M25 91 Q110 67 195 91 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
-                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Only palate + uvular base visible</text>
-                        </svg>
+                        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mallampati class III: soft palate and base of uvula visible; most of uvula obscured">
+<defs>
+<clipPath id="cavmA3"><ellipse cx="110" cy="92" rx="84" ry="70"/></clipPath>
+<linearGradient id="hpmA3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1c4b5"/><stop offset="1" stop-color="#e8aaa3"/></linearGradient>
+<linearGradient id="spmA3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4787d"/><stop offset="1" stop-color="#c5656f"/></linearGradient>
+<radialGradient id="tgmA3" cx="0.5" cy="0.2" r="0.9"><stop offset="0" stop-color="#e8939b"/><stop offset="1" stop-color="#c4636f"/></radialGradient>
+<linearGradient id="uvmA3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e48f94"/><stop offset="1" stop-color="#d2767d"/></linearGradient>
+</defs>
+<ellipse cx="110" cy="92" rx="100" ry="84" fill="#c5675f"/><ellipse cx="110" cy="92" rx="92" ry="77" fill="#b3524f"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="#5a1f2b"/>
+<g clip-path="url(#cavmA3)">
+<path d="M0 0 H220 V58 Q110 40 0 58Z" fill="url(#hpmA3)"/>
+<path d="M110 22 V50" stroke="#cf8582" stroke-width="1.5" opacity=".6"/><path d="M82 44 Q96 40 108 42 M138 44 Q124 40 112 42" stroke="#cf8582" stroke-width="1.3" fill="none" opacity=".5"/>
+<path d="M0 58 Q110 40 220 58 V150 H0Z" fill="url(#spmA3)"/>
+<path d="M78 150 C76 112 90 98 110 98 C130 98 144 112 142 150Z" fill="#5a1f2b"/>
+<path d="M102 66 Q110 62 118 66 L116 88 Q110 98 104 88Z" fill="url(#uvmA3)" stroke="#8e3b4a" stroke-opacity=".35" stroke-width="1"/>
+<path d="M20 175 L20 142 Q50 126 80 106 Q110 94 140 106 Q170 126 200 142 L200 175Z" fill="url(#tgmA3)" stroke="#8e3b4a" stroke-opacity=".5" stroke-width="1.5"/>
+<path d="M110 104 V172" stroke="#a64a58" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+</g>
+<rect x="37" y="40.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-7.3 44 48.0)"/>
+<rect x="53" y="33.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-5.6 60 41.2)"/>
+<rect x="69" y="28.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-3.8 76 36.2)"/>
+<rect x="85" y="25.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-2.0 92 33.2)"/>
+<rect x="101" y="24.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-0.2 108 32.0)"/>
+<rect x="117" y="24.7" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(1.6 124 32.7)"/>
+<rect x="133" y="27.3" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(3.3 140 35.3)"/>
+<rect x="149" y="31.8" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(5.1 156 39.8)"/>
+<rect x="165" y="38.1" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(6.9 172 46.1)"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="none" stroke="#7d2f38" stroke-width="2"/>
+</svg>
                         <strong>Class III</strong>
                         <div class="mallampati-mnemonic" aria-label="SH: soft palate, hard palate">
                             <div class="mnemonic-key">Mnemonic: SH</div>
@@ -1725,12 +1794,34 @@
                         <span>Soft palate and base of uvula visible</span>
                     </div>
                     <div class="mallampati-item">
-                        <svg viewBox="0 0 220 190" role="img" aria-label="Mallampati class IV: hard palate only visible; soft palate and uvula not visible">
-                            <rect x="12" y="8" width="196" height="174" rx="82" fill="#252b3b"/>
-                            <path d="M42 43 Q110 7 178 43 Q170 66 145 75 Q110 84 75 75 Q50 66 42 43Z" fill="#f4c6bb" stroke="#bd7e7a" stroke-width="3"/>
-                            <path d="M24 67 Q110 43 196 67 L192 145 Q180 169 110 173 Q40 169 28 145Z" fill="#d77c88" stroke="#a94f61" stroke-width="3"/>
-                            <text x="110" y="186" text-anchor="middle" font-size="9" fill="#64748b">Hard palate only</text>
-                        </svg>
+                        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mallampati class IV: hard palate only visible; soft palate and uvula not visible">
+<defs>
+<clipPath id="cavmA4"><ellipse cx="110" cy="92" rx="84" ry="70"/></clipPath>
+<linearGradient id="hpmA4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1c4b5"/><stop offset="1" stop-color="#e8aaa3"/></linearGradient>
+<linearGradient id="spmA4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4787d"/><stop offset="1" stop-color="#c5656f"/></linearGradient>
+<radialGradient id="tgmA4" cx="0.5" cy="0.2" r="0.9"><stop offset="0" stop-color="#e8939b"/><stop offset="1" stop-color="#c4636f"/></radialGradient>
+<linearGradient id="uvmA4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e48f94"/><stop offset="1" stop-color="#d2767d"/></linearGradient>
+</defs>
+<ellipse cx="110" cy="92" rx="100" ry="84" fill="#c5675f"/><ellipse cx="110" cy="92" rx="92" ry="77" fill="#b3524f"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="#5a1f2b"/>
+<g clip-path="url(#cavmA4)">
+<path d="M0 0 H220 V58 Q110 40 0 58Z" fill="url(#hpmA4)"/>
+<path d="M110 22 V50" stroke="#cf8582" stroke-width="1.5" opacity=".6"/><path d="M82 44 Q96 40 108 42 M138 44 Q124 40 112 42" stroke="#cf8582" stroke-width="1.3" fill="none" opacity=".5"/>
+<path d="M0 58 Q110 40 220 58 V150 H0Z" fill="url(#spmA4)"/>
+<path d="M20 175 L20 64 Q50 48 80 54 Q110 42 140 54 Q170 48 200 64 L200 175Z" fill="url(#tgmA4)" stroke="#8e3b4a" stroke-opacity=".5" stroke-width="1.5"/>
+<path d="M110 52 V172" stroke="#a64a58" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+</g>
+<rect x="37" y="40.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-7.3 44 48.0)"/>
+<rect x="53" y="33.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-5.6 60 41.2)"/>
+<rect x="69" y="28.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-3.8 76 36.2)"/>
+<rect x="85" y="25.2" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-2.0 92 33.2)"/>
+<rect x="101" y="24.0" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(-0.2 108 32.0)"/>
+<rect x="117" y="24.7" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(1.6 124 32.7)"/>
+<rect x="133" y="27.3" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(3.3 140 35.3)"/>
+<rect x="149" y="31.8" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(5.1 156 39.8)"/>
+<rect x="165" y="38.1" width="14" height="17" rx="5" fill="#fbf7ee" stroke="#d9d2c0" stroke-width="1" transform="rotate(6.9 172 46.1)"/>
+<ellipse cx="110" cy="92" rx="84" ry="70" fill="none" stroke="#7d2f38" stroke-width="2"/>
+</svg>
                         <strong>Class IV</strong>
                         <div class="mallampati-mnemonic" aria-label="H: hard palate">
                             <div class="mnemonic-key">Mnemonic: H</div>
@@ -2019,6 +2110,268 @@
                 </div>
 
                 <div class="footnote">Links are stored locally in this browser and are not shared with other users or devices. Anyone using the same browser profile may be able to see them. Institutional sign-in may be required when opening a link. Use institutionally approved resources and do not enter patient-identifiable information or passwords here.</div>
+            </div>
+        </div>
+
+        <!-- IR VASCULAR & ORGAN ANATOMY REFERENCE -->
+        <div id="anatomy_ref" class="tab-content">
+            <div class="card">
+                <h2>IR Vascular &amp; Organ Anatomy</h2>
+                <div class="card-subtitle">Offline procedural schematics + local high-res diagram slots (Couinaud liver, biliary/renal collecting, PAE pelvic, extremity &amp; systemic vasculature)</div>
+
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 18px;" id="anat_pills">
+                    <button type="button" class="anat-btn active-anat" onclick="showAnatPanel('anat_liver', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--primary); background:var(--primary); color:#fff; cursor:pointer;">Liver &amp; Portal</button>
+                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_biliary_renal', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Biliary &amp; Renal</button>
+                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_abd_pelvis', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Abdominal &amp; PAE Pelvis</button>
+                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_extremities', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Upper &amp; Lower Extremity</button>
+                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_whole_body', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Whole-Body Map</button>
+                </div>
+
+                <!-- PANEL 1: LIVER SEGMENTS & VASCULATURE -->
+                <div id="anat_liver" class="anat-panel">
+                    <h3>Couinaud Liver Segments &amp; Hepatic Vasculature</h3>
+                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;">Divided vertically by the <strong>Right, Middle, and Left Hepatic Veins</strong> (draining to IVC) and transversely by the <strong>Main Portal Vein bifurcation</strong> (Cantlie's line = Middle Hepatic Vein plane).</p>
+
+                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+                        <svg viewBox="0 0 640 340" style="width:100%; max-width:620px; height:auto;">
+                            <rect x="295" y="12" width="34" height="310" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                            <text x="312" y="28" font-size="11" font-weight="bold" fill="#1e3a8a" text-anchor="middle">IVC</text>
+                            <path d="M90,95 C90,55 210,45 312,50 C410,55 560,65 565,105 C570,135 505,165 445,175 C395,185 350,245 275,275 C185,305 85,270 80,195 C76,145 90,120 90,95 Z" fill="#fef3c7" stroke="#d97706" stroke-width="2.5" opacity="0.9"/>
+                            <path d="M302,62 L175,185 M312,62 L320,210 M322,62 L465,140" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+                            <text x="165" y="200" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">RHV</text>
+                            <text x="338" y="218" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">MHV (Cantlie)</text>
+                            <text x="480" y="148" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">LHV</text>
+                            <path d="M265,318 L285,235 L180,215 M285,235 L415,175" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round"/>
+                            <text x="230" y="312" font-size="11" font-weight="bold" fill="#5b21b6">Main Portal Vein</text>
+                            <g font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">
+                                <circle cx="135" cy="135" r="16" fill="#fff" stroke="#d97706"/><text x="135" y="140">VII</text>
+                                <circle cx="235" cy="115" r="16" fill="#fff" stroke="#d97706"/><text x="235" y="120">VIII</text>
+                                <circle cx="130" cy="230" r="16" fill="#fff" stroke="#d97706"/><text x="130" y="235">VI</text>
+                                <circle cx="225" cy="245" r="16" fill="#fff" stroke="#d97706"/><text x="225" y="250">V</text>
+                                <circle cx="312" cy="145" r="15" fill="#ede9fe" stroke="#7c3aed"/><text x="312" y="150">I</text>
+                                <circle cx="375" cy="105" r="16" fill="#fff" stroke="#d97706"/><text x="375" y="110">IVa</text>
+                                <circle cx="375" cy="165" r="16" fill="#fff" stroke="#d97706"/><text x="375" y="170">IVb</text>
+                                <circle cx="465" cy="95" r="16" fill="#fff" stroke="#d97706"/><text x="465" y="100">II</text>
+                                <circle cx="515" cy="122" r="16" fill="#fff" stroke="#d97706"/><text x="515" y="127">III</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="anat-ext-wrap" style="margin-top:10px;">
+                        <img src="assets/anatomy/liver-segments.svg" alt="Couinaud Liver Segments Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                    </div>
+                    <div class="anat-ext-wrap" style="margin-top:10px;">
+                        <img src="assets/anatomy/liver-vasculature.svg" alt="Liver Vascular Anatomy Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                    </div>
+
+                    <div class="tbl-wrap" style="margin-top:12px;">
+                        <table class="ref">
+                            <thead><tr><th>Sector / Lobe</th><th>Superior (Above PV)</th><th>Inferior (Below PV)</th><th>Venous Drainage / Clinical Notes</th></tr></thead>
+                            <tbody>
+                                <tr><td>Caudate (I)</td><td colspan="2">Posterior; straddles IVC &amp; PV bifurcation</td><td>Drains directly into IVC (hypertrophies in Budd-Chiari)</td></tr>
+                                <tr><td>Left Lateral</td><td>Segment II</td><td>Segment III</td><td>Left Hepatic Vein (lateral to falciform ligament)</td></tr>
+                                <tr><td>Left Medial</td><td>Segment IVa</td><td>Segment IVb</td><td>Middle &amp; Left Hepatic Veins</td></tr>
+                                <tr><td>Right Anterior</td><td>Segment VIII</td><td>Segment V</td><td>Middle &amp; Right Hepatic Veins</td></tr>
+                                <tr><td>Right Posterior</td><td>Segment VII</td><td>Segment VI</td><td>Right Hepatic Vein (clockwise numbering I &rarr; VIII)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: BILIARY & RENAL COLLECTING SYSTEM -->
+                <div id="anat_biliary_renal" class="anat-panel" style="display:none;">
+                    <h3>Biliary Tree &amp; Renal Collecting System</h3>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:8px;">
+                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px;">Biliary Ductal System</div>
+                            <svg viewBox="0 0 300 280" style="width:100%; height:auto;">
+                                <path d="M60,40 L110,75 L150,95 M240,45 L190,75 L150,95" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <path d="M45,65 L90,62 M255,70 L210,63" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                <path d="M150,95 L150,235 L185,250" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round"/>
+                                <ellipse cx="92" cy="145" rx="22" ry="38" transform="rotate(25 92 145)" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
+                                <path d="M108,125 C125,125 135,145 150,150" stroke="#15803d" stroke-width="4.5" fill="none"/>
+                                <path d="M245,220 L155,235" stroke="#0284c7" stroke-width="4" fill="none"/>
+                                <path d="M195,195 C225,215 225,255 185,270" stroke="#94a3b8" stroke-width="10" fill="none" opacity="0.45"/>
+                                <g font-size="10" font-weight="600" fill="#1e293b">
+                                    <text x="65" y="30">RHD (Ant/Post)</text>
+                                    <text x="205" y="32">LHD</text>
+                                    <text x="162" y="122">CHD</text>
+                                    <text x="58" y="192">Gallbladder</text>
+                                    <text x="162" y="185">CBD (&le;6 mm)</text>
+                                    <text x="200" y="212" fill="#0369a1">Main PD</text>
+                                    <text x="195" y="262">Ampulla / D2</text>
+                                </g>
+                            </svg>
+                            <div class="anat-ext-wrap" style="margin-top:8px;">
+                                <img src="assets/anatomy/biliary-system.svg" alt="Biliary System Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        </div>
+
+                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px;">Renal Collecting System (PCN Access)</div>
+                            <svg viewBox="0 0 300 280" style="width:100%; height:auto;">
+                                <path d="M150,25 C85,25 55,80 55,140 C55,200 85,255 150,255 C185,255 205,225 200,190 C195,165 185,155 185,140 C185,125 195,115 200,90 C205,55 185,25 150,25 Z" fill="#fee2e2" stroke="#b91c1c" stroke-width="2.5"/>
+                                <path d="M105,65 L135,105 M90,115 L130,130 M90,165 L130,150 M105,215 L135,175" stroke="#eab308" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M130,105 Q165,140 130,175 L185,155 L205,265" stroke="#eab308" stroke-width="11" fill="none" stroke-linejoin="round"/>
+                                <line x1="42" y1="205" x2="108" y2="165" stroke="#0f172a" stroke-width="2.5" stroke-dasharray="4,3"/>
+                                <circle cx="108" cy="165" r="4" fill="#dc2626"/>
+                                <g font-size="10" font-weight="600" fill="#1e293b">
+                                    <text x="115" y="55">Upper Pole Calyx</text>
+                                    <text x="108" y="136">Interpolar</text>
+                                    <text x="115" y="232">Lower Pole Calyx</text>
+                                    <text x="165" y="132">Renal Pelvis</text>
+                                    <text x="214" y="255">Ureter</text>
+                                    <text x="35" y="222" fill="#dc2626">Posterior Calyx</text>
+                                    <text x="35" y="234" fill="#64748b">(Br&ouml;del Plane)</text>
+                                </g>
+                            </svg>
+                            <div class="anat-ext-wrap" style="margin-top:8px;">
+                                <img src="assets/anatomy/renal-collecting.svg" alt="Renal Collecting System Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 3: ABDOMINAL & PELVIC VASCULATURE (PAE) -->
+                <div id="anat_abd_pelvis" class="anat-panel" style="display:none;">
+                    <h3>Abdominal Aorta &amp; Pelvic / PAE Arterial Supply</h3>
+                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;"><strong>PAE Pearl:</strong> The prostatic artery most commonly arises from the <strong>Internal Pudendal Artery (~35%)</strong>, <strong>Superior Vesical / Common Gluteopudendal Trunk (~20&ndash;30%)</strong>, or <strong>Obturator Artery (~15%)</strong>. Identify and protect/coil penile, bladder, or rectal anastomoses to prevent non-target embolization.</p>
+                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+                        <svg viewBox="0 0 640 360" style="width:100%; max-width:620px; height:auto;">
+                            <path d="M320,15 L320,175" stroke="#dc2626" stroke-width="14" stroke-linecap="round"/>
+                            <path d="M320,42 L265,35 M320,42 L375,35" stroke="#dc2626" stroke-width="5"/>
+                            <path d="M320,72 L255,75 M320,75 L385,78" stroke="#dc2626" stroke-width="5"/>
+                            <path d="M320,65 L355,95" stroke="#ef4444" stroke-width="5"/>
+                            <path d="M320,130 L355,150" stroke="#ef4444" stroke-width="4"/>
+                            <path d="M320,175 L250,225 L195,335" stroke="#dc2626" stroke-width="9" fill="none"/>
+                            <path d="M320,175 L390,225 L445,335" stroke="#dc2626" stroke-width="9" fill="none"/>
+                            <path d="M250,225 L265,275" stroke="#b91c1c" stroke-width="7"/>
+                            <path d="M390,225 L375,275" stroke="#b91c1c" stroke-width="7"/>
+                            <path d="M375,275 L415,315" stroke="#dc2626" stroke-width="3.5"/>
+                            <path d="M375,275 L350,320" stroke="#dc2626" stroke-width="3.5"/>
+                            <path d="M375,275 L400,290" stroke="#dc2626" stroke-width="3"/>
+                            <ellipse cx="320" cy="318" rx="28" ry="20" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/>
+                            <path d="M362,298 Q345,310 336,314" stroke="#7c3aed" stroke-width="3.5" fill="none"/>
+                            <circle cx="336" cy="314" r="4" fill="#7c3aed"/>
+                            <g font-size="10.5" font-weight="600" fill="#1e293b">
+                                <text x="255" y="32" text-anchor="end">Celiac Trunk (T12)</text>
+                                <text x="362" y="98">SMA (L1)</text>
+                                <text x="248" y="78" text-anchor="end">R. Renal (L1-L2)</text>
+                                <text x="392" y="81">L. Renal</text>
+                                <text x="362" y="153">IMA (L3)</text>
+                                <text x="235" y="218" text-anchor="end">Common Iliac (L4)</text>
+                                <text x="185" y="335" text-anchor="end">External Iliac &rarr; CFA</text>
+                                <text x="455" y="335">External Iliac &rarr; CFA</text>
+                                <text x="405" y="262">Internal Iliac (Ant/Post)</text>
+                                <text x="422" y="318">Int. Pudendal / Obturator</text>
+                                <text x="320" y="322" text-anchor="middle" fill="#9a3412">Prostate</text>
+                                <text x="315" y="352" text-anchor="middle" fill="#6d28d9">Prostatic Artery (Inferior Vesical)</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="anat-ext-wrap" style="margin-top:10px;">
+                        <img src="assets/anatomy/abdominal-aorta.svg" alt="Abdominal Aorta Branches Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                    </div>
+                    <div class="anat-ext-wrap" style="margin-top:10px;">
+                        <img src="assets/anatomy/pelvic-vasculature.svg" alt="Pelvic & Internal Iliac Vasculature Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+                <!-- PANEL 4: UPPER & LOWER EXTREMITY VASCULATURE -->
+                <div id="anat_extremities" class="anat-panel" style="display:none;">
+                    <h3>Upper &amp; Lower Extremity Arterial Runoff</h3>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:8px;">
+                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px;">
+                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px; text-align:center;">Upper Extremity (AVF / Radial Access)</div>
+                            <svg viewBox="0 0 280 310" style="width:100%; height:auto;">
+                                <path d="M50,25 L110,45 L145,85 L155,155" stroke="#dc2626" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <path d="M155,155 L115,245 L130,275" stroke="#dc2626" stroke-width="4" fill="none"/>
+                                <path d="M155,155 L185,245 L165,275" stroke="#dc2626" stroke-width="4" fill="none"/>
+                                <path d="M130,275 Q148,290 165,275" stroke="#dc2626" stroke-width="3" fill="none"/>
+                                <g font-size="10" font-weight="600" fill="#1e293b">
+                                    <text x="50" y="18">Subclavian Art.</text>
+                                    <text x="122" y="45">Axillary Art.</text>
+                                    <text x="165" y="115">Brachial Art.</text>
+                                    <text x="165" y="156" fill="#0369a1">Bifurcation (Antecubital)</text>
+                                    <text x="108" y="210" text-anchor="end">Radial (Lateral)</text>
+                                    <text x="192" y="210">Ulnar (Medial)</text>
+                                    <text x="148" y="302" text-anchor="middle">Superficial/Deep Palmar Arches</text>
+                                </g>
+                            </svg>
+                            <div class="anat-ext-wrap" style="margin-top:8px;">
+                                <img src="assets/anatomy/upper-extremity.svg" alt="Upper Extremity Arteries Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        </div>
+
+                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px;">
+                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px; text-align:center;">Lower Extremity Runoff (PAD / CLI)</div>
+                            <svg viewBox="0 0 280 310" style="width:100%; height:auto;">
+                                <path d="M140,15 L140,65" stroke="#dc2626" stroke-width="7"/>
+                                <path d="M140,65 L100,130" stroke="#ef4444" stroke-width="4.5"/>
+                                <path d="M140,65 L145,175" stroke="#dc2626" stroke-width="6"/>
+                                <path d="M145,175 L105,275 L90,295" stroke="#dc2626" stroke-width="3.5" fill="none"/>
+                                <path d="M145,175 L155,205" stroke="#dc2626" stroke-width="5"/>
+                                <path d="M155,205 L145,270" stroke="#dc2626" stroke-width="3"/>
+                                <path d="M155,205 L185,280" stroke="#dc2626" stroke-width="3.5"/>
+                                <g font-size="10" font-weight="600" fill="#1e293b">
+                                    <text x="152" y="32">CFA (Femoral Head)</text>
+                                    <text x="95" y="115" text-anchor="end">Profunda Femoris</text>
+                                    <text x="155" y="115">SFA (Hunter Canal)</text>
+                                    <text x="156" y="168">Popliteal Art.</text>
+                                    <text x="98" y="235" text-anchor="end">Ant. Tibial (AT)</text>
+                                    <text x="164" y="202">TP Trunk</text>
+                                    <text x="138" y="284" text-anchor="end">Peroneal</text>
+                                    <text x="192" y="255">Post. Tibial (PT)</text>
+                                    <text x="85" y="306" text-anchor="middle" fill="#0369a1">Dorsalis Pedis</text>
+                                </g>
+                            </svg>
+                            <div class="anat-ext-wrap" style="margin-top:8px;">
+                                <img src="assets/anatomy/lower-extremity.svg" alt="Lower Extremity Arteries Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 5: WHOLE-BODY ARTERIAL & VENOUS MAP -->
+                <div id="anat_whole_body" class="anat-panel" style="display:none;">
+                    <h3>Systemic Whole-Body Vascular Overview</h3>
+                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;">Key central venous &amp; arterial access landmarks for ports, PICCs, IVC filters, and endovascular interventions.</p>
+                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+                        <svg viewBox="0 0 600 340" style="width:100%; max-width:580px; height:auto;">
+                            <text x="150" y="22" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">ARTERIAL SYSTEM</text>
+                            <path d="M150,70 L150,40 M150,70 L90,85 L65,165 M150,70 L210,85 L235,165 M150,70 L150,175 L125,215 L120,315 M150,175 L175,215 L180,315" stroke="#dc2626" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <g font-size="9.5" font-weight="600" fill="#7f1d1d">
+                                <text x="158" y="45">Carotids / Arch</text>
+                                <text x="85" y="78" text-anchor="end">Subclavian/Axillary</text>
+                                <text x="60" y="165" text-anchor="end">Radial / Ulnar</text>
+                                <text x="160" y="130">Thoracic/Abd Aorta</text>
+                                <text x="115" y="215" text-anchor="end">Iliac / CFA</text>
+                                <text x="112" y="265" text-anchor="end">SFA / Pop</text>
+                                <text x="112" y="312" text-anchor="end">AT / PT / Peroneal</text>
+                            </g>
+                            <line x1="300" y1="15" x2="300" y2="325" stroke="#cbd5e1" stroke-dasharray="4,4"/>
+                            <text x="450" y="22" font-size="12" font-weight="bold" fill="#2563eb" text-anchor="middle">VENOUS SYSTEM</text>
+                            <path d="M442,40 L442,95 M458,40 L458,95 M385,85 L442,95 M515,85 L458,95 M450,95 L450,180 L425,220 L420,315 M450,180 L475,220 L480,315" stroke="#2563eb" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <g font-size="9.5" font-weight="600" fill="#1e3a8a">
+                                <text x="434" y="45" text-anchor="end">R. IJV</text>
+                                <text x="466" y="45">L. IJV</text>
+                                <text x="380" y="80" text-anchor="end">Basilic/Cephalic</text>
+                                <text x="462" y="102">SVC (Cavoatrial Jxn)</text>
+                                <text x="462" y="148">IVC (Infrarenal Filter)</text>
+                                <text x="484" y="218">Common / Ext. Iliac</text>
+                                <text x="488" y="265">CFV / Femoral / GSV</text>
+                                <text x="488" y="312">Popliteal / Tibial</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="anat-ext-wrap" style="margin-top:10px;">
+                        <img src="assets/anatomy/whole-body-vasculature.svg" alt="Whole Body Circulatory System Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+                <div class="footnote" style="margin-top:14px;">
+                    Schematic anatomical reference for rapid pre-procedural planning. Always confirm variant anatomy (e.g., Michels hepatic arterial variants, corona mortis, high radial bifurcation) on cross-sectional CTA/MRA or intraprocedural angiography.
+                </div>
             </div>
         </div>
 
@@ -3769,6 +4122,23 @@
             window.addEventListener('load', function () {
                 navigator.serviceWorker.register('sw.js').catch(function () { /* offline support unavailable */ });
             });
+        }
+
+        // ---------- ANATOMY SUB-TABS ----------
+        function showAnatPanel(panelId, btn) {
+            document.querySelectorAll('.anat-panel').forEach(function (p) { p.style.display = 'none'; });
+            var target = document.getElementById(panelId);
+            if (target) target.style.display = 'block';
+            document.querySelectorAll('.anat-btn').forEach(function (b) {
+                b.style.background = 'var(--bg)';
+                b.style.color = 'var(--text)';
+                b.style.borderColor = 'var(--border)';
+            });
+            if (btn) {
+                btn.style.background = 'var(--primary)';
+                btn.style.color = '#ffffff';
+                btn.style.borderColor = 'var(--primary)';
+            }
         }
 
     </script>

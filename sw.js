@@ -1,7 +1,7 @@
 /* IR Decision Support Suite: offline service worker.
    To publish an update: change CACHE_VERSION, then re-upload the files.
    Users receive the new version the next time they open the app online. */
-const CACHE_VERSION = 'ir-suite-v23';
+const CACHE_VERSION = 'ir-suite-v25';
 const APP_SHELL = [
   './',
   'index.html',
@@ -13,9 +13,24 @@ const APP_SHELL = [
   'icons/favicon-32.png'
 ];
 
+const OPTIONAL_ANATOMY_ASSETS = [
+  'assets/anatomy/liver-segments.svg',
+  'assets/anatomy/liver-vasculature.svg',
+  'assets/anatomy/biliary-system.svg',
+  'assets/anatomy/renal-collecting.svg',
+  'assets/anatomy/abdominal-aorta.svg',
+  'assets/anatomy/pelvic-vasculature.svg',
+  'assets/anatomy/upper-extremity.svg',
+  'assets/anatomy/lower-extremity.svg',
+  'assets/anatomy/whole-body-vasculature.svg'
+];
+
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE_VERSION).then(async cache => {
+      await cache.addAll(APP_SHELL);
+      await Promise.all(OPTIONAL_ANATOMY_ASSETS.map(url => cache.add(url).catch(() => {})));
+    }).then(() => self.skipWaiting())
   );
 });
 
