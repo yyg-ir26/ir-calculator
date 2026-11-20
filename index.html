@@ -1688,7 +1688,7 @@
 <path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150Z" fill="#5a1f2b"/>
 <path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150" fill="none" stroke="#e8a09c" stroke-width="11" stroke-linecap="round"/>
 <path d="M52 150 C46 100 70 80 110 80 C150 80 174 100 168 150" fill="none" stroke="#8e3b4a" stroke-width="1" opacity=".35" transform="translate(0,-5.5)"/>
-<ellipse cx="68" cy="118" rx="9" ry="14" fill="#c46b74" opacity=".95"/><ellipse cx="152" cy="118" rx="9" ry="14" fill="#c46b74" opacity=".95"/>
+<path d="M70 91 C59 104 58 124 66 145 M150 91 C161 104 162 124 154 145" fill="none" stroke="#e8a09c" stroke-width="7" stroke-linecap="round"/><path d="M70 91 C59 104 58 124 66 145 M150 91 C161 104 162 124 154 145" fill="none" stroke="#8e3b4a" stroke-width="1" opacity=".45"/>
 <path d="M103 78 Q110 72 117 78 L116 108 Q110 122 104 108Z" fill="url(#uvmA1)" stroke="#8e3b4a" stroke-opacity=".35" stroke-width="1"/>
 <path d="M20 175 L20 172 Q50 156 80 136 Q110 124 140 136 Q170 156 200 172 L200 175Z" fill="url(#tgmA1)" stroke="#8e3b4a" stroke-opacity=".5" stroke-width="1.5"/>
 <path d="M110 134 V172" stroke="#a64a58" stroke-width="2" opacity=".55" stroke-linecap="round"/>
@@ -1712,7 +1712,7 @@
                             <div class="mnemonic-row"><b>S</b><span>oft palate</span></div>
                             <div class="mnemonic-row"><b>H</b><span>ard palate</span></div>
                         </div>
-                        <span>Soft palate, fauces, uvula, and tonsillar pillars visible</span>
+                        <span>Soft palate, fauces, uvula, and tonsillar pillars visible (schematic view)</span>
                     </div>
                     <div class="mallampati-item">
                         <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mallampati class II: soft palate, fauces and uvula visible; tonsillar pillars obscured">
@@ -2116,264 +2116,87 @@
         <!-- IR VASCULAR & ORGAN ANATOMY REFERENCE -->
         <div id="anatomy_ref" class="tab-content">
             <div class="card">
-                <h2>IR Vascular &amp; Organ Anatomy</h2>
-                <div class="card-subtitle">Offline procedural schematics + local high-res diagram slots (Couinaud liver, biliary/renal collecting, PAE pelvic, extremity &amp; systemic vasculature)</div>
-
-                <div style="display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 18px;" id="anat_pills">
-                    <button type="button" class="anat-btn active-anat" onclick="showAnatPanel('anat_liver', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--primary); background:var(--primary); color:#fff; cursor:pointer;">Liver &amp; Portal</button>
-                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_biliary_renal', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Biliary &amp; Renal</button>
-                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_abd_pelvis', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Abdominal &amp; PAE Pelvis</button>
-                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_extremities', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Upper &amp; Lower Extremity</button>
-                    <button type="button" class="anat-btn" onclick="showAnatPanel('anat_whole_body', this)" style="padding:7px 13px; font-size:0.82rem; font-weight:600; border-radius:999px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer;">Whole-Body Map</button>
+                <h2>IR Anatomy Reference</h2>
+                <div class="card-subtitle">Offline anatomical image library for procedural orientation. Images are loaded from the local assets/anatomy folder.</div>
+                <style>
+                  .anat-nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 18px}
+                  .anat-btn{padding:7px 13px;font-size:.82rem;font-weight:600;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+                  .anat-btn.active-anat{border-color:var(--primary);background:var(--primary);color:#fff}
+                  .anat-panel{display:none}.anat-panel.active-anat-panel{display:block}
+                  .anat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px;margin:12px 0}
+                  .anat-image-card{border:1px solid var(--border);border-radius:9px;padding:10px;background:var(--bg);min-width:0}
+                  .anat-image-card h4{margin:0 0 5px;font-size:.92rem;color:var(--text)}
+                  .anat-image-card p{font-size:.78rem;color:var(--text-muted);margin:0 0 8px;line-height:1.4}
+                  .anat-image-frame{min-height:110px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px dashed var(--border);border-radius:6px;padding:6px;position:relative}
+                  .anat-image-frame img{display:block;max-width:100%;width:auto;height:auto;max-height:460px;object-fit:contain;cursor:zoom-in}
+                  .anat-image-placeholder{font-size:.78rem;color:#64748b;text-align:center;padding:22px 8px}
+                  .anat-note{font-size:.82rem;line-height:1.5;background:var(--bg);border-left:3px solid var(--primary);padding:9px 11px;margin:10px 0;border-radius:4px}
+                  .anat-lightbox{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);align-items:center;justify-content:center;padding:18px}
+                  .anat-lightbox.open{display:flex}.anat-lightbox img{max-width:96vw;max-height:90vh;object-fit:contain;background:#fff;border-radius:4px}
+                  .anat-lightbox button{position:absolute;top:12px;right:16px;background:#fff;color:#111;border:0;border-radius:20px;padding:8px 13px;font-size:1rem;cursor:pointer}
+                </style>
+                <div class="anat-nav" id="anat_pills">
+                  <button type="button" class="anat-btn active-anat" onclick="showAnatPanel('anat_liver',this)">Liver &amp; Portal</button>
+                  <button type="button" class="anat-btn" onclick="showAnatPanel('anat_biliary_renal',this)">Biliary &amp; Renal</button>
+                  <button type="button" class="anat-btn" onclick="showAnatPanel('anat_abd_pelvis',this)">Abdomen &amp; PAE Pelvis</button>
+                  <button type="button" class="anat-btn" onclick="showAnatPanel('anat_extremities',this)">Extremities</button>
+                  <button type="button" class="anat-btn" onclick="showAnatPanel('anat_whole_body',this)">Whole Body</button>
                 </div>
-
-                <!-- PANEL 1: LIVER SEGMENTS & VASCULATURE -->
-                <div id="anat_liver" class="anat-panel">
-                    <h3>Couinaud Liver Segments &amp; Hepatic Vasculature</h3>
-                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;">Divided vertically by the <strong>Right, Middle, and Left Hepatic Veins</strong> (draining to IVC) and transversely by the <strong>Main Portal Vein bifurcation</strong> (Cantlie's line = Middle Hepatic Vein plane).</p>
-
-                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
-                        <svg viewBox="0 0 640 340" style="width:100%; max-width:620px; height:auto;">
-                            <rect x="295" y="12" width="34" height="310" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
-                            <text x="312" y="28" font-size="11" font-weight="bold" fill="#1e3a8a" text-anchor="middle">IVC</text>
-                            <path d="M90,95 C90,55 210,45 312,50 C410,55 560,65 565,105 C570,135 505,165 445,175 C395,185 350,245 275,275 C185,305 85,270 80,195 C76,145 90,120 90,95 Z" fill="#fef3c7" stroke="#d97706" stroke-width="2.5" opacity="0.9"/>
-                            <path d="M302,62 L175,185 M312,62 L320,210 M322,62 L465,140" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
-                            <text x="165" y="200" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">RHV</text>
-                            <text x="338" y="218" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">MHV (Cantlie)</text>
-                            <text x="480" y="148" font-size="10" font-weight="bold" fill="#1d4ed8" text-anchor="middle">LHV</text>
-                            <path d="M265,318 L285,235 L180,215 M285,235 L415,175" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round"/>
-                            <text x="230" y="312" font-size="11" font-weight="bold" fill="#5b21b6">Main Portal Vein</text>
-                            <g font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">
-                                <circle cx="135" cy="135" r="16" fill="#fff" stroke="#d97706"/><text x="135" y="140">VII</text>
-                                <circle cx="235" cy="115" r="16" fill="#fff" stroke="#d97706"/><text x="235" y="120">VIII</text>
-                                <circle cx="130" cy="230" r="16" fill="#fff" stroke="#d97706"/><text x="130" y="235">VI</text>
-                                <circle cx="225" cy="245" r="16" fill="#fff" stroke="#d97706"/><text x="225" y="250">V</text>
-                                <circle cx="312" cy="145" r="15" fill="#ede9fe" stroke="#7c3aed"/><text x="312" y="150">I</text>
-                                <circle cx="375" cy="105" r="16" fill="#fff" stroke="#d97706"/><text x="375" y="110">IVa</text>
-                                <circle cx="375" cy="165" r="16" fill="#fff" stroke="#d97706"/><text x="375" y="170">IVb</text>
-                                <circle cx="465" cy="95" r="16" fill="#fff" stroke="#d97706"/><text x="465" y="100">II</text>
-                                <circle cx="515" cy="122" r="16" fill="#fff" stroke="#d97706"/><text x="515" y="127">III</text>
-                            </g>
-                        </svg>
-                    </div>
-
-                    <div class="anat-ext-wrap" style="margin-top:10px;">
-                        <img src="assets/anatomy/liver-segments.svg" alt="Couinaud Liver Segments Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                    </div>
-                    <div class="anat-ext-wrap" style="margin-top:10px;">
-                        <img src="assets/anatomy/liver-vasculature.svg" alt="Liver Vascular Anatomy Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                    </div>
-
-                    <div class="tbl-wrap" style="margin-top:12px;">
-                        <table class="ref">
-                            <thead><tr><th>Sector / Lobe</th><th>Superior (Above PV)</th><th>Inferior (Below PV)</th><th>Venous Drainage / Clinical Notes</th></tr></thead>
-                            <tbody>
-                                <tr><td>Caudate (I)</td><td colspan="2">Posterior; straddles IVC &amp; PV bifurcation</td><td>Drains directly into IVC (hypertrophies in Budd-Chiari)</td></tr>
-                                <tr><td>Left Lateral</td><td>Segment II</td><td>Segment III</td><td>Left Hepatic Vein (lateral to falciform ligament)</td></tr>
-                                <tr><td>Left Medial</td><td>Segment IVa</td><td>Segment IVb</td><td>Middle &amp; Left Hepatic Veins</td></tr>
-                                <tr><td>Right Anterior</td><td>Segment VIII</td><td>Segment V</td><td>Middle &amp; Right Hepatic Veins</td></tr>
-                                <tr><td>Right Posterior</td><td>Segment VII</td><td>Segment VI</td><td>Right Hepatic Vein (clockwise numbering I &rarr; VIII)</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div id="anat_liver" class="anat-panel active-anat-panel">
+                  <h3>Couinaud Liver Segments &amp; Hepatic Vasculature</h3>
+                  <p class="anat-note">Hepatic veins define the major longitudinal sectoral planes. Portal venous pedicles define the transverse superior/inferior segmental levels. The middle hepatic vein plane approximates Cantlie's line, separating the functional right and left hemilivers. Segment I is posterior to the porta hepatis, adjacent to the IVC, and commonly drains directly into the IVC through short hepatic veins.</p>
+                  <div class="anat-grid">
+                    <div class="anat-image-card"><h4>Couinaud segments I–VIII</h4><p>Prefer a diagram showing the segmental arrangement and portal-plane relationship.</p><div class="anat-image-frame"><img src="assets/anatomy/liver-segments.svg" alt="Couinaud liver segments" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>liver-segments.svg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Portal vein, hepatic artery &amp; hepatic veins</h4><p>Macroscopic vascular anatomy; distinguish portal inflow from hepatic venous outflow.</p><div class="anat-image-frame"><img src="assets/anatomy/liver-vasculature.svg" alt="Liver portal, arterial and hepatic venous anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>liver-vasculature.svg</code></div></div></div>
+                  </div>
+                  <div class="tbl-wrap"><table class="ref"><thead><tr><th>Sector</th><th>Superior</th><th>Inferior</th><th>Typical venous drainage</th></tr></thead><tbody>
+                    <tr><td>Left lateral</td><td>II</td><td>III</td><td>Left hepatic vein</td></tr><tr><td>Left medial</td><td>IVa</td><td>IVb</td><td>Middle and left hepatic veins</td></tr><tr><td>Right anterior</td><td>VIII</td><td>V</td><td>Middle and right hepatic veins</td></tr><tr><td>Right posterior</td><td>VII</td><td>VI</td><td>Right hepatic vein</td></tr><tr><td>Caudate</td><td colspan="2">I; posterior to porta hepatis</td><td>Direct short hepatic veins to IVC</td></tr>
+                  </tbody></table></div>
                 </div>
-
-                <!-- PANEL 2: BILIARY & RENAL COLLECTING SYSTEM -->
-                <div id="anat_biliary_renal" class="anat-panel" style="display:none;">
-                    <h3>Biliary Tree &amp; Renal Collecting System</h3>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:8px;">
-                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
-                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px;">Biliary Ductal System</div>
-                            <svg viewBox="0 0 300 280" style="width:100%; height:auto;">
-                                <path d="M60,40 L110,75 L150,95 M240,45 L190,75 L150,95" stroke="#15803d" stroke-width="6" fill="none" stroke-linecap="round"/>
-                                <path d="M45,65 L90,62 M255,70 L210,63" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                                <path d="M150,95 L150,235 L185,250" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round"/>
-                                <ellipse cx="92" cy="145" rx="22" ry="38" transform="rotate(25 92 145)" fill="#bbf7d0" stroke="#15803d" stroke-width="2.5"/>
-                                <path d="M108,125 C125,125 135,145 150,150" stroke="#15803d" stroke-width="4.5" fill="none"/>
-                                <path d="M245,220 L155,235" stroke="#0284c7" stroke-width="4" fill="none"/>
-                                <path d="M195,195 C225,215 225,255 185,270" stroke="#94a3b8" stroke-width="10" fill="none" opacity="0.45"/>
-                                <g font-size="10" font-weight="600" fill="#1e293b">
-                                    <text x="65" y="30">RHD (Ant/Post)</text>
-                                    <text x="205" y="32">LHD</text>
-                                    <text x="162" y="122">CHD</text>
-                                    <text x="58" y="192">Gallbladder</text>
-                                    <text x="162" y="185">CBD (&le;6 mm)</text>
-                                    <text x="200" y="212" fill="#0369a1">Main PD</text>
-                                    <text x="195" y="262">Ampulla / D2</text>
-                                </g>
-                            </svg>
-                            <div class="anat-ext-wrap" style="margin-top:8px;">
-                                <img src="assets/anatomy/biliary-system.svg" alt="Biliary System Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                            </div>
-                        </div>
-
-                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
-                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px;">Renal Collecting System (PCN Access)</div>
-                            <svg viewBox="0 0 300 280" style="width:100%; height:auto;">
-                                <path d="M150,25 C85,25 55,80 55,140 C55,200 85,255 150,255 C185,255 205,225 200,190 C195,165 185,155 185,140 C185,125 195,115 200,90 C205,55 185,25 150,25 Z" fill="#fee2e2" stroke="#b91c1c" stroke-width="2.5"/>
-                                <path d="M105,65 L135,105 M90,115 L130,130 M90,165 L130,150 M105,215 L135,175" stroke="#eab308" stroke-width="8" stroke-linecap="round"/>
-                                <path d="M130,105 Q165,140 130,175 L185,155 L205,265" stroke="#eab308" stroke-width="11" fill="none" stroke-linejoin="round"/>
-                                <line x1="42" y1="205" x2="108" y2="165" stroke="#0f172a" stroke-width="2.5" stroke-dasharray="4,3"/>
-                                <circle cx="108" cy="165" r="4" fill="#dc2626"/>
-                                <g font-size="10" font-weight="600" fill="#1e293b">
-                                    <text x="115" y="55">Upper Pole Calyx</text>
-                                    <text x="108" y="136">Interpolar</text>
-                                    <text x="115" y="232">Lower Pole Calyx</text>
-                                    <text x="165" y="132">Renal Pelvis</text>
-                                    <text x="214" y="255">Ureter</text>
-                                    <text x="35" y="222" fill="#dc2626">Posterior Calyx</text>
-                                    <text x="35" y="234" fill="#64748b">(Br&ouml;del Plane)</text>
-                                </g>
-                            </svg>
-                            <div class="anat-ext-wrap" style="margin-top:8px;">
-                                <img src="assets/anatomy/renal-collecting.svg" alt="Renal Collecting System Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                            </div>
-                        </div>
-                    </div>
+                <div id="anat_biliary_renal" class="anat-panel">
+                  <h3>Biliary Tree &amp; Renal Collecting System</h3>
+                  <div class="anat-grid">
+                    <div class="anat-image-card"><h4>Biliary ductal anatomy</h4><p>Right/left hepatic ducts, common hepatic duct, cystic duct, gallbladder, common bile duct and ampulla.</p><div class="anat-image-frame"><img src="assets/anatomy/biliary-system.svg" alt="Biliary tree and gallbladder" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>biliary-system.svg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Renal collecting system</h4><p>Minor and major calyces, infundibula, renal pelvis, ureter and UPJ.</p><div class="anat-image-frame"><img src="assets/anatomy/renal-collecting.png" alt="Renal collecting system" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>renal-collecting.png</code></div></div></div>
+                  </div>
+                  <div class="anat-note"><strong>Renal access:</strong> Brödel's relatively avascular plane lies between anterior and posterior segmental arterial territories. It is not a calyx. A posterior calyx is a collecting-system structure; target a posterior calyx when planning standard percutaneous access, using patient-specific imaging and procedural technique.</div>
+                  <div class="anat-note"><strong>CBD diameter:</strong> No fixed diameter cutoff is embedded in this anatomy reference. Interpretation depends on age, cholecystectomy status, clinical context and imaging modality.</div>
                 </div>
-
-                <!-- PANEL 3: ABDOMINAL & PELVIC VASCULATURE (PAE) -->
-                <div id="anat_abd_pelvis" class="anat-panel" style="display:none;">
-                    <h3>Abdominal Aorta &amp; Pelvic / PAE Arterial Supply</h3>
-                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;"><strong>PAE Pearl:</strong> The prostatic artery most commonly arises from the <strong>Internal Pudendal Artery (~35%)</strong>, <strong>Superior Vesical / Common Gluteopudendal Trunk (~20&ndash;30%)</strong>, or <strong>Obturator Artery (~15%)</strong>. Identify and protect/coil penile, bladder, or rectal anastomoses to prevent non-target embolization.</p>
-                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
-                        <svg viewBox="0 0 640 360" style="width:100%; max-width:620px; height:auto;">
-                            <path d="M320,15 L320,175" stroke="#dc2626" stroke-width="14" stroke-linecap="round"/>
-                            <path d="M320,42 L265,35 M320,42 L375,35" stroke="#dc2626" stroke-width="5"/>
-                            <path d="M320,72 L255,75 M320,75 L385,78" stroke="#dc2626" stroke-width="5"/>
-                            <path d="M320,65 L355,95" stroke="#ef4444" stroke-width="5"/>
-                            <path d="M320,130 L355,150" stroke="#ef4444" stroke-width="4"/>
-                            <path d="M320,175 L250,225 L195,335" stroke="#dc2626" stroke-width="9" fill="none"/>
-                            <path d="M320,175 L390,225 L445,335" stroke="#dc2626" stroke-width="9" fill="none"/>
-                            <path d="M250,225 L265,275" stroke="#b91c1c" stroke-width="7"/>
-                            <path d="M390,225 L375,275" stroke="#b91c1c" stroke-width="7"/>
-                            <path d="M375,275 L415,315" stroke="#dc2626" stroke-width="3.5"/>
-                            <path d="M375,275 L350,320" stroke="#dc2626" stroke-width="3.5"/>
-                            <path d="M375,275 L400,290" stroke="#dc2626" stroke-width="3"/>
-                            <ellipse cx="320" cy="318" rx="28" ry="20" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/>
-                            <path d="M362,298 Q345,310 336,314" stroke="#7c3aed" stroke-width="3.5" fill="none"/>
-                            <circle cx="336" cy="314" r="4" fill="#7c3aed"/>
-                            <g font-size="10.5" font-weight="600" fill="#1e293b">
-                                <text x="255" y="32" text-anchor="end">Celiac Trunk (T12)</text>
-                                <text x="362" y="98">SMA (L1)</text>
-                                <text x="248" y="78" text-anchor="end">R. Renal (L1-L2)</text>
-                                <text x="392" y="81">L. Renal</text>
-                                <text x="362" y="153">IMA (L3)</text>
-                                <text x="235" y="218" text-anchor="end">Common Iliac (L4)</text>
-                                <text x="185" y="335" text-anchor="end">External Iliac &rarr; CFA</text>
-                                <text x="455" y="335">External Iliac &rarr; CFA</text>
-                                <text x="405" y="262">Internal Iliac (Ant/Post)</text>
-                                <text x="422" y="318">Int. Pudendal / Obturator</text>
-                                <text x="320" y="322" text-anchor="middle" fill="#9a3412">Prostate</text>
-                                <text x="315" y="352" text-anchor="middle" fill="#6d28d9">Prostatic Artery (Inferior Vesical)</text>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="anat-ext-wrap" style="margin-top:10px;">
-                        <img src="assets/anatomy/abdominal-aorta.svg" alt="Abdominal Aorta Branches Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                    </div>
-                    <div class="anat-ext-wrap" style="margin-top:10px;">
-                        <img src="assets/anatomy/pelvic-vasculature.svg" alt="Pelvic & Internal Iliac Vasculature Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                    </div>
+                <div id="anat_abd_pelvis" class="anat-panel">
+                  <h3>Abdominal &amp; Pelvic Vasculature / PAE</h3>
+                  <div class="anat-grid">
+                    <div class="anat-image-card"><h4>Abdominal aorta and visceral branches</h4><p>Celiac trunk, SMA, IMA, renal and gonadal arteries, aortic bifurcation and common iliac arteries.</p><div class="anat-image-frame"><img src="assets/anatomy/abdominal-aorta.svg" alt="Abdominal aorta and branches" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>abdominal-aorta.svg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Internal iliac branching anatomy</h4><p>Anterior/posterior divisions and major branches, including superior/inferior gluteal, iliolumbar, lateral sacral, obturator, internal pudendal and superior vesical arteries.</p><div class="anat-image-frame"><img src="assets/anatomy/internal-iliac.svg" alt="Internal iliac artery branches" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>internal-iliac.svg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Prostatic artery origins</h4><p>Show common origin patterns, including internal pudendal, superior vesical, obturator and common trunks. Variants are frequent; no single origin should be assumed.</p><div class="anat-image-frame"><img src="assets/anatomy/prostatic-artery-origins.svg" alt="Prostatic artery origin variants" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>prostatic-artery-origins.svg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Pelvic collateral pathways relevant to PAE</h4><p>Potential communications with vesical, rectal, penile/pudendal, seminal vesicle and contralateral prostatic territories.</p><div class="anat-image-frame"><img src="assets/anatomy/pae-collaterals.svg" alt="Pelvic arterial collateral pathways relevant to PAE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>pae-collaterals.svg</code></div></div></div>
+                  </div>
+                  <div class="anat-note"><strong>PAE anatomy pearl:</strong> Prostatic artery origins are variable. Common origins include the internal pudendal, superior vesical, obturator, and common anterior gluteopudendal trunk. Less common origins and shared trunks also occur. Avoid relying on fixed origin percentages; identify the artery and assess collateral pathways on the individual patient's angiography. Potential non-target territories include bladder, rectum and penis. Angiographic anatomy and procedural judgment—not this schematic reference—guide embolization decisions.</div>
+                  <div class="anat-image-card"><h4>IVC and abdominal/pelvic venous drainage</h4><p>IVC, renal veins, hepatic veins, gonadal veins and iliac venous confluence.</p><div class="anat-image-frame"><img src="assets/anatomy/abdominal-pelvic-veins.jpg" alt="Abdominal and pelvic venous anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>abdominal-pelvic-veins.jpg</code></div></div></div>
                 </div>
-
-                <!-- PANEL 4: UPPER & LOWER EXTREMITY VASCULATURE -->
-                <div id="anat_extremities" class="anat-panel" style="display:none;">
-                    <h3>Upper &amp; Lower Extremity Arterial Runoff</h3>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:8px;">
-                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px;">
-                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px; text-align:center;">Upper Extremity (AVF / Radial Access)</div>
-                            <svg viewBox="0 0 280 310" style="width:100%; height:auto;">
-                                <path d="M50,25 L110,45 L145,85 L155,155" stroke="#dc2626" stroke-width="6" fill="none" stroke-linecap="round"/>
-                                <path d="M155,155 L115,245 L130,275" stroke="#dc2626" stroke-width="4" fill="none"/>
-                                <path d="M155,155 L185,245 L165,275" stroke="#dc2626" stroke-width="4" fill="none"/>
-                                <path d="M130,275 Q148,290 165,275" stroke="#dc2626" stroke-width="3" fill="none"/>
-                                <g font-size="10" font-weight="600" fill="#1e293b">
-                                    <text x="50" y="18">Subclavian Art.</text>
-                                    <text x="122" y="45">Axillary Art.</text>
-                                    <text x="165" y="115">Brachial Art.</text>
-                                    <text x="165" y="156" fill="#0369a1">Bifurcation (Antecubital)</text>
-                                    <text x="108" y="210" text-anchor="end">Radial (Lateral)</text>
-                                    <text x="192" y="210">Ulnar (Medial)</text>
-                                    <text x="148" y="302" text-anchor="middle">Superficial/Deep Palmar Arches</text>
-                                </g>
-                            </svg>
-                            <div class="anat-ext-wrap" style="margin-top:8px;">
-                                <img src="assets/anatomy/upper-extremity.svg" alt="Upper Extremity Arteries Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                            </div>
-                        </div>
-
-                        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px;">
-                            <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px; text-align:center;">Lower Extremity Runoff (PAD / CLI)</div>
-                            <svg viewBox="0 0 280 310" style="width:100%; height:auto;">
-                                <path d="M140,15 L140,65" stroke="#dc2626" stroke-width="7"/>
-                                <path d="M140,65 L100,130" stroke="#ef4444" stroke-width="4.5"/>
-                                <path d="M140,65 L145,175" stroke="#dc2626" stroke-width="6"/>
-                                <path d="M145,175 L105,275 L90,295" stroke="#dc2626" stroke-width="3.5" fill="none"/>
-                                <path d="M145,175 L155,205" stroke="#dc2626" stroke-width="5"/>
-                                <path d="M155,205 L145,270" stroke="#dc2626" stroke-width="3"/>
-                                <path d="M155,205 L185,280" stroke="#dc2626" stroke-width="3.5"/>
-                                <g font-size="10" font-weight="600" fill="#1e293b">
-                                    <text x="152" y="32">CFA (Femoral Head)</text>
-                                    <text x="95" y="115" text-anchor="end">Profunda Femoris</text>
-                                    <text x="155" y="115">SFA (Hunter Canal)</text>
-                                    <text x="156" y="168">Popliteal Art.</text>
-                                    <text x="98" y="235" text-anchor="end">Ant. Tibial (AT)</text>
-                                    <text x="164" y="202">TP Trunk</text>
-                                    <text x="138" y="284" text-anchor="end">Peroneal</text>
-                                    <text x="192" y="255">Post. Tibial (PT)</text>
-                                    <text x="85" y="306" text-anchor="middle" fill="#0369a1">Dorsalis Pedis</text>
-                                </g>
-                            </svg>
-                            <div class="anat-ext-wrap" style="margin-top:8px;">
-                                <img src="assets/anatomy/lower-extremity.svg" alt="Lower Extremity Arteries Diagram" style="width:100%; border:1px solid var(--border); border-radius:6px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                            </div>
-                        </div>
-                    </div>
+                <div id="anat_extremities" class="anat-panel">
+                  <h3>Upper &amp; Lower Extremity Arterial and Venous Anatomy</h3>
+                  <div class="anat-grid">
+                    <div class="anat-image-card"><h4>Upper-extremity arteries</h4><p>Subclavian, axillary, brachial, radial, ulnar and palmar arches.</p><div class="anat-image-frame"><img src="assets/anatomy/upper-extremity-arteries.jpg" alt="Upper extremity arterial anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>upper-extremity-arteries.jpg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Upper-extremity veins</h4><p>Cephalic, basilic, brachial, axillary, subclavian and central veins.</p><div class="anat-image-frame"><img src="assets/anatomy/upper-extremity-veins.jpg" alt="Upper extremity venous anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>upper-extremity-veins.jpg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Lower-extremity arteries</h4><p>Common femoral, profunda, SFA, popliteal, anterior tibial, tibioperoneal trunk, posterior tibial, peroneal and pedal vessels.</p><div class="anat-image-frame"><img src="assets/anatomy/lower-extremity-arteries.jpg" alt="Lower extremity arterial anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>lower-extremity-arteries.jpg</code></div></div></div>
+                    <div class="anat-image-card"><h4>Lower-extremity veins</h4><p>Great/small saphenous, deep femoral, femoral, popliteal, tibial, peroneal and iliac veins.</p><div class="anat-image-frame"><img src="assets/anatomy/lower-extremity-veins.jpg" alt="Lower extremity venous anatomy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>lower-extremity-veins.jpg</code></div></div></div>
+                  </div>
                 </div>
-
-                <!-- PANEL 5: WHOLE-BODY ARTERIAL & VENOUS MAP -->
-                <div id="anat_whole_body" class="anat-panel" style="display:none;">
-                    <h3>Systemic Whole-Body Vascular Overview</h3>
-                    <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;">Key central venous &amp; arterial access landmarks for ports, PICCs, IVC filters, and endovascular interventions.</p>
-                    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
-                        <svg viewBox="0 0 600 340" style="width:100%; max-width:580px; height:auto;">
-                            <text x="150" y="22" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">ARTERIAL SYSTEM</text>
-                            <path d="M150,70 L150,40 M150,70 L90,85 L65,165 M150,70 L210,85 L235,165 M150,70 L150,175 L125,215 L120,315 M150,175 L175,215 L180,315" stroke="#dc2626" stroke-width="4" fill="none" stroke-linecap="round"/>
-                            <g font-size="9.5" font-weight="600" fill="#7f1d1d">
-                                <text x="158" y="45">Carotids / Arch</text>
-                                <text x="85" y="78" text-anchor="end">Subclavian/Axillary</text>
-                                <text x="60" y="165" text-anchor="end">Radial / Ulnar</text>
-                                <text x="160" y="130">Thoracic/Abd Aorta</text>
-                                <text x="115" y="215" text-anchor="end">Iliac / CFA</text>
-                                <text x="112" y="265" text-anchor="end">SFA / Pop</text>
-                                <text x="112" y="312" text-anchor="end">AT / PT / Peroneal</text>
-                            </g>
-                            <line x1="300" y1="15" x2="300" y2="325" stroke="#cbd5e1" stroke-dasharray="4,4"/>
-                            <text x="450" y="22" font-size="12" font-weight="bold" fill="#2563eb" text-anchor="middle">VENOUS SYSTEM</text>
-                            <path d="M442,40 L442,95 M458,40 L458,95 M385,85 L442,95 M515,85 L458,95 M450,95 L450,180 L425,220 L420,315 M450,180 L475,220 L480,315" stroke="#2563eb" stroke-width="4" fill="none" stroke-linecap="round"/>
-                            <g font-size="9.5" font-weight="600" fill="#1e3a8a">
-                                <text x="434" y="45" text-anchor="end">R. IJV</text>
-                                <text x="466" y="45">L. IJV</text>
-                                <text x="380" y="80" text-anchor="end">Basilic/Cephalic</text>
-                                <text x="462" y="102">SVC (Cavoatrial Jxn)</text>
-                                <text x="462" y="148">IVC (Infrarenal Filter)</text>
-                                <text x="484" y="218">Common / Ext. Iliac</text>
-                                <text x="488" y="265">CFV / Femoral / GSV</text>
-                                <text x="488" y="312">Popliteal / Tibial</text>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="anat-ext-wrap" style="margin-top:10px;">
-                        <img src="assets/anatomy/whole-body-vasculature.svg" alt="Whole Body Circulatory System Diagram" style="width:100%; border:1px solid var(--border); border-radius:8px; background:#fff;" onerror="this.parentElement.style.display='none'">
-                    </div>
+                <div id="anat_whole_body" class="anat-panel">
+                  <h3>Whole-Body Circulatory Overview</h3>
+                  <p class="anat-note">Use this as a broad orientation image only. For procedural planning, refer to the dedicated regional arterial and venous diagrams and the patient's CTA, MRA, ultrasound or angiography.</p>
+                  <div class="anat-grid"><div class="anat-image-card"><h4>Systemic arterial and venous circulation</h4><p>Whole-body overview of major arteries and veins.</p><div class="anat-image-frame"><img src="assets/anatomy/whole-body-vasculature.svg" alt="Whole-body circulatory system" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="anat-image-placeholder" style="display:none">Image not yet added<br><code>whole-body-vasculature.svg</code></div></div></div></div>
                 </div>
-
-                <div class="footnote" style="margin-top:14px;">
-                    Schematic anatomical reference for rapid pre-procedural planning. Always confirm variant anatomy (e.g., Michels hepatic arterial variants, corona mortis, high radial bifurcation) on cross-sectional CTA/MRA or intraprocedural angiography.
-                </div>
+                <div class="footnote" style="margin-top:14px;">Anatomical reference only; illustrations may simplify branching and variants. Confirm individual anatomy on patient-specific imaging and angiography. Image sources, licenses, attribution requirements and exact target filenames are listed in <code>ANATOMY_DOWNLOAD_LINKS.md</code>.</div>
             </div>
         </div>
+        <div id="anat_lightbox" class="anat-lightbox" role="dialog" aria-modal="true" aria-label="Expanded anatomy image" onclick="if(event.target===this)closeAnatLightbox()"><button type="button" onclick="closeAnatLightbox()" aria-label="Close image">Close ✕</button><img id="anat_lightbox_img" alt="Expanded anatomy reference"></div>
+        <script>
+          function closeAnatLightbox(){var box=document.getElementById('anat_lightbox');if(box)box.classList.remove('open');}
+          document.addEventListener('click',function(e){var im=e.target.closest('#anatomy_ref .anat-image-frame img');if(!im||im.style.display==='none')return;var lb=document.getElementById('anat_lightbox'),large=document.getElementById('anat_lightbox_img');if(lb&&large){large.src=im.src;large.alt=im.alt||'Expanded anatomy image';lb.classList.add('open');}});
+          document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAnatLightbox();});
+        </script>
+</div>
 
         <!-- REFERENCES -->
         <div id="refs" class="tab-content">

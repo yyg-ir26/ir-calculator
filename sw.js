@@ -1,7 +1,7 @@
 /* IR Decision Support Suite: offline service worker.
    To publish an update: change CACHE_VERSION, then re-upload the files.
    Users receive the new version the next time they open the app online. */
-const CACHE_VERSION = 'ir-suite-v25';
+const CACHE_VERSION = 'ir-suite-v26';
 const APP_SHELL = [
   './',
   'index.html',
@@ -17,11 +17,16 @@ const OPTIONAL_ANATOMY_ASSETS = [
   'assets/anatomy/liver-segments.svg',
   'assets/anatomy/liver-vasculature.svg',
   'assets/anatomy/biliary-system.svg',
-  'assets/anatomy/renal-collecting.svg',
+  'assets/anatomy/renal-collecting.png',
   'assets/anatomy/abdominal-aorta.svg',
-  'assets/anatomy/pelvic-vasculature.svg',
-  'assets/anatomy/upper-extremity.svg',
-  'assets/anatomy/lower-extremity.svg',
+  'assets/anatomy/internal-iliac.svg',
+  'assets/anatomy/prostatic-artery-origins.svg',
+  'assets/anatomy/pae-collaterals.svg',
+  'assets/anatomy/abdominal-pelvic-veins.jpg',
+  'assets/anatomy/upper-extremity-arteries.jpg',
+  'assets/anatomy/upper-extremity-veins.jpg',
+  'assets/anatomy/lower-extremity-arteries.jpg',
+  'assets/anatomy/lower-extremity-veins.jpg',
   'assets/anatomy/whole-body-vasculature.svg'
 ];
 

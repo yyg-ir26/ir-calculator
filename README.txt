@@ -93,3 +93,5 @@ VERSION 1.6 ASA AIRWAY GUIDANCE UPDATE (November 2026)
   - Incremented service-worker cache to ir-suite-v19. App version remains v1.6.
 
 - Updated Mallampati reference with the PUSH mnemonic: Class I (PUSH), II (USH), III (SH), and IV (H), displayed as vertically stacked anatomical terms with bold initial letters.
+
+Anatomy Reference: local image assets are optional until downloaded. See ANATOMY_DOWNLOAD_LINKS.md for target filenames, source links, licensing notes and offline installation. The anatomy section uses image placeholders until files are added.
