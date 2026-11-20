@@ -20,8 +20,6 @@ const OPTIONAL_ANATOMY_ASSETS = [
   'assets/anatomy/renal-collecting.png',
   'assets/anatomy/abdominal-aorta.svg',
   'assets/anatomy/internal-iliac.svg',
-  'assets/anatomy/prostatic-artery-origins.svg',
-  'assets/anatomy/pae-collaterals.svg',
   'assets/anatomy/abdominal-pelvic-veins.jpg',
   'assets/anatomy/upper-extremity-arteries.jpg',
   'assets/anatomy/upper-extremity-veins.jpg',
