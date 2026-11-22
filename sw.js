@@ -1,10 +1,11 @@
 /* IR Decision Support Suite: offline service worker.
    To publish an update: change CACHE_VERSION, then re-upload the files.
    Users receive the new version the next time they open the app online. */
-const CACHE_VERSION = 'ir-suite-v26';
+const CACHE_VERSION = 'ir-suite-v27';
 const APP_SHELL = [
   './',
   'index.html',
+  'IMAGE_CREDITS.md',
   'manifest.webmanifest',
   'icons/icon-192.png',
   'icons/icon-512.png',
